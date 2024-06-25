@@ -23,8 +23,7 @@ namespace SISDEN
 
         public int year441 { get; set; }
 
-
-
+        //rfs
 
     }
 }

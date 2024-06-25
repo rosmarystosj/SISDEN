@@ -13,5 +13,7 @@ namespace SISDEN
         public int variable {  get; set; }
 
         public int variable2 { get; set; }
+
+        public int variable3 { get; set; }
     }
 }

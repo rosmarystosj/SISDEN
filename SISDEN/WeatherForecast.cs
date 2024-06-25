@@ -12,5 +12,8 @@ namespace SISDEN
 
         public int Year { get; set; }
         public int Year2000 { get; set; }
+        public int Year222000 { get; set; }
+
+
     }
 }

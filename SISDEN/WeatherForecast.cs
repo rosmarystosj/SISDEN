@@ -11,5 +11,7 @@ namespace SISDEN
         public string? Summary { get; set; }
 
         public int variable {  get; set; }
+
+        public int variable2 { get; set; }
     }
 }

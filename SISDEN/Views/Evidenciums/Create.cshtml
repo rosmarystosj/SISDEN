@@ -1,0 +1,48 @@
+﻿@model SISDEN.Models.Evidencium
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Evidencium</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Idevidencia" class="control-label"></label>
+                <input asp-for="Idevidencia" class="form-control" />
+                <span asp-validation-for="Idevidencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Evurl" class="control-label"></label>
+                <input asp-for="Evurl" class="form-control" />
+                <span asp-validation-for="Evurl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EvIdtipoevid" class="control-label"></label>
+                <input asp-for="EvIdtipoevid" class="form-control" />
+                <span asp-validation-for="EvIdtipoevid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EvIddenuncia" class="control-label"></label>
+                <input asp-for="EvIddenuncia" class="form-control" />
+                <span asp-validation-for="EvIddenuncia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

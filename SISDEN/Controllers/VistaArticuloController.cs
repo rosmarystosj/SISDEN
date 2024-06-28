@@ -20,9 +20,9 @@ namespace SISDEN.Controllers
         {
             return View();
         }
-       
 
-            [HttpGet("{id}")]
+ 
+            [HttpGet("api/VistaArticulo/{id}")]
             public ActionResult<VistaArticulo> GetVistaArticulo(int id)
             {
                 var vistaarticulo = _context.VistaArticulos.FirstOrDefault(va => va.Idarticulo == id);
@@ -35,7 +35,7 @@ namespace SISDEN.Controllers
             return vistaarticulo;
 
          
-        }
+            }
         
     }
 

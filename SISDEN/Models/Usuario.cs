@@ -7,9 +7,9 @@ public partial class Usuario
 {
     public int Idusuario { get; set; }
 
-    public string Usunombre { get; set; } = null!;
+    public string? Usunombre { get; set; }
 
-    public string Usuapellido { get; set; } = null!;
+    public string? Usuapellido { get; set; }
 
     public string? Usuidentificacion { get; set; }
 
@@ -23,5 +23,5 @@ public partial class Usuario
 
     public string? Usustatus { get; set; }
 
-    public int Usurol { get; set; }
+    public int? Usurol { get; set; }
 }

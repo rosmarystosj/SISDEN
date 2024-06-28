@@ -7,13 +7,13 @@ public partial class Denuncium
 {
     public int Iddenuncia { get; set; }
 
-    public string Dentitulo { get; set; } = null!;
+    public string? Dentitulo { get; set; }
 
     public string? Dendescripcion { get; set; }
 
     public string? Denanimal { get; set; }
 
-    public DateTime Denfechacreacion { get; set; }
+    public DateTime? Denfechacreacion { get; set; }
 
     public DateTime? Denfechacierre { get; set; }
 
@@ -35,9 +35,9 @@ public partial class Denuncium
 
     public int? DenIdmotivocierre { get; set; }
 
-    public int DenIdubicacion { get; set; }
+    public int? DenIdubicacion { get; set; }
 
-    public int DenIdusuario { get; set; }
+    public int? DenIdusuario { get; set; }
 
     public int? DenIdestado { get; set; }
 }

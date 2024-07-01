@@ -6,31 +6,54 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SISDEN.Models;
+using SISDEN.DTOS;
+using System.Data.SqlClient;
+
+
 
 namespace SISDEN.Controllers
 {
-    public class DenunciumsController : Controller
+    public class DenunciasController : Controller
     {
         private readonly SisdemContext _context;
 
-        public DenunciumsController(SisdemContext context)
+        public DenunciasController(SisdemContext context)
         {
             _context = context;
         }
 
-
-      
         [HttpPost("api/RegistarDenuncias")]
-        public async Task<ActionResult<Denuncium>> PostDenuncia(Denuncium denuncia)
+        public async Task<ActionResult<DenunciasDTO>> PostDenuncia(DenunciasDTO denunciaDTO)
         {
-            if (denuncia == null)
+            if (denunciaDTO == null)
             {
                 return BadRequest("Denuncia no válida");
             }
 
             try
             {
-                denuncia.Denfechacreacion = DateTime.Now;
+                var denuncia = new Denuncium
+                {
+                    Dentitulo = denunciaDTO.Dentitulo,
+                    Dendescripcion = denunciaDTO.Dendescripcion,
+                    Denanimal = denunciaDTO.Denanimal,
+                    Denfechacreacion = DateTime.Now,
+                    Denfechacierre = denunciaDTO.Denfechacierre,
+                    Denevidenciaadjunta = denunciaDTO.Denevidenciaadjunta,
+                    Denservicio = denunciaDTO.Denservicio,
+                    Densalarios = denunciaDTO.Densalarios,
+                    Denprision = denunciaDTO.Denprision,
+                    Dennumsalarios = denunciaDTO.Dennumsalarios,
+                    Dennumprision = denunciaDTO.Dennumprision,
+                    Dennumserv = denunciaDTO.Dennumserv,
+                    Denobservaciones = denunciaDTO.Denobservaciones,
+                    DenIdmotivocierre = denunciaDTO.DenIdmotivocierre,
+                    DenIdubicacion = denunciaDTO.DenIdubicacion,
+                    DenIdusuario = denunciaDTO.DenIdusuario,
+                    DenIdestado = denunciaDTO.DenIdestado
+                };
+
+
                 _context.Denuncia.Add(denuncia);
                 await _context.SaveChangesAsync();
 

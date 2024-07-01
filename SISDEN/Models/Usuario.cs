@@ -11,6 +11,10 @@ public partial class Usuario
 
     public string? Usuapellido { get; set; }
 
+    public string? Usucontraseña { get; set; }
+
+    public string? Usuverificacion { get; set; }
+
     public string? Usuidentificacion { get; set; }
 
     public string? Usutelefono { get; set; }

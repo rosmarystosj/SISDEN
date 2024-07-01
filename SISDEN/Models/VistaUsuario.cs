@@ -7,13 +7,15 @@ public partial class VistaUsuario
 {
     public int Idusuario { get; set; }
 
-    public string Usunombre { get; set; } = null!;
+    public string? Usunombre { get; set; }
 
-    public string Usuapellido { get; set; } = null!;
+    public string? Usuapellido { get; set; }
 
     public string? Usuidentificacion { get; set; }
 
     public string? Usutelefono { get; set; }
+
+    public string? Usucontraseña { get; set; }
 
     public string? Usutelefono2 { get; set; }
 

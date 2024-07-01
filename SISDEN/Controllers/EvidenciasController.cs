@@ -4,18 +4,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Versioning;
 using SISDEN.Models;
+using SISDEN.Services;
 
 namespace SISDEN.Controllers
 {
     public class EvidenciasController : Controller
     {
         private readonly SisdemContext _context;
-        public EvidenciasController(SisdemContext context)
+        private readonly IRegistrarDenuncia _registrarDenuncia;
+
+        public EvidenciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia)
         {
             _context = context;
-
+            _registrarDenuncia = registrarDenuncia; 
         }
 
 
@@ -32,64 +36,74 @@ namespace SISDEN.Controllers
             {
                 return BadRequest("No file uploaded.");
             }
-                 string uploadsFolder = "";
+            string uploadsFolder = "";
 
-                 if (archivo.FileName.Contains(".mp4"))
-                 {
-                uploadsFolder = Path.Combine("Archivos", "Videos");
-                _guardar.ruta = Path.Combine(uploadsFolder, archivo.FileName);
-                 _guardar.tipoevidencia = 2;
+            if (archivo.FileName.Contains(".mp4"))
+            {
+              uploadsFolder = Path.Combine("Archivos", "Videos");
+              _guardar.ruta = Path.Combine(uploadsFolder, archivo.FileName);
+              _guardar.tipoevidencia = 2;
                      
-                 }
-                else if (archivo.FileName.Contains(".jp") || archivo.FileName.Contains(".png") || archivo.FileName.Contains(".bmp") || _guardar.Archivo.FileName.Contains(".webp"))
+            }
+            else if (archivo.FileName.Contains(".jp") || archivo.FileName.Contains(".png") || archivo.FileName.Contains(".bmp") || _guardar.Archivo.FileName.Contains(".webp"))
+            {
+            uploadsFolder = Path.Combine("Archivos", "Fotos");
+            _guardar.ruta = Path.Combine(uploadsFolder, archivo.FileName);
+            _guardar.tipoevidencia = 1;
+
+            }
+            else if (_guardar.Archivo.FileName.Contains(".docx") || _guardar.Archivo.FileName.Contains(".pdf"))
+            {
+                uploadsFolder = Path.Combine("Archivos", "Documentos");
+            _guardar.ruta = Path.Combine(uploadsFolder, archivo.FileName);
+                _guardar.tipoevidencia = 3;
+            }
+            if 
+            (!Directory.Exists(uploadsFolder))
+            {
+            Directory.CreateDirectory(uploadsFolder);
+            }
+
+            try
+            {
+            using (var stream = new FileStream(_guardar.ruta, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            int MaxDenuncia = 0;
+            var maxIDDenuncia = await _context.Denuncia.MaxAsync(d => (int?)d.Iddenuncia);
+                if (maxIDDenuncia.HasValue)
                 {
-                uploadsFolder = Path.Combine("Archivos", "Fotos");
-                _guardar.ruta = Path.Combine(uploadsFolder, archivo.FileName);
-                _guardar.tipoevidencia = 1;
+                    MaxDenuncia = maxIDDenuncia.Value;
 
                 }
-                else if (_guardar.Archivo.FileName.Contains(".docx") || _guardar.Archivo.FileName.Contains(".pdf"))
-                {
-                 uploadsFolder = Path.Combine("Archivos", "Documentos");
-                _guardar.ruta = Path.Combine(uploadsFolder, archivo.FileName);
-                 _guardar.tipoevidencia = 3;
-                }
-                if 
-                (!Directory.Exists(uploadsFolder))
-                {
-                Directory.CreateDirectory(uploadsFolder);
-               }
+               
+            await _registrarDenuncia.RegistrarDenunciaAsync(MaxDenuncia + 1);
 
-              try
-              {
-                using (var stream = new FileStream(_guardar.ruta, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
 
-                Denuncium denuncium = new Denuncium();
-                
+            var evidencia = new Evidencium()
+            {
+                EvIddenuncia = MaxDenuncia + 1,
+                Evurl = _guardar.ruta,
+                EvIdtipoevid = _guardar.tipoevidencia,
+            };
+            _context.Evidencia.Add(evidencia);
+            await _context.SaveChangesAsync();
 
-                var evidencia = new Evidencium()
-                {
-                    EvIddenuncia = denuncium.Iddenuncia,
-                    Evurl = _guardar.ruta,
-                    EvIdtipoevid = _guardar.tipoevidencia,
-                };
-                _context.Evidencia.Add(evidencia);
-                await _context.SaveChangesAsync();
-
-                var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-                var fileUrl = $"{baseUrl}/{_guardar.ruta}/{file.FileName}";
+            var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+            var fileUrl = $"{baseUrl}/{_guardar.ruta}/{file.FileName}";
 
                 return Ok(new { fileUrl });
+                //return Ok(maxIDDenuncia);
 
-               }
+
+            }
             catch (Exception ex)
-              {
-                return StatusCode(500, $"Ocurrió un error al guardar el archivo: {ex.Message}");
+            {
+            return StatusCode(500, $"Ocurrió un error al guardar el archivo: {ex.Message}");
 
-              }
+            }
     
         }
        

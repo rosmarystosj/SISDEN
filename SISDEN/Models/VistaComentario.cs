@@ -15,5 +15,7 @@ public partial class VistaComentario
 
     public int? Iddenuncia { get; set; }
 
+    public string? Rolnombre { get; set; }
+
     public string? DenunciaTitulo { get; set; }
 }

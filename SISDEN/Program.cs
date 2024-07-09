@@ -14,6 +14,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddScoped<IServicioEmail,  EmailService>();
 builder.Services.AddScoped<IRegistrarDenuncia, RegistroDenunciaService>();
+builder.Services.AddScoped<ISesion, ObtenerSesionIdService>();
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -24,16 +25,18 @@ builder.Services.AddDbContext<SisdemContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SisdemContext"));
 
 });
-
-/*builder.WebHost.ConfigureKestrel(options =>
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
 {
-    options.ListenLocalhost(7212); // Puerto HTTP
-    options.ListenLocalhost(7213, listenOptions => listenOptions.UseHttps()); // Puerto HTTPS
-});*/
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -43,7 +46,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllers();
 
 app.Run();

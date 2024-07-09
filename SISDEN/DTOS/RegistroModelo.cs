@@ -16,5 +16,21 @@
         public int? Usuentidad { get; set; }
         public string? Usustatus { get; set; }
         public int Usurol { get; set; }
+        
+        public String tipodeidentificacion { get; set; }
+
+        public string QuitarGuion(string cedula)
+        {
+            string cedulaSinGuion = "";
+
+            foreach (char c in cedula)
+            {
+                if (c >= '0' && c <= '9' && c != '-')
+                {
+                    cedulaSinGuion = ((string.Concat(cedulaSinGuion, c)));
+                }
+            }
+            return cedulaSinGuion;
+        }
     }
 }

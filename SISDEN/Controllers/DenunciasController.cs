@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using SISDEN.Models;
 using SISDEN.DTOS;
 using System.Data.SqlClient;
+using SISDEN.Services;
+using NuGet.Versioning;
 
 
 
@@ -16,14 +18,44 @@ namespace SISDEN.Controllers
     public class DenunciasController : Controller
     {
         private readonly SisdemContext _context;
+        private readonly IRegistrarDenuncia _registrarDenuncia;
 
-        public DenunciasController(SisdemContext context)
+
+        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia)
         {
             _context = context;
+            _registrarDenuncia = registrarDenuncia;
+
+
         }
 
+        [HttpGet("api/ObtenerIDDenuncia/{sesionid}")]
+        public async Task<IActionResult> GetIDDenuncias(string sesionid)
+        {
+            var denunciaid = await _registrarDenuncia.RegistrarDenunciaAsync(sesionid);
+            return Ok (new { denunciaid });
+        }
+
+        [HttpGet("api/ObtenerDenuncias")]
+        public async Task<ActionResult<IEnumerable<VistaDenuncia>>> GetDenuncias()
+        {
+
+             return await _context.VistaDenuncias.ToListAsync();
+        }
+
+        [HttpGet("api/ObtenerDenuncia/{id}")]
+        public async Task<ActionResult<VistaDenuncia>> GetDenuncia(int id)
+        {
+            var denuncia = await _context.VistaDenuncias.FirstOrDefaultAsync(d => d.Iddenuncia == id);
+            if (denuncia == null)
+            {
+                return NotFound();
+
+            }
+            return denuncia;
+        }
         [HttpPost("api/RegistarDenuncias")]
-        public async Task<ActionResult<DenunciasDTO>> PostDenuncia(DenunciasDTO denunciaDTO)
+        public async Task<ActionResult> PostDenuncia([FromBody] DenunciasDTO denunciaDTO)
         {
             if (denunciaDTO == null)
             {
@@ -33,14 +65,14 @@ namespace SISDEN.Controllers
             try
             {
                 var denuncia = new Denuncium
-                {
+                {  
                     Dentitulo = denunciaDTO.Dentitulo,
                     Dendescripcion = denunciaDTO.Dendescripcion,
                     Denanimal = denunciaDTO.Denanimal,
                     Denfechacreacion = DateTime.Now,
                     Denfechacierre = denunciaDTO.Denfechacierre,
                     Denevidenciaadjunta = denunciaDTO.Denevidenciaadjunta,
-                    Denservicio = denunciaDTO.Denservicio,
+                    Denservicio = denunciaDTO.Denservicio,           
                     Densalarios = denunciaDTO.Densalarios,
                     Denprision = denunciaDTO.Denprision,
                     Dennumsalarios = denunciaDTO.Dennumsalarios,
@@ -48,12 +80,13 @@ namespace SISDEN.Controllers
                     Dennumserv = denunciaDTO.Dennumserv,
                     Denobservaciones = denunciaDTO.Denobservaciones,
                     DenIdmotivocierre = denunciaDTO.DenIdmotivocierre,
-                    DenIdubicacion = denunciaDTO.DenIdubicacion,
+                    Denubicacion = denunciaDTO.DenIdubicacion,
                     DenIdusuario = denunciaDTO.DenIdusuario,
-                    DenIdestado = denunciaDTO.DenIdestado
+                    DenIdestado = denunciaDTO.DenIdestado,
+                    Dencategoria =denunciaDTO.DenCategoria,
                 };
 
-
+                
                 _context.Denuncia.Add(denuncia);
                 await _context.SaveChangesAsync();
 
@@ -64,37 +97,67 @@ namespace SISDEN.Controllers
                 return StatusCode(500, $"Error interno del servidor: {ex.Message}");
             }
         }
-
+        
         [HttpPut("api/EditarDenuncia/{id}")]
-        public async Task<IActionResult> Denuncia(int id, Denuncium denuncia)
+        public async Task<IActionResult> PutDenuncia([FromBody] int id, DenunciasDTO denunciaDTO)
         {
-            if (id != denuncia.Iddenuncia)
+            if (denunciaDTO == null)
             {
-                return BadRequest("ID de denuncia no coincide");
+                return BadRequest("Denuncia no valida");
             }
-
-            if (denuncia == null)
-            {
-                return BadRequest("Denuncia no válida");
-            }
-
-            _context.Entry(denuncia).State = EntityState.Modified;
-
             try
             {
+                var denuncia = await _context.Denuncia.FirstOrDefaultAsync(d => d.Iddenuncia == id);
+
+                if (denuncia == null)
+                {
+                   return NotFound("Denuncia no encontrada");  
+
+                }
+                if (denunciaDTO.Denanimal == "Ambos")
+                {
+                    denunciaDTO.Denanimal = "Perros y gatos";
+                }
+                denuncia.Dendescripcion = denunciaDTO.Dendescripcion;
+                denuncia.Denanimal = denunciaDTO.Denanimal;
+                denuncia.Denfechacierre = denunciaDTO.Denfechacierre;
+                denuncia.Denevidenciaadjunta = denunciaDTO.Denevidenciaadjunta;
+                denuncia.Denservicio = denunciaDTO.Denservicio;
+                denuncia.Densalarios = denunciaDTO.Densalarios;
+                denuncia.Denprision = denunciaDTO.Denprision;
+                denuncia.Dennumsalarios = denunciaDTO.Dennumsalarios;
+                denuncia.Dennumprision = denunciaDTO.Dennumprision;
+                denuncia.Dennumserv = denunciaDTO.Dennumserv;
+                denuncia.Denobservaciones = denunciaDTO.Denobservaciones;
+                denuncia.DenIdmotivocierre = denunciaDTO.DenIdmotivocierre;
+                denuncia.Denubicacion = denunciaDTO.DenIdubicacion;
+                denuncia.DenIdusuario = denunciaDTO.DenIdusuario;
+                denuncia.DenIdestado = denunciaDTO.DenIdestado;
+                denuncia.Dencategoria = denunciaDTO.DenCategoria;
+
+
+                _context.Entry(denuncia).State = EntityState.Modified;
+
+
                 await _context.SaveChangesAsync();
-                return Ok(new { mensaje = "Denuncia actualizada correctamente", denuncia });
+
+                denuncia.Dentitulo = GenerarTitulo(denunciaDTO);
+                await _context.SaveChangesAsync();
+
+                return Ok( denuncia );
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DenunciaExists(id))
+
+                if (DenunciaExists(id))
                 {
-                    return NotFound("La denuncia no existe");
+                    return NotFound("Denuncia no encontrada");
                 }
-                else
+                else 
                 {
                     throw;
                 }
+
             }
             catch (Exception ex)
             {
@@ -102,6 +165,32 @@ namespace SISDEN.Controllers
             }
         }
 
+        [HttpDelete("api/EliminarDenuncia/{id}")]
+         public async Task<IActionResult> DeleteDenuncia(int id)
+        {
+            var denuncia = await _context.Denuncia.FirstOrDefaultAsync(d => d.Iddenuncia == id);   
+            if (denuncia == null)
+            {
+                return NotFound();
+
+            }
+            _context.Denuncia.Remove(denuncia);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+         }
+
+
+        [HttpPost("api/TomarCategoria")]
+
+        public string GenerarTitulo(DenunciasDTO denunciasDTO)
+        {
+            var titulo = $" Denuncia sobre {denunciasDTO.DenCategoria} de {denunciasDTO.Denanimal} en {denunciasDTO.DenIdubicacion}";
+
+
+             return titulo;
+        }
         private bool DenunciaExists(int id)
         {
             return _context.Denuncia.Any(e => e.Iddenuncia == id);

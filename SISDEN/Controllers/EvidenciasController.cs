@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using NuGet.Versioning;
 using SISDEN.Models;
 using SISDEN.Services;
@@ -15,18 +16,40 @@ namespace SISDEN.Controllers
     {
         private readonly SisdemContext _context;
         private readonly IRegistrarDenuncia _registrarDenuncia;
+        private readonly ISesion _sesion;
 
-        public EvidenciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia)
+        public EvidenciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia, ISesion sesion)
         {
             _context = context;
             _registrarDenuncia = registrarDenuncia; 
+            _sesion = sesion;   
+        }
+        [HttpGet("api/ObtenerEvidencias")]
+        public async Task<ActionResult<IEnumerable<VistaEvidencia>>> GetEvidencia()
+        {
+            return await _context.VistaEvidencias.ToListAsync();
         }
 
+        [HttpGet("api/ObtenerEvidenicia/{id}")]
+        public async Task<ActionResult<VistaEvidencia>> GetEvidencia(int id)
+        {
+            var denuncia = await _context.VistaEvidencias.FirstOrDefaultAsync(e => e.Idevidencia == id);
+            if (denuncia == null)
+            {
+                return BadRequest("Evidenicia no encontrada");
+            }
+            return denuncia;
+        }
 
         [HttpPost("api/GuardarArchivo")]
-    
-        public async Task<IActionResult> GuardarArchivos(IFormFile file)
+        public async Task<IActionResult> GuardarArchivos(IFormFile file, [FromHeader] string sesionId)
         {
+            var userid = await _sesion.ObtenerUserIdAsync(sesionId);
+            if (userid == null)
+            {
+                return Unauthorized("Sesion expirada o invalida");
+            }
+
             GuardarArchivo _guardar = new GuardarArchivo();
             _guardar.Archivo = file;    
             var archivo = _guardar.Archivo;
@@ -71,20 +94,10 @@ namespace SISDEN.Controllers
                 await file.CopyToAsync(stream);
             }
 
-            int MaxDenuncia = 0;
-            var maxIDDenuncia = await _context.Denuncia.MaxAsync(d => (int?)d.Iddenuncia);
-                if (maxIDDenuncia.HasValue)
-                {
-                    MaxDenuncia = maxIDDenuncia.Value;
-
-                }
-               
-            await _registrarDenuncia.RegistrarDenunciaAsync(MaxDenuncia + 1);
-
-
+            int denunciaId = await _registrarDenuncia.RegistrarDenunciaAsync(sesionId);
             var evidencia = new Evidencium()
             {
-                EvIddenuncia = MaxDenuncia + 1,
+                EvIddenuncia = denunciaId,
                 Evurl = _guardar.ruta,
                 EvIdtipoevid = _guardar.tipoevidencia,
             };
@@ -94,8 +107,7 @@ namespace SISDEN.Controllers
             var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
             var fileUrl = $"{baseUrl}/{_guardar.ruta}/{file.FileName}";
 
-                return Ok(new { fileUrl });
-                //return Ok(maxIDDenuncia);
+                return Ok(new {fileUrl});
 
 
             }
@@ -106,7 +118,6 @@ namespace SISDEN.Controllers
             }
     
         }
-       
 
     }
 }

@@ -32,10 +32,14 @@
 
         public int? DenIdmotivocierre { get; set; }
 
-        public int? DenIdubicacion { get; set; }
+        public string DenIdubicacion { get; set; }
 
         public int? DenIdusuario { get; set; }
 
         public int? DenIdestado { get; set; }
+        public string Densesion { get; set; }
+
+        public string DenCategoria { get; set; }
+
     }
 }

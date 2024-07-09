@@ -47,6 +47,8 @@ public partial class SisdemContext : DbContext
 
     public virtual DbSet<Seccion> Seccions { get; set; }
 
+    public virtual DbSet<Sesion> Sesions { get; set; }
+
     public virtual DbSet<Tipoevidencium> Tipoevidencia { get; set; }
 
     public virtual DbSet<Tipopreguntum> Tipopregunta { get; set; }
@@ -74,7 +76,8 @@ public partial class SisdemContext : DbContext
     public virtual DbSet<VistaViolacione> VistaViolaciones { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=ROSMARYSTOSJ\\SQLEXPRESS; Database=SISDEM; User=RosmaryStos; Password=12345678 ;Trusted_Connection=True;  TrustServerCertificate=True");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=ROSMARYSTOSJ\\SQLEXPRESS;Database=SISDEM;User=RosmaryStos;Password=12345678;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -110,7 +113,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Categorium>(entity =>
         {
-            entity.HasKey(e => e.Idcategoria).HasName("PK__CATEGORI__ADC0E7197089F116");
+            entity.HasKey(e => e.Idcategoria).HasName("PK__CATEGORI__ADC0E719FFC25D5D");
 
             entity.ToTable("CATEGORIA");
 
@@ -123,12 +126,13 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Comentario>(entity =>
         {
-            entity.HasKey(e => e.Idcomentario).HasName("PK__COMENTAR__B189A03B555CBDF5");
+            entity.HasKey(e => e.Idcomentario).HasName("PK__COMENTAR__B189A03BB4EBEF47");
 
             entity.ToTable("COMENTARIOS");
 
             entity.Property(e => e.Idcomentario).HasColumnName("IDCOMENTARIO");
             entity.Property(e => e.ComIddenuncia).HasColumnName("COM_IDDENUNCIA");
+            entity.Property(e => e.ComIdrol).HasColumnName("COM_IDROL");
             entity.Property(e => e.ComIdusuario).HasColumnName("COM_IDUSUARIO");
             entity.Property(e => e.Comdescripcion)
                 .HasColumnType("text")
@@ -137,21 +141,21 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Denuncium>(entity =>
         {
-            entity.HasKey(e => e.Iddenuncia).HasName("PK__DENUNCIA__656008795E90589E");
+            entity.HasKey(e => e.Iddenuncia).HasName("PK__DENUNCIA__6560087946C99EB1");
 
             entity.ToTable("DENUNCIA");
 
-            entity.Property(e => e.Iddenuncia)
-                .ValueGeneratedNever()
-                .HasColumnName("IDDENUNCIA");
+            entity.Property(e => e.Iddenuncia).HasColumnName("IDDENUNCIA");
             entity.Property(e => e.DenIdestado).HasColumnName("DEN_IDESTADO");
             entity.Property(e => e.DenIdmotivocierre).HasColumnName("DEN_IDMOTIVOCIERRE");
-            entity.Property(e => e.DenIdubicacion).HasColumnName("DEN_IDUBICACION");
             entity.Property(e => e.DenIdusuario).HasColumnName("DEN_IDUSUARIO");
             entity.Property(e => e.Denanimal)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("DENANIMAL");
+            entity.Property(e => e.Dencategoria)
+                .IsUnicode(false)
+                .HasColumnName("DENCATEGORIA");
             entity.Property(e => e.Dendescripcion)
                 .IsUnicode(false)
                 .HasColumnName("DENDESCRIPCION");
@@ -171,10 +175,16 @@ public partial class SisdemContext : DbContext
             entity.Property(e => e.Denprision).HasColumnName("DENPRISION");
             entity.Property(e => e.Densalarios).HasColumnName("DENSALARIOS");
             entity.Property(e => e.Denservicio).HasColumnName("DENSERVICIO");
+            entity.Property(e => e.Densesion)
+                .IsUnicode(false)
+                .HasColumnName("DENSESION");
             entity.Property(e => e.Dentitulo)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("DENTITULO");
+            entity.Property(e => e.Denubicacion)
+                .IsUnicode(false)
+                .HasColumnName("DENUBICACION");
         });
 
         modelBuilder.Entity<Entidadautorizadum>(entity =>
@@ -336,6 +346,28 @@ public partial class SisdemContext : DbContext
                 .HasColumnName("SECNOMBRE");
         });
 
+        modelBuilder.Entity<Sesion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__SESION__3214EC2752D6A698");
+
+            entity.ToTable("SESION");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Createat)
+                .HasColumnType("datetime")
+                .HasColumnName("CREATEAT");
+            entity.Property(e => e.Expiresat)
+                .HasColumnType("datetime")
+                .HasColumnName("EXPIRESAT");
+            entity.Property(e => e.Sesionid)
+                .IsUnicode(false)
+                .HasColumnName("SESIONID");
+            entity.Property(e => e.Userid)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("USERID");
+        });
+
         modelBuilder.Entity<Tipoevidencium>(entity =>
         {
             entity.HasKey(e => e.Idtipoevid).HasName("PK__TIPOEVID__789FB5A13AA461DC");
@@ -383,7 +415,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.Idusuario).HasName("PK__USUARIO__98242AA9F9A99D90");
+            entity.HasKey(e => e.Idusuario).HasName("PK__USUARIO__98242AA9D3BA70C7");
 
             entity.ToTable("USUARIO");
 
@@ -393,7 +425,6 @@ public partial class SisdemContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("USUAPELLIDO");
             entity.Property(e => e.Usucontraseña)
-                .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("USUCONTRASEÑA");
             entity.Property(e => e.Usuemail)
@@ -472,6 +503,10 @@ public partial class SisdemContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Idcomentario).HasColumnName("IDCOMENTARIO");
             entity.Property(e => e.Iddenuncia).HasColumnName("IDDENUNCIA");
+            entity.Property(e => e.Rolnombre)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ROLNOMBRE");
             entity.Property(e => e.UsuarioApellido)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -486,6 +521,16 @@ public partial class SisdemContext : DbContext
                 .HasNoKey()
                 .ToView("VistaDenuncias");
 
+            entity.Property(e => e.Denanimal)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("DENANIMAL");
+            entity.Property(e => e.Dencategoria)
+                .IsUnicode(false)
+                .HasColumnName("DENCATEGORIA");
+            entity.Property(e => e.Dendescripcion)
+                .IsUnicode(false)
+                .HasColumnName("DENDESCRIPCION");
             entity.Property(e => e.Denevidenciaadjunta).HasColumnName("DENEVIDENCIAADJUNTA");
             entity.Property(e => e.Denfechacierre)
                 .HasColumnType("datetime")
@@ -502,10 +547,16 @@ public partial class SisdemContext : DbContext
             entity.Property(e => e.Denprision).HasColumnName("DENPRISION");
             entity.Property(e => e.Densalarios).HasColumnName("DENSALARIOS");
             entity.Property(e => e.Denservicio).HasColumnName("DENSERVICIO");
+            entity.Property(e => e.Densesion)
+                .IsUnicode(false)
+                .HasColumnName("DENSESION");
             entity.Property(e => e.Dentitulo)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("DENTITULO");
+            entity.Property(e => e.Denubicacion)
+                .IsUnicode(false)
+                .HasColumnName("DENUBICACION");
             entity.Property(e => e.Estado)
                 .HasMaxLength(20)
                 .IsUnicode(false);
@@ -513,14 +564,11 @@ public partial class SisdemContext : DbContext
             entity.Property(e => e.MotivoCierre)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.UsuarioApellido)
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.UsuarioEmail)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.UsuarioNombre)
-                .HasMaxLength(50)
+            entity.Property(e => e.UsuarioNombreCompleto)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.UsuarioTelefono)
                 .HasMaxLength(20)
@@ -632,7 +680,6 @@ public partial class SisdemContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("USUAPELLIDO");
             entity.Property(e => e.Usucontraseña)
-                .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("USUCONTRASEÑA");
             entity.Property(e => e.Usuemail)
@@ -647,6 +694,7 @@ public partial class SisdemContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("USUNOMBRE");
+            entity.Property(e => e.Usurol).HasColumnName("USUROL");
             entity.Property(e => e.Usustatus)
                 .HasMaxLength(20)
                 .IsUnicode(false)

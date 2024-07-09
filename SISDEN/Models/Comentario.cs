@@ -12,4 +12,6 @@ public partial class Comentario
     public int ComIdusuario { get; set; }
 
     public int ComIddenuncia { get; set; }
+
+    public int? ComIdrol { get; set; }
 }

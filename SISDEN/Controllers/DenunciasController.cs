@@ -48,7 +48,7 @@ namespace SISDEN.Controllers
                     Dennumserv = denunciaDTO.Dennumserv,
                     Denobservaciones = denunciaDTO.Denobservaciones,
                     DenIdmotivocierre = denunciaDTO.DenIdmotivocierre,
-                    DenIdubicacion = denunciaDTO.DenIdubicacion,
+                    Denubicacion = denunciaDTO.DenIdubicacion,
                     DenIdusuario = denunciaDTO.DenIdusuario,
                     DenIdestado = denunciaDTO.DenIdestado
                 };

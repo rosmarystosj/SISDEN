@@ -7,9 +7,13 @@ public partial class VistaDenuncia
 {
     public int Iddenuncia { get; set; }
 
-    public string Dentitulo { get; set; } = null!;
+    public string? Dentitulo { get; set; }
 
-    public DateTime Denfechacreacion { get; set; }
+    public DateTime? Denfechacreacion { get; set; }
+
+    public string? Dendescripcion { get; set; }
+
+    public string? Denanimal { get; set; }
 
     public DateTime? Denfechacierre { get; set; }
 
@@ -29,13 +33,17 @@ public partial class VistaDenuncia
 
     public bool? Densalarios { get; set; }
 
+    public string? Denubicacion { get; set; }
+
+    public string? Dencategoria { get; set; }
+
+    public string? Densesion { get; set; }
+
     public string? Estado { get; set; }
 
     public string? MotivoCierre { get; set; }
 
-    public string? UsuarioNombre { get; set; }
-
-    public string? UsuarioApellido { get; set; }
+    public string? UsuarioNombreCompleto { get; set; }
 
     public string? UsuarioTelefono { get; set; }
 

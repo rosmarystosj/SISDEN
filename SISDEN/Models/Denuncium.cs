@@ -35,9 +35,13 @@ public partial class Denuncium
 
     public int? DenIdmotivocierre { get; set; }
 
-    public int? DenIdubicacion { get; set; }
+    public string? Denubicacion { get; set; }
 
     public int? DenIdusuario { get; set; }
 
     public int? DenIdestado { get; set; }
+
+    public string? Densesion { get; set; }
+
+    public string? Dencategoria { get; set; }
 }

@@ -32,7 +32,7 @@
 
         public int? DenIdmotivocierre { get; set; }
 
-        public int? DenIdubicacion { get; set; }
+        public string? DenIdubicacion { get; set; }
 
         public int? DenIdusuario { get; set; }
 

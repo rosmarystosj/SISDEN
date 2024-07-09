@@ -83,7 +83,7 @@ public partial class SisdemContext : DbContext
     {
         modelBuilder.Entity<Articulo>(entity =>
         {
-            entity.HasKey(e => e.Idarticulo).HasName("PK__ARTICULO__51E79CEF00457179");
+            entity.HasKey(e => e.Idarticulo).HasName("PK__ARTICULO__51E79CEF5E657D69");
 
             entity.ToTable("ARTICULO");
 
@@ -100,7 +100,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Capitulo>(entity =>
         {
-            entity.HasKey(e => e.Idcapitulo).HasName("PK__CAPITULO__E247373F8EB78E03");
+            entity.HasKey(e => e.Idcapitulo).HasName("PK__CAPITULO__E247373F2C9CCD1F");
 
             entity.ToTable("CAPITULO");
 
@@ -189,7 +189,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Entidadautorizadum>(entity =>
         {
-            entity.HasKey(e => e.Identidadaut).HasName("PK__ENTIDADA__8DDD21D0E37D3EDE");
+            entity.HasKey(e => e.Identidadaut).HasName("PK__ENTIDADA__8DDD21D0B58FA8B0");
 
             entity.ToTable("ENTIDADAUTORIZADA");
 
@@ -206,7 +206,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Estado>(entity =>
         {
-            entity.HasKey(e => e.Idestado).HasName("PK__ESTADO__A93E12E2874D6F13");
+            entity.HasKey(e => e.Idestado).HasName("PK__ESTADO__A93E12E22E8CC0D5");
 
             entity.ToTable("ESTADO");
 
@@ -219,7 +219,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Evidencium>(entity =>
         {
-            entity.HasKey(e => e.Idevidencia).HasName("PK__EVIDENCI__281166CE6EF4DFA7");
+            entity.HasKey(e => e.Idevidencia).HasName("PK__EVIDENCI__281166CE8EBFE157");
 
             entity.ToTable("EVIDENCIA");
 
@@ -233,7 +233,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Leyviolacion>(entity =>
         {
-            entity.HasKey(e => e.Idviolacion).HasName("PK__LEYVIOLA__FF7F417AF18F831C");
+            entity.HasKey(e => e.Idviolacion).HasName("PK__LEYVIOLA__FF7F417A73747957");
 
             entity.ToTable("LEYVIOLACION");
 
@@ -245,7 +245,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Motivocierre>(entity =>
         {
-            entity.HasKey(e => e.Idmotivo).HasName("PK__MOTIVOCI__BE3091F4F4EC55C2");
+            entity.HasKey(e => e.Idmotivo).HasName("PK__MOTIVOCI__BE3091F4A0024126");
 
             entity.ToTable("MOTIVOCIERRE");
 
@@ -258,7 +258,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Opcionpreguntum>(entity =>
         {
-            entity.HasKey(e => e.Idopcionpreg).HasName("PK__OPCIONPR__F9FF149BA0E3AE08");
+            entity.HasKey(e => e.Idopcionpreg).HasName("PK__OPCIONPR__F9FF149BDE1B360A");
 
             entity.ToTable("OPCIONPREGUNTA");
 
@@ -274,7 +274,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Preguntum>(entity =>
         {
-            entity.HasKey(e => e.Idpregunta).HasName("PK__PREGUNTA__177765F7963217DD");
+            entity.HasKey(e => e.Idpregunta).HasName("PK__PREGUNTA__177765F7F1158584");
 
             entity.ToTable("PREGUNTA");
 
@@ -289,7 +289,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Puntosart>(entity =>
         {
-            entity.HasKey(e => e.Idpuntoart).HasName("PK__PUNTOSAR__412B9EA475C35667");
+            entity.HasKey(e => e.Idpuntoart).HasName("PK__PUNTOSAR__412B9EA41C007C35");
 
             entity.ToTable("PUNTOSART");
 
@@ -306,7 +306,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Respuestum>(entity =>
         {
-            entity.HasKey(e => e.Idrespuesta).HasName("PK__RESPUEST__0B6869FD2473316C");
+            entity.HasKey(e => e.Idrespuesta).HasName("PK__RESPUEST__0B6869FDA4E58EF1");
 
             entity.ToTable("RESPUESTA");
 
@@ -321,7 +321,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Idrol).HasName("PK__ROLES__A686519E3F548FC9");
+            entity.HasKey(e => e.Idrol).HasName("PK__ROLES__A686519EBA6E9B03");
 
             entity.ToTable("ROLES");
 
@@ -334,7 +334,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Seccion>(entity =>
         {
-            entity.HasKey(e => e.Idseccion).HasName("PK__SECCION__4956D4230A2A9E52");
+            entity.HasKey(e => e.Idseccion).HasName("PK__SECCION__4956D4235068D495");
 
             entity.ToTable("SECCION");
 
@@ -370,7 +370,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Tipoevidencium>(entity =>
         {
-            entity.HasKey(e => e.Idtipoevid).HasName("PK__TIPOEVID__789FB5A13AA461DC");
+            entity.HasKey(e => e.Idtipoevid).HasName("PK__TIPOEVID__789FB5A1E2EACE8B");
 
             entity.ToTable("TIPOEVIDENCIA");
 
@@ -383,7 +383,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Tipopreguntum>(entity =>
         {
-            entity.HasKey(e => e.Idtipo).HasName("PK__TIPOPREG__E57FEC10EF926F7A");
+            entity.HasKey(e => e.Idtipo).HasName("PK__TIPOPREG__E57FEC1033E74356");
 
             entity.ToTable("TIPOPREGUNTA");
 
@@ -396,7 +396,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Ubicacion>(entity =>
         {
-            entity.HasKey(e => e.Idubicacion).HasName("PK__UBICACIO__781B28C995A20C55");
+            entity.HasKey(e => e.Idubicacion).HasName("PK__UBICACIO__781B28C902A76A86");
 
             entity.ToTable("UBICACION");
 

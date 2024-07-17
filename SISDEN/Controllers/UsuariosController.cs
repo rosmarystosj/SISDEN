@@ -49,10 +49,7 @@ namespace SISDEN.Controllers
         public async Task<IActionResult> LoginDenunciante([FromBody] LoginModel loginModel)
 
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+           
             var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuidentificacion == loginModel.Usuidentificacion);
             if (usuarioLogin == null)
             {
@@ -72,10 +69,7 @@ namespace SISDEN.Controllers
         [HttpPost("api/loginEntidad")]
         public async Task<IActionResult> LoginEntidad([FromBody] LoginModel loginModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            
             var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == loginModel.Usuemail);
             if (usuarioLogin == null)
             {
@@ -111,7 +105,6 @@ namespace SISDEN.Controllers
                 Usuverificacion = Guid.NewGuid().ToString(),
                 Usucontraseña =  passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
                 Usurol = 1,
-                Usuentidad = registroModelo.Usuentidad,
                 Usustatus = registroModelo.Usustatus,
                 Usutelefono = registroModelo.Usutelefono,
                 Usutelefono2 = registroModelo.Usutelefono2,
@@ -139,7 +132,7 @@ namespace SISDEN.Controllers
 
         }
         [HttpPost("api/validarEntidad")]
-        public async Task<IActionResult> ValidarEntidad([FromBody] RegistroModelo registroModelo)
+        public async Task<IActionResult> ValidarEntidad([FromBody] EntidadModel registroModelo)
         {
             if (!ModelState.IsValid)
             {
@@ -191,7 +184,7 @@ namespace SISDEN.Controllers
         }
 
         [HttpPost("api/registroEntidad")]
-        public async Task<IActionResult> RegistroEntidad([FromBody] RegistroModelo registroModelo)
+        public async Task<IActionResult> RegistroEntidad([FromBody] EntidadModel registroModelo)
         {
             if (!ModelState.IsValid)
             {
@@ -251,8 +244,6 @@ namespace SISDEN.Controllers
                 usuario.Usuemail = registroModelo.Usuemail;
                 usuario.Usuidentificacion = registroModelo.Usuidentificacion;
                 usuario.Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usucontraseña);
-                usuario.Usuentidad = registroModelo.Usuentidad;
-                usuario.Usustatus = registroModelo.Usustatus;
                 usuario.Usutelefono = registroModelo.Usutelefono;
                 usuario.Usutelefono2 = registroModelo.Usutelefono2;
 

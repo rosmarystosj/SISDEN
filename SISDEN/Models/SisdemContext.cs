@@ -189,7 +189,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Entidadautorizadum>(entity =>
         {
-            entity.HasKey(e => e.Identidadaut).HasName("PK__ENTIDADA__8DDD21D010E12ABF");
+            entity.HasKey(e => e.Identidadaut).HasName("PK__ENTIDADA__8DDD21D008665DD7");
 
             entity.ToTable("ENTIDADAUTORIZADA");
 
@@ -404,7 +404,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Ubicacion>(entity =>
         {
-            entity.HasKey(e => e.Idubicacion).HasName("PK__UBICACIO__781B28C995A20C55");
+            entity.HasKey(e => e.Idubicacion).HasName("PK__UBICACIO__781B28C996FB4984");
 
             entity.ToTable("UBICACION");
 
@@ -413,12 +413,7 @@ public partial class SisdemContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("UBDESCRIPCION");
-            entity.Property(e => e.Ublatitud)
-                .HasColumnType("decimal(10, 5)")
-                .HasColumnName("UBLATITUD");
-            entity.Property(e => e.Ublongitud)
-                .HasColumnType("decimal(10, 5)")
-                .HasColumnName("UBLONGITUD");
+            entity.Property(e => e.UbiIdentidadaut).HasColumnName("UBI_IDENTIDADAUT");
         });
 
         modelBuilder.Entity<Usuario>(entity =>

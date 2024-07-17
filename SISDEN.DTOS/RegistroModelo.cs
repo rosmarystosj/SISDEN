@@ -32,6 +32,8 @@ namespace SISDEN.DTOS
         public string? Usutelefono { get; set; }
         public string? Usutelefono2 { get; set; }
 
+        [Required(ErrorMessage = "Este campo es requerido.")]
+        public int? Usuentidad { get; set; }
         public string? Usustatus { get; set; }
         
 

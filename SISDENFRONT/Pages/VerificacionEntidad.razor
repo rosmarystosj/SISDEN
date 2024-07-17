@@ -6,7 +6,7 @@
 
 <div class="verifica-correo">
     <div class="mensaje">
-        <h1>Revisa tu bandeja de entrada en <strong>@RegistroService.RegistroModelo.Usuemail</strong></h1>
+        <h1>Revisa tu bandeja de entrada en <strong>@RegistroService.EntidadModelo.Usuemail</strong></h1>
         <p>Acabamos de enviarte un enlace para verificar tu cuenta en nuestra plataforma.</p>
         <p>A veces el correo puede caer en filtros de spam. Puede que quieras añadir <strong>sistemasdedenucias@gmail.com</strong> a tu libreta de direcciones para que no te pierdas ninguna notificación importante.</p>
     </div>
@@ -23,7 +23,7 @@
         try
         {
             errorMessage = null;
-            var result = await AuthService.RegistroEntidad(RegistroService.RegistroModelo);
+            var result = await AuthService.RegistroEntidad(RegistroService.EntidadModelo);
             NavigationManager.NavigateTo("/Home");
         }
         catch (ApplicationException ex)

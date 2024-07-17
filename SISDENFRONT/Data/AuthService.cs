@@ -27,9 +27,9 @@ namespace SISDENFRONT.Data
                 throw new ApplicationException(errorMessage);
             }
         }
-        public async Task<string> ValidarEntidad(RegistroModelo registroModelo)
+        public async Task<string> ValidarEntidad(EntidadModel entidadModelo)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/validarEntidad", registroModelo);
+            var response = await _httpClient.PostAsJsonAsync("api/validarEntidad", entidadModelo);
 
             if (response.IsSuccessStatusCode)
             {
@@ -67,9 +67,9 @@ namespace SISDENFRONT.Data
                 throw new ApplicationException(errorMessage);
             }
         }
-        public async Task<bool> RegistroEntidad(RegistroModelo registroModelo)
+        public async Task<bool> RegistroEntidad(EntidadModel entidadModelo)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/registroEntidad", registroModelo);
+            var response = await _httpClient.PostAsJsonAsync("api/registroEntidad", entidadModelo);
 
             if (response.IsSuccessStatusCode)
             {

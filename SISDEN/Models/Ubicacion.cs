@@ -9,7 +9,5 @@ public partial class Ubicacion
 
     public string? Ubdescripcion { get; set; }
 
-    public decimal? Ublatitud { get; set; }
-
-    public decimal? Ublongitud { get; set; }
+    public int UbiIdentidadaut { get; set; }
 }

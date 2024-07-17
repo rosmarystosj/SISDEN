@@ -1,0 +1,69 @@
+﻿@page "/registro-denunciante"
+@inject AuthService AuthService
+@inject RegistroDenuncianteService RegistroService
+@inject NavigationManager NavigationManager
+
+<h3>Registro</h3>
+
+<EditForm Model="RegistroService.RegistroModelo">
+    <DataAnnotationsValidator />
+    <Validaciones TModel="RegistroModelo" />
+    <div>
+        <label for="Usunombre">Nombre</label>
+        <InputText id="Usunombre" @bind-Value="RegistroService.RegistroModelo.Usunombre" />
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usunombre)" class="validation-message" />
+    </div>
+    <div>
+        <label for="Usuapellido">Apellido</label>
+        <InputText id="Usuapellido" @bind-Value="RegistroService.RegistroModelo.Usuapellido" />
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuapellido)" class="validation-message" />
+    </div>
+    <div>
+        <label for="Usuemail">Email</label>
+        <InputText id="Usuemail" @bind-Value="RegistroService.RegistroModelo.Usuemail" />
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuemail)" class="validation-message" />
+    </div>
+    <div>
+        <label for="Usuidentificacion">Cédula</label>
+        <InputText id="Usuidentificacion" @bind-Value="RegistroService.RegistroModelo.Usuidentificacion" />
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuidentificacion)" class="validation-message" />
+    </div>
+    <div>
+        <label for="Usucontraseña">Contraseña</label>
+        <InputText id="Usucontraseña" @bind-Value="RegistroService.RegistroModelo.Usucontraseña" type="password" />
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usucontraseña)" class="validation-message" />
+    </div>
+    <div>
+        <label for="Usutelefono">Teléfono</label>
+        <InputText id="Usutelefono" @bind-Value="RegistroService.RegistroModelo.Usutelefono" />
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usutelefono)" class="validation-message" />
+    </div>
+    <a @onclick="HandleRegister"><button type="submit">Siguiente</button></a>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@code {
+    private string errorMessage;
+    private async Task HandleRegister()
+    {
+        try
+        {
+            errorMessage = null;
+            var result = await AuthService.ValidarDenunciante(RegistroService.RegistroModelo);
+            NavigationManager.NavigateTo("/verificacion-denunciante");
+        }
+        catch (ApplicationException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ocurrió un error inesperado.";
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

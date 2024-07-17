@@ -1,11 +1,11 @@
-﻿@page "/loginEntidad"
+﻿@page "/login-entidad"
 @inject AuthService AuthService
 @inject NavigationManager NavigationManager
 @using System.ComponentModel.DataAnnotations
 
 <h3>Login Entidad</h3>
 
-<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+<EditForm Model="loginModel">
     <DataAnnotationsValidator />
     <Validaciones TModel="LoginModel"/>
 
@@ -21,7 +21,7 @@
         <ValidationMessage For="@(() => loginModel.Usucontraseña)" class="validation-message" />
 
     </div>
-    <button type="submit">Login</button>
+    <a @onclick="HandleLogin"><button type="submit">Siguiente</button></a>
 </EditForm>
 
 @if (!string.IsNullOrEmpty(errorMessage))

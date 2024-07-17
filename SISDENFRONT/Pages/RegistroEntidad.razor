@@ -5,14 +5,13 @@
 @inject RegistroEntidadService RegistroService
 
 <h3>Registro</h3>
-
-<EditForm Model="RegistroService.RegistroModelo" OnValidSubmit="HandleRegisterEntidad">
+<EditForm Model="RegistroService.EntidadModelo">
     <DataAnnotationsValidator />
-    <Validaciones TModel="RegistroModelo" />
+    <Validaciones TModel="EntidadModel"/>
 
     <div>
         <label for="Usuentidad">Entidad</label>
-        <InputSelect id="Usuentidad" @bind-Value="RegistroService.RegistroModelo.Usuentidad">
+        <InputSelect id="Usuentidad" @bind-Value="RegistroService.EntidadModelo.Usuentidad">
             <option value="">Selecciona tu entidad</option>
             @if (entidades != null)
             {
@@ -22,27 +21,25 @@
                 }
             }
         </InputSelect>
-        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuentidad)" />
-
+        <ValidationMessage For="@(() => RegistroService.EntidadModelo.Usuentidad)" />
     </div>
 
     <div>
         <label for="Usucontraseña">Contraseña</label>
-        <InputText id="Usucontraseña" @bind-Value="RegistroService.RegistroModelo.Usucontraseña" type="password" />
+        <InputText id="Usucontraseña" @bind-Value="RegistroService.EntidadModelo.Usucontraseña" type="password" />
+        <ValidationMessage For="@(() => RegistroService.EntidadModelo.Usucontraseña)" />
     </div>
-    <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usucontraseña)" />
-
 
     <div>
         <label for="Usutelefono">Teléfono</label>
-        <InputText id="Usutelefono" @bind-Value="RegistroService.RegistroModelo.Usutelefono" />
-        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usutelefono)" />
-
+        <InputText id="Usutelefono" @bind-Value="RegistroService.EntidadModelo.Usutelefono" />
+        <ValidationMessage For="@(() => RegistroService.EntidadModelo.Usutelefono)" />
     </div>
-
-    <button type="submit">Siguiente</button>
+        
+        <a @onclick="HandleRegisterEntidad"><button type="submit">Siguiente</button></a>
 </EditForm>
 
+   
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <div class="alert alert-danger">@errorMessage</div>
@@ -52,6 +49,7 @@
     private List<EntidadAutorizadaDTO> entidades;
 
     private string errorMessage;
+    private string textodeprueba;
 
     protected override async Task OnInitializedAsync()
     {
@@ -71,8 +69,8 @@
         try
         {
             errorMessage = null;
-            var email = await AuthService.ValidarEntidad(RegistroService.RegistroModelo);
-            RegistroService.RegistroModelo.Usuemail = email;
+            var email = await AuthService.ValidarEntidad(RegistroService.EntidadModelo);
+            RegistroService.EntidadModelo.Usuemail = email;
             NavigationManager.NavigateTo("/verificacion-entidad");
         }
         catch (ApplicationException ex)
@@ -85,4 +83,6 @@
             Console.WriteLine(ex.Message);
         }
     }
-}
+    
+    }
+

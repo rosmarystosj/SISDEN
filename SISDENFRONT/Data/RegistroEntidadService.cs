@@ -4,7 +4,7 @@ namespace SISDENFRONT.Data
 {
     public class RegistroEntidadService
     {
-        public RegistroModelo RegistroModelo { get; set; } = new RegistroModelo();
+        public EntidadModel EntidadModelo { get; set; } = new EntidadModel();
 
     }
 }

@@ -72,7 +72,7 @@ namespace SISDEN.Controllers
         }
 
         [HttpPost("api/Leyviolacion")]
-        public async Task<ActionResult<LeyviolacionDTO>> PostLeyviolacion(LeyviolacionDTO leyviolacionDto)
+        public async Task<ActionResult<LeyviolacionDTO>> PostLeyviolacion([FromBody] LeyviolacionDTO leyviolacionDto)
         {
             var leyviolacion = new Leyviolacion
             {
@@ -91,7 +91,7 @@ namespace SISDEN.Controllers
         }
 
         [HttpPut("api/Leyviolacion/id")]
-        public async Task<IActionResult> PutLeyviolacion(int id, LeyviolacionDTO leyviolacionDto)
+        public async Task<IActionResult> PutLeyviolacion([FromBody] int id, LeyviolacionDTO leyviolacionDto)
         {
             if (id != leyviolacionDto.Idviolacion)
             {

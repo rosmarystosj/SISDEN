@@ -1,0 +1,40 @@
+﻿@page "/verificacion-entidad"
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+@inject RegistroEntidadService RegistroService
+
+
+<div class="verifica-correo">
+    <div class="mensaje">
+        <h1>Revisa tu bandeja de entrada en <strong>@RegistroService.RegistroModelo.Usuemail</strong></h1>
+        <p>Acabamos de enviarte un enlace para verificar tu cuenta en nuestra plataforma.</p>
+        <p>A veces el correo puede caer en filtros de spam. Puede que quieras añadir <strong>sistemasdedenucias@gmail.com</strong> a tu libreta de direcciones para que no te pierdas ninguna notificación importante.</p>
+    </div>
+</div>
+
+<button @onclick="HandleRegister">Siguiente</button>
+
+@code {
+
+    private string errorMessage;
+
+    private async Task HandleRegister()
+    {
+        try
+        {
+            errorMessage = null;
+            var result = await AuthService.RegistroEntidad(RegistroService.RegistroModelo);
+            NavigationManager.NavigateTo("/Home");
+        }
+        catch (ApplicationException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ocurrio un error inesperado.";
+            Console.WriteLine(ex.Message);
+        }
+    }
+  
+}

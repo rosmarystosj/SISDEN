@@ -1,0 +1,56 @@
+﻿@page "/loginDenunciante"
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+
+<h3>Login</h3>
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <Validaciones TModel="LoginModel" />
+
+    <div>
+        <label for="Usuidentificacion">Usuario</label>
+        <InputText id="Usuidentificacion" @bind-Value="loginModel.Usuidentificacion" />
+        <ValidationMessage For="@(() => loginModel.Usuidentificacion)" class="validation-message" />
+
+    </div>
+    <div>
+        <label for="Usucontraseña">Contraseña</label>
+        <InputText id="Usucontraseña" @bind-Value="loginModel.Usucontraseña" type="password" />
+        <ValidationMessage For="@(() => loginModel.Usucontraseña)" class="validation-message" />
+
+    </div>
+    <button type="submit">Login</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private string errorMessage;
+
+    private async Task HandleLogin()
+    {
+    try
+    {
+        errorMessage = null;
+        var result = await AuthService.LoginDenunciante(loginModel);
+        NavigationManager.NavigateTo("/Home");
+    }
+    catch (ApplicationException ex)
+    {
+        errorMessage = ex.Message;
+    }
+    catch (Exception ex)
+    {
+        errorMessage = "An unexpected error occurred.";
+        Console.WriteLine(ex.Message);
+    }
+    }
+
+   
+}

@@ -1,0 +1,22 @@
+﻿@using System.ComponentModel.DataAnnotations
+@inject IServiceProvider ServiceProvider
+
+@typeparam TModel
+
+@if (EditContext != null)
+{
+    @foreach (var message in GetValidationMessages())
+    {
+        <div class="validation-message">@message</div>
+    }
+}
+
+@code {
+    [CascadingParameter] EditContext EditContext { get; set; }
+
+    private IEnumerable<string> GetValidationMessages()
+    {
+        var messages = EditContext.GetValidationMessages();
+        return messages.Select(message => message.StartsWith(". ") ? message.Substring(2) : message);
+    }
+}

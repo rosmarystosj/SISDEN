@@ -45,68 +45,60 @@ namespace SISDEN.Controllers
             }
            return usuario;
         }
-        [HttpPost("api/Login")]
+        [HttpPost("api/loginDenunciante")]
+        public async Task<IActionResult> LoginDenunciante([FromBody] LoginModel loginModel)
 
-        public async Task<IActionResult> Login(LoginModel loginModel)
         {
-
+            if (!ModelState.IsValid)
             {
-                if (loginModel == null)
-                {
-                    return BadRequest("Datos de login inválidos.");
-                }
-
-                var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuidentificacion == loginModel.Usuidentificacion);
-                if (usuarioLogin == null)
-                {
-                    return NotFound("Usuario no encontrado.");
-                }
-
-                var passwordHasher = new PasswordHasher<Usuario>();
+                return BadRequest(ModelState);
+            }
+            var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuidentificacion == loginModel.Usuidentificacion);
+            if (usuarioLogin == null)
+            {
+                return Unauthorized("Datos invalidos.");
+            }
+            var passwordHasher = new PasswordHasher<Usuario>();
                 var result = passwordHasher.VerifyHashedPassword(usuarioLogin, usuarioLogin.Usucontraseña, loginModel.Usucontraseña);
 
                 if (result == PasswordVerificationResult.Failed)
                 {
-                    return Unauthorized("Contraseña incorrecta.");
+                    return Unauthorized("Datos invalidos.");
                 }
 
                 return Ok("Login exitoso.");
+            
+        }
+        [HttpPost("api/loginEntidad")]
+        public async Task<IActionResult> LoginEntidad([FromBody] LoginModel loginModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
+            var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == loginModel.Usuemail);
+            if (usuarioLogin == null)
+            {
+                return Unauthorized("Datos invalidos.");
+            }
+            var passwordHasher = new PasswordHasher<Usuario>();
+            var result = passwordHasher.VerifyHashedPassword(usuarioLogin, usuarioLogin.Usucontraseña, loginModel.Usucontraseña);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                return Unauthorized("Datos invalidos.");
+            }
+
+            return Ok("Login exitoso.");
+
         }
 
-        [HttpPost("api/RegistroUsuario")]
-        public async Task<IActionResult> Registro([FromBody] RegistroModelo registroModelo, int usurol, string via)
-
+        [HttpPost("api/registroDenunciante")]
+        public async Task<IActionResult> RegistroDenunciante([FromBody] RegistroModelo registroModelo, string via)
         {
-            if (registroModelo.tipodeidentificacion == "Cedula")
+            if (!ModelState.IsValid)
             {
-                bool esCedula = Regex.IsMatch(registroModelo.Usuidentificacion, @"^\d{11}$");
-                if (!esCedula)
-                {
-                    return BadRequest("La cedula solo debe contener 11 numeros.");
-                }
-                var verificacionCedula = VerificarCedula(registroModelo.Usuidentificacion);
-                if (!verificacionCedula)
-                {
-                    return BadRequest("Cédula no válida");
-                }
-            }
-            else if (registroModelo.tipodeidentificacion == "Pasaporte")
-            {
-                bool esPasaporte = Regex.IsMatch(registroModelo.Usuidentificacion, @"^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9]{8,9}$");
-                if (!esPasaporte)
-                {
-                    return BadRequest("El pasaporte debe contener solo 8 o 9 caracteres alfanuméricos.");
-                }
-            }
-            else
-            {
-                return BadRequest("Tipo de identificación no válido. Debe ser 'cedula' o 'pasaporte'.");
-            }
-
-            if (_context.Usuarios.Any(u => u.Usuidentificacion == registroModelo.Usuidentificacion))
-            {
-                return BadRequest("Este usuario ya está registrado");
+                return BadRequest(ModelState);
             }
             var passwordHasher = new PasswordHasher<Usuario>();
 
@@ -118,15 +110,15 @@ namespace SISDEN.Controllers
                 Usuidentificacion= registroModelo.Usuidentificacion,
                 Usuverificacion = Guid.NewGuid().ToString(),
                 Usucontraseña =  passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
-                Usurol = usurol,
+                Usurol = 1,
                 Usuentidad = registroModelo.Usuentidad,
                 Usustatus = registroModelo.Usustatus,
                 Usutelefono = registroModelo.Usutelefono,
                 Usutelefono2 = registroModelo.Usutelefono2,
-
             };
 
-            if (usurol == 1 && via == "whatsapp")
+
+            if (via == "whatsapp")
             {
                 usuario.Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usuidentificacion);
             }
@@ -146,8 +138,101 @@ namespace SISDEN.Controllers
                 return Ok(new { Link = verificationLink, Data = registroModelo });
 
         }
+        [HttpPost("api/validarEntidad")]
+        public async Task<IActionResult> ValidarEntidad([FromBody] RegistroModelo registroModelo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            if (_context.Usuarios.Any(u => u.Usuentidad == registroModelo.Usuentidad))
+            {
+                return BadRequest("Datos inválidos");
+            }
+           
+            var mail = await _context.Entidadautorizada
+                .Where(ea => ea.Identidadaut == registroModelo.Usuentidad)
+                .Select(ea => ea.EntCorreo).FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(mail))
+            {
+                return BadRequest("Correo no encontrado para la entidad");
+            }
+
+            return Ok(new { Usuemail = mail });
+           
+
+            
+        }
+        [HttpPost("api/validarDenunciante")]
+        public async Task<IActionResult> ValidarDenunciante([FromBody] RegistroModelo registroModelo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            bool esCedula = Regex.IsMatch(registroModelo.Usuidentificacion, @"^\d{11}$");
+            if (!esCedula)
+            {
+                return BadRequest("La cedula solo debe contener 11 numeros.");
+            }
+            var verificacionCedula = VerificarCedula(registroModelo.Usuidentificacion);
+            if (!verificacionCedula)
+            {
+                return BadRequest("Cédula no válida");
+            }
+            if (_context.Usuarios.Any(u => u.Usuidentificacion == registroModelo.Usuidentificacion))
+            {
+                return BadRequest("Datos invalidos");
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("api/registroEntidad")]
+        public async Task<IActionResult> RegistroEntidad([FromBody] RegistroModelo registroModelo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var passwordHasher = new PasswordHasher<Usuario>();
+
+            var usuario = new Usuario
+            {
+                Usuverificacion = Guid.NewGuid().ToString(),
+                Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
+                Usurol = 2,
+                Usuentidad = registroModelo.Usuentidad,
+                Usustatus = registroModelo.Usustatus,
+                Usutelefono = registroModelo.Usutelefono,
+            };
+
+            var mail = await _context.Entidadautorizada
+                .Where(ea => ea.Identidadaut == registroModelo.Usuentidad)
+                .Select(ea => ea.EntCorreo).FirstOrDefaultAsync();
+
+             usuario.Usuemail = mail;
+
+
+            var verificationLink = Url.Action("VerifyEmail", "Usuarios", new { token = usuario.Usuverificacion }, Request.Scheme);
+
+            var subject = "Confirmación de registro";
+            var message = $"<h1>Bienvenido, </h1><p>Gracias por registrarte en nuestra aplicación de registro y gestion de denucnas contra el maltrato animal.</p>" +
+                          $"<p>Por favor, verifica tu cuenta como entidad haciendo clic en el siguiente enlace: <a href='{verificationLink}'>Verificar cuenta</a></p>";
+
+            await _emailService.SendEmailAsync(mail, subject, message);
+
+            _context.Usuarios.Add(usuario);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Link = verificationLink, Usuemail = usuario.Usuemail });
+
+        }
+
         [HttpPut("api/EditarUsuario")]
-        public async Task<IActionResult> PutUsuario(int id, RegistroModelo registroModelo)
+        public async Task<IActionResult> PutUsuario([FromBody]  int id, RegistroModelo registroModelo)
         {
             if (registroModelo == null)
             {
@@ -197,7 +282,7 @@ namespace SISDEN.Controllers
         [HttpDelete("api/EliminarUsuario/{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Idusuario == id);
             if (usuario == null)
             {
                 return NotFound();

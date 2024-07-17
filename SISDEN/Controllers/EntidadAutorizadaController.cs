@@ -27,7 +27,10 @@ namespace SISDEN.Controllers
                 {
                     Identidadaut = e.Identidadaut,
                     Entautorizadadescp = e.Entautorizadadescp,
-                    EntautorizadaEstatus = e.EntautorizadaEstatus
+                    EntautorizadaEstatus = e.EntautorizadaEstatus,
+                    EntCorreo = e.EntCorreo,
+                    EntidadSector = e.EntidadSector,    
+                    
                 }).ToListAsync();
         }
 
@@ -40,7 +43,9 @@ namespace SISDEN.Controllers
                 {
                     Identidadaut = e.Identidadaut,
                     Entautorizadadescp = e.Entautorizadadescp,
-                    EntautorizadaEstatus = e.EntautorizadaEstatus
+                    EntautorizadaEstatus = e.EntautorizadaEstatus,
+                    EntCorreo = e.EntCorreo,
+                    EntidadSector = e.EntidadSector,
                 }).FirstOrDefaultAsync(e => e.Identidadaut == id);
 
             if (entidadAutorizada == null)

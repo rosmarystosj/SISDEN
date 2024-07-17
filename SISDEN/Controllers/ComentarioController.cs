@@ -22,7 +22,7 @@ namespace SISDEN.Controllers
         }
 
         [HttpPost("api/Comentario")]
-        public async Task<ActionResult<ComentarioDTO>> PostComentario(ComentarioDTO comentarioDto)
+        public async Task<ActionResult<ComentarioDTO>> PostComentario([FromBody] ComentarioDTO comentarioDto)
         {
             var comentario = new Comentario
             {
@@ -92,7 +92,7 @@ namespace SISDEN.Controllers
         }
 
         [HttpPut("api/Comentario/id")]
-        public async Task<IActionResult> PutComentario(int id, ComentarioDTO comentarioDto)
+        public async Task<IActionResult> PutComentario([FromBody] int id, ComentarioDTO comentarioDto)
         {
             if (id != comentarioDto.Idcomentario)
             {

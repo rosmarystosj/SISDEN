@@ -36,7 +36,7 @@ namespace SISDEN.Controllers
         }
 
         [HttpPost("api/GuardarRespuesta")]
-        public async Task<ActionResult> PostRespuesta(RespuestasDTO respuestasDTO, string sesionid)
+        public async Task<ActionResult> PostRespuesta([FromBody] RespuestasDTO respuestasDTO, string sesionid)
         {
             if (respuestasDTO == null)
             {
@@ -91,7 +91,7 @@ namespace SISDEN.Controllers
         }
 
         [HttpPut("api/EditarRespuesta/{id}")]
-        public async Task<IActionResult> PutRespuesta(int id, RespuestasDTO respuestasDTO)
+        public async Task<IActionResult> PutRespuesta([FromBody] int id, RespuestasDTO respuestasDTO)
         {
             if (respuestasDTO == null)
             {

@@ -53,7 +53,7 @@ namespace SISDEN.Controllers
 
        
         [HttpPost("api/Estado")]
-        public async Task<ActionResult<EstadoDTO>> PostEstado(EstadoDTO estadoDto)
+        public async Task<ActionResult<EstadoDTO>> PostEstado([FromBody] EstadoDTO estadoDto)
         {
             var estado = new Estado
             {

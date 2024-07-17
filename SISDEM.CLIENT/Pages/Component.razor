@@ -1,0 +1,84 @@
+﻿@page "/registro-entidad"
+@inject AuthService AuthService
+@inject EntidadService EntidadService
+@inject NavigationManager NavigationManager
+@inject RegistroEntidadService RegistroService
+
+<h3>Registro</h3>
+
+<EditForm Model="RegistroService.RegistroModelo" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator />
+    <Validaciones TModel="RegistroModelo" />
+
+    <div class="form-group">
+        <label for="Usuentidad">Entidad</label>
+        <InputSelect id="Usuentidad" class="form-control" @bind-Value="RegistroService.RegistroModelo.Usuentidad">
+            <option value="">Selecciona tu entidad</option>
+            @if (entidades != null)
+            {
+                @foreach (var entidad in entidades)
+                {
+                    <option value="@entidad.Identidadaut">@entidad.Entautorizadadescp</option>
+                }
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuentidad)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Usucontraseña">Contraseña</label>
+        <InputText id="Usucontraseña" class="form-control" @bind-Value="RegistroService.RegistroModelo.Usucontraseña" type="password" />
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usucontraseña)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Usutelefono">Teléfono</label>
+        <InputText id="Usutelefono" class="form-control" @bind-Value="RegistroService.RegistroModelo.Usutelefono" />
+        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usutelefono)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Siguiente</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@code {
+    private List<EntidadAutorizadaDTO> entidades;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            entidades = await EntidadService.GetEntidadesAutorizadasAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading entities.";
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task HandleRegister()
+    {
+        try
+        {
+            errorMessage = null;
+            var email = await AuthService.ValidarEntidad(RegistroService.RegistroModelo);
+            RegistroService.RegistroModelo.Usuemail = email;
+            NavigationManager.NavigateTo("/verificacion-entidad");
+        }
+        catch (ApplicationException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ocurrio un error inesperado.";
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

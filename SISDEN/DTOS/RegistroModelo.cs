@@ -1,36 +1,41 @@
-﻿namespace SISDEN.DTOS
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SISDEN.DTOS
 {
     public class RegistroModelo
     {
+        [Required(ErrorMessage = "Este campo es requerido.")]
 
-        public string Usunombre { get; set; }
-        public string Usuapellido { get; set; }
+        public string? Usunombre { get; set; }
+
+        [Required(ErrorMessage = "Este campo es requerido.")]
+
+        public string? Usuapellido { get; set; }
+
+        [EmailAddress(ErrorMessage = "Digite un correo valido.")]
+        [Required(ErrorMessage = "Este campo es requerido.")]
+
+        public string? Usuemail { get; set; }
+
+        [Required(ErrorMessage = "Este campo es requerido.")]
+
         public string? Usuidentificacion { get; set; }
-        public string? Usuverificacion { get; set; }
 
+        [Required(ErrorMessage = "Este campo es requerido.")]
+        [MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres.")]
         public string? Usucontraseña { get; set; }
 
+        public int Usurol { get; set; }
+        public string? Usuverificacion { get; set; }
+
+        [Required(ErrorMessage = "Este campo es requerido.")]
         public string? Usutelefono { get; set; }
         public string? Usutelefono2 { get; set; }
-        public string? Usuemail { get; set; }
+
+        [Required(ErrorMessage = "Este campo es requerido.")]
         public int? Usuentidad { get; set; }
         public string? Usustatus { get; set; }
-        public int Usurol { get; set; }
         
-        public String tipodeidentificacion { get; set; }
 
-        public string QuitarGuion(string cedula)
-        {
-            string cedulaSinGuion = "";
-
-            foreach (char c in cedula)
-            {
-                if (c >= '0' && c <= '9' && c != '-')
-                {
-                    cedulaSinGuion = ((string.Concat(cedulaSinGuion, c)));
-                }
-            }
-            return cedulaSinGuion;
-        }
     }
 }

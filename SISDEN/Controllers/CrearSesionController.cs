@@ -19,7 +19,7 @@ namespace SISDEN.Controllers
 
         [HttpPost("api/CrearSesion")]
 
-        public async Task<IActionResult> IniciarChat(string userid)
+        public async Task<IActionResult> IniciarChat([FromBody] string userid)
         {
             var sesionid = await _sesion.ObtenerSesionID(userid);
 

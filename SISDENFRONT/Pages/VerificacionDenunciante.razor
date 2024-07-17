@@ -1,0 +1,41 @@
+﻿@page "/verificacion-denunciante"
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+@inject RegistroDenuncianteService RegistroDenuncianteService
+
+<div class="verifica-correo">
+<div class="mensaje">
+<h1>Revisa tu bandeja de entrada en <strong>@RegistroDenuncianteService.RegistroModelo.Usuemail</strong></h1>
+<p>Acabamos de enviarte un enlace para verificar tu cuenta en nuestra plataforma.</p>
+<p>A veces el correo puede caer en filtros de spam. Puede que quieras añadir <strong>[sistemasdedenuncias@gmail.com](mailto:sistemasdedenuncias@gmail.com)</strong> a tu libreta de direcciones para que no te pierdas ninguna notificación importante.</p>
+</div>
+</div>
+
+<button @onclick="HandleRegister">Siguiente</button>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+<div class="alert alert-danger">@errorMessage</div>
+}
+
+@code {
+private string errorMessage;
+    private async Task HandleRegister()
+    {
+        try
+        {
+            errorMessage = null;
+            var result = await AuthService.RegistroDenunciante(RegistroDenuncianteService.RegistroModelo, "web");
+            NavigationManager.NavigateTo("/Home");
+        }
+        catch (ApplicationException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ocurrió un error inesperado.";
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

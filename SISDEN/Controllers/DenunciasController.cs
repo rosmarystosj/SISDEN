@@ -9,8 +9,7 @@ using SISDEN.Models;
 using SISDEN.DTOS;
 using System.Data.SqlClient;
 using SISDEN.Services;
-using NuGet.Versioning;
-
+using Microsoft.Data.SqlClient;
 
 
 namespace SISDEN.Controllers
@@ -28,14 +27,31 @@ namespace SISDEN.Controllers
 
 
         }
-
         [HttpGet("api/ObtenerIDDenuncia/{sesionid}")]
         public async Task<IActionResult> GetIDDenuncias(string sesionid)
         {
             var denunciaid = await _registrarDenuncia.RegistrarDenunciaAsync(sesionid);
-            return Ok (new { denunciaid });
+            return Ok(new { denunciaid });
         }
 
+
+        [HttpGet("api/ObtenerDenuncias/entidad/{entidadid}")]
+        public async Task<IActionResult> GetIDDenunciasentidad(int entidadid)
+        {
+            if (entidadid == 13) {
+                var todasDenuncias = await _context.VistaDenuncias.ToListAsync();
+                return Ok(new { denuncias = todasDenuncias });
+            }
+            else {
+                var entidadIdParameter = new SqlParameter("@EntidadId", entidadid);
+
+                var denuncias = await _context.VistaDenuncias
+                    .FromSqlRaw("EXEC GetDenunciasByEntidadId @EntidadId", entidadIdParameter)
+                    .ToListAsync();
+
+                return Ok(new { denuncias });
+            }
+        }
         [HttpGet("api/ObtenerDenuncias")]
         public async Task<ActionResult<IEnumerable<VistaDenuncia>>> GetDenuncias()
         {

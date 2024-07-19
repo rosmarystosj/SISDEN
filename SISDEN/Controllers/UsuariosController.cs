@@ -20,6 +20,14 @@ namespace SISDEN.Controllers
         private readonly SisdemContext _context;
         private readonly IServicioEmail _emailService;
         private readonly IRegistrarDenuncia _registrarDenuncia;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager+
+            +
+            +
+            +;
+
+
+
 
         public UsuariosController(SisdemContext context, IServicioEmail emailService, IRegistrarDenuncia registrarDenuncia)
         {
@@ -428,6 +436,50 @@ namespace SISDEN.Controllers
 
             return Ok("Mensaje eviado");
             
+        }
+        [HttpPost("contraseña")]
+        public async Task<IActionResult> ForgotPassword([FromBody] OlvidarContraseña model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest("Correo electronico invalido.");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = Url.Action("ResetPassword", "Account", new { token, email = model.Email }, Request.Scheme);
+
+            await _emailService.SendEmailAsync(model.Email, "Cambio de Contraseña", $"Resetea tu contraseña haciendo click en el siguiente link: <a href='{resetLink}'>here</a>");
+
+
+            return Ok("Link enviado.");
+        }
+        [HttpGet("cambio-contraseña")]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token == null || email == null)
+                return BadRequest("Invalid token or email.");
+
+            var model = new ResetearContraseña { Token = token, Email = email };
+            return View(model); 
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetearContraseña model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest("Correo electronico invalido.");
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok("Contraseña cambiada.");
         }
 
         private bool UsuarioExists(int id)

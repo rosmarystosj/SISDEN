@@ -73,10 +73,8 @@ namespace SISDEN.Controllers
         [HttpPost("api/RegistarDenuncias")]
         public async Task<ActionResult> PostDenuncia([FromBody] DenunciasDTO denunciaDTO)
         {
-            if (denunciaDTO == null)
-            {
-                return BadRequest("Denuncia no válida");
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             try
             {
@@ -117,10 +115,8 @@ namespace SISDEN.Controllers
         [HttpPut("api/EditarDenuncia/{id}")]
         public async Task<IActionResult> PutDenuncia([FromBody] int id, DenunciasDTO denunciaDTO)
         {
-            if (denunciaDTO == null)
-            {
-                return BadRequest("Denuncia no valida");
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             try
             {
                 var denuncia = await _context.Denuncia.FirstOrDefaultAsync(d => d.Iddenuncia == id);

@@ -5,41 +5,107 @@
 
 <h3>Registro</h3>
 
-<EditForm Model="RegistroService.RegistroModelo">
-    <DataAnnotationsValidator />
-    <Validaciones TModel="RegistroModelo" />
-    <div>
-        <label for="Usunombre">Nombre</label>
-        <InputText id="Usunombre" @bind-Value="RegistroService.RegistroModelo.Usunombre" />
-        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usunombre)" class="validation-message" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/images/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/icofont.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/themify.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/flag-icon.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/feather-icon.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+    <link id="color" rel="stylesheet" href="../assets/css/color-1.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../assets/css/responsive.css">
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="row m-0">
+            <div class="col-12 p-0">
+                <div class="login-card login-dark">
+                    <div>
+                        <div><a class="logo" href="index.html"> <img class="img-fluid for-dark" src="../assets/images/logo/logo.png" alt="looginpage"><img class="img-fluid for-light" src="../assets/images/logo/logo_dark.png" alt="looginpage"></a></div>
+                        <div class="login-main">
+                            <EditForm class="theme-form" Model="RegistroService.RegistroModelo">
+                                <DataAnnotationsValidator />
+                                <Validaciones TModel="RegistroModelo" />
+
+                                <h4>Crea tu cuenta</h4>
+                                <p>Ingresa tus datos personales para crear una cuenta</p>
+                                <div class="form-group">
+                                    <label class="col-form-label pt-0">Yo</label>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <input class="form-control" type="text" required="" placeholder="Nombre" @bind="RegistroService.RegistroModelo.Usunombre" >
+                                            <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usunombre)" class="validation-message" />
+
+                                        </div>
+                                        <div class="col-6">
+                                            <input class="form-control" type="text" required="" placeholder="Apellido" @bind="RegistroService.RegistroModelo.Usuapellido">
+                                            <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuapellido)" class="validation-message" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Correo electrónico</label>
+                                    <input class="form-control" type="email" required="" placeholder="Test@gmail.com" @bind="RegistroService.RegistroModelo.Usuemail" >
+                                    <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuemail)" class="validation-message" />
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Cédula de identidad</label>
+                                    <input class="form-control" type="text" required="" placeholder="Ingrese su cédula sin guion aqui" @bind="RegistroService.RegistroModelo.Usuidentificacion">
+                                    <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuidentificacion)" class="validation-message" />
+
+                                </div>
+                              
+                                <div class="form-group">
+                                    <label class="col-form-label">Contraseña</label>
+                                    <div class="form-input position-relative">
+                                        <input class="form-control" type="password" name="login[password]" required="" placeholder="*********" @bind="RegistroService.RegistroModelo.Usucontraseña">
+                                        <div class="show-hide"><span class="show"></span></div>
+                                        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usucontraseña)" class="validation-message" />
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Teléfono</label>
+                                    <input class="form-control" type="text" required="" placeholder="Ingrese su cédula sin guion aqui" @bind="RegistroService.RegistroModelo.Usutelefono">
+                                    <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usutelefono)" class="validation-message" />
+
+                                </div>
+                                <div class="form-group mb-0">
+                                    <a @onclick="HandleRegister"><button class="btn btn-primary btn-block w-100" type="submit">Siguiente</button></a>
+
+                                </div>
+                                <h6 class="text-muted mt-4 or">Or signup with</h6>
+                                <div class="social mt-4">
+                                    <div class="btn-showcase"><a class="btn btn-light" href="https://www.linkedin.com/login" target="_blank"><i class="txt-linkedin" data-feather="linkedin"></i> LinkedIn </a><a class="btn btn-light" href="https://twitter.com/login?lang=en" target="_blank"><i class="txt-twitter" data-feather="twitter"></i>twitter</a><a class="btn btn-light" href="https://www.facebook.com/" target="_blank"><i class="txt-fb" data-feather="facebook"></i>facebook</a></div>
+                                </div>
+                                <p class="mt-4 mb-0">¿Ya tienes una cuenta?<a class="ms-2" href="LoginDenun.razor">Iniciar sesión</a></p>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../assets/js/jquery.min.js"></script>
+        <script src="../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="../assets/js/icons/feather-icon/feather.min.js"></script>
+        <script src="../assets/js/icons/feather-icon/feather-icon.js"></script>
+        <script src="../assets/js/config.js"></script>
+        <script src="../assets/js/script.js"></script>
     </div>
-    <div>
-        <label for="Usuapellido">Apellido</label>
-        <InputText id="Usuapellido" @bind-Value="RegistroService.RegistroModelo.Usuapellido" />
-        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuapellido)" class="validation-message" />
-    </div>
-    <div>
-        <label for="Usuemail">Email</label>
-        <InputText id="Usuemail" @bind-Value="RegistroService.RegistroModelo.Usuemail" />
-        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuemail)" class="validation-message" />
-    </div>
-    <div>
-        <label for="Usuidentificacion">Cédula</label>
-        <InputText id="Usuidentificacion" @bind-Value="RegistroService.RegistroModelo.Usuidentificacion" />
-        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usuidentificacion)" class="validation-message" />
-    </div>
-    <div>
-        <label for="Usucontraseña">Contraseña</label>
-        <InputText id="Usucontraseña" @bind-Value="RegistroService.RegistroModelo.Usucontraseña" type="password" />
-        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usucontraseña)" class="validation-message" />
-    </div>
-    <div>
-        <label for="Usutelefono">Teléfono</label>
-        <InputText id="Usutelefono" @bind-Value="RegistroService.RegistroModelo.Usutelefono" />
-        <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usutelefono)" class="validation-message" />
-    </div>
-    <a @onclick="HandleRegister"><button type="submit">Siguiente</button></a>
-</EditForm>
+</body>
+</html>
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {

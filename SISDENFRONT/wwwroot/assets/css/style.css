@@ -49688,6 +49688,24 @@ html[dir=rtl] body.dark-only .page-wrapper .page-body-wrapper .page-body .card:n
   }
 }
 
+/* Asegura que los mensajes de validación sean rojos */
+.text-danger {
+    color: red;
+}
+
+/* Espaciado entre el campo y el mensaje de validación */
+input + .text-danger,
+textarea + .text-danger,
+select + .text-danger {
+    margin-top: 5px;
+    display: block;
+}
+
+/* Asegura que los divs del formulario tengan un margen inferior */
+form div {
+    margin-bottom: 15px;
+}
+
 /**=====================
   5.9 Box-layout CSS Ends
 ==========================**/

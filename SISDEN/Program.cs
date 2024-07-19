@@ -4,6 +4,10 @@ using SISDEN.Models;
 using Microsoft.EntityFrameworkCore;
 using FluentAssertions.Common;
 using SISDEN.Services;
+using Microsoft.AspNetCore.Identity;
+using SISDEN.DTOS;
+using Microsoft.Extensions.DependencyInjection;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +19,9 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IServicioEmail,  EmailService>();
 builder.Services.AddScoped<IRegistrarDenuncia, RegistroDenunciaService>();
 builder.Services.AddScoped<ISesion, ObtenerSesionIdService>();
-
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+               // .AddEntityFrameworkStores<SisdemContext>()
+               // .AddDefaultTokenProviders();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

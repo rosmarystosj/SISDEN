@@ -19,13 +19,12 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IServicioEmail,  EmailService>();
 builder.Services.AddScoped<IRegistrarDenuncia, RegistroDenunciaService>();
 builder.Services.AddScoped<ISesion, ObtenerSesionIdService>();
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-               // .AddEntityFrameworkStores<SisdemContext>()
-               // .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+               .AddEntityFrameworkStores<SisdemContext>()
+               .AddDefaultTokenProviders();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddDbContext<SisdemContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SisdemContext"));

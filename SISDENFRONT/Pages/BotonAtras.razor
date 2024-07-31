@@ -1,0 +1,17 @@
+﻿@inject NavigationManager NavigationManager
+
+<button class="btn alert-light-primary btn-sm" id="backbtn" @onclick="backStep"> Atras</button>
+<style>
+    .form-group button {
+        flex: 1;
+        margin-right: 10px;
+    }
+</style>
+      
+
+@code {
+    private async Task backStep()
+    {
+        NavigationManager.NavigateTo("", forceLoad: false);
+    }
+}

@@ -11,7 +11,8 @@ namespace SISDEN.DTOS
         [Required(ErrorMessage = "Este campo es requerido.")]
         public int? Usuentidad { get; set; }
 
-        [Required(ErrorMessage = "Este campo es requerido.")]
+        [Required(ErrorMessage = "El teléfono es requerido.")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "El teléfono debe contener solo números.")] 
         public string? Usutelefono { get; set; }
 
         public string? Usustatus { get; set; }

@@ -28,4 +28,6 @@ public partial class Usuario
     public string? Usustatus { get; set; }
 
     public int? Usurol { get; set; }
+
+    public DateTime? VerificationExpiry { get; set; }
 }

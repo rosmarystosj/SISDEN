@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Macs;
 using SISDEN.DTOS;
 using SISDEN.Models;
 using SISDEN.Services;
@@ -22,18 +24,16 @@ namespace SISDEN.Controllers
         private readonly SisdemContext _context;
         private readonly IServicioEmail _emailService;
         private readonly IRegistrarDenuncia _registrarDenuncia;
-        //private readonly UserManager<ApplicationUser> _userManager;
-        //private readonly SignInManager<ApplicationUser> _signInManager;
+        
        
 
-        public UsuariosController(SisdemContext context, IServicioEmail emailService, IRegistrarDenuncia registrarDenuncia )
-            //UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public UsuariosController(SisdemContext context, IServicioEmail emailService, IRegistrarDenuncia registrarDenuncia)
+ 
         {
             _context = context;
             _emailService = emailService;
             _registrarDenuncia = registrarDenuncia;
-            //_userManager = userManager;
-            //_signInManager = signInManager;
+          
         }
 
         [HttpGet("api/ObtenerUsuarios")]
@@ -58,7 +58,7 @@ namespace SISDEN.Controllers
 
         {
            
-            var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuidentificacion == loginModel.Usuidentificacion);
+            var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuidentificacion == loginModel.Usuidentificacion && u.Usustatus == "Verificado");
             if (usuarioLogin == null)
             {
                 return Unauthorized("Datos invalidos.");
@@ -78,7 +78,7 @@ namespace SISDEN.Controllers
         public async Task<IActionResult> LoginEntidad([FromBody] LoginModel loginModel)
         {
             
-            var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == loginModel.Usuemail);
+            var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == loginModel.Usuemail && u.Usustatus == "Verificado");
             if (usuarioLogin == null)
             {
                 return Unauthorized("Datos invalidos.");
@@ -100,84 +100,14 @@ namespace SISDEN.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
-            var passwordHasher = new PasswordHasher<Usuario>();
-
-            var usuario = new Usuario
+            var email = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == registroModelo.Usuemail);
+            if (email != null )
             {
-                Usunombre = registroModelo.Usunombre,
-                Usuapellido = registroModelo.Usuapellido,
-                Usuemail = registroModelo.Usuemail,
-                Usuidentificacion= registroModelo.Usuidentificacion,
-                Usuverificacion = Guid.NewGuid().ToString(),
-                Usucontraseña =  passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
-                Usurol = 1,
-                Usustatus = registroModelo.Usustatus,
-                Usutelefono = registroModelo.Usutelefono,
-                Usutelefono2 = registroModelo.Usutelefono2,
-            };
-
-
-            if (via == "whatsapp")
-            {
-                usuario.Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usuidentificacion);
+                return BadRequest("Este correo electronico ya esta asociado a una cuenta");
             }
 
-                _context.Usuarios.Add(usuario);
-                await _context.SaveChangesAsync();
-
-                var verificationLink = Url.Action("VerifyEmail", "Usuarios", new { token = usuario.Usuverificacion }, Request.Scheme);
-            
-                var subject = "Confirmación de registro";
-                var message = $"<h1>Bienvenido {usuario.Usunombre} {usuario.Usuapellido}, </h1><p>Gracias por registrarte en nuestra aplicación de registro y gestion de denucnas contra el maltrato animal.</p>" +
-                              $"<p>Por favor, verifica tu cuenta haciendo clic en el siguiente enlace: <a href='{verificationLink}'>Verificar cuenta</a></p>";
-
-                await _emailService.SendEmailAsync(usuario.Usuemail, subject, message);
-
-                
-                return Ok(new { Link = verificationLink, Data = registroModelo });
-
-        }
-        [HttpPost("api/validarEntidad")]
-        public async Task<IActionResult> ValidarEntidad([FromBody] EntidadModel registroModelo)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            
-            if (_context.Usuarios.Any(u => u.Usuentidad == registroModelo.Usuentidad))
-            {
-                return BadRequest("Datos inválidos");
-            }
-           
-            var mail = await _context.Entidadautorizada
-                .Where(ea => ea.Identidadaut == registroModelo.Usuentidad)
-                .Select(ea => ea.EntCorreo).FirstOrDefaultAsync();
-
-            if (string.IsNullOrEmpty(mail))
-            {
-                return BadRequest("Correo no encontrado para la entidad");
-            }
-
-            return Ok(new { Usuemail = mail });
-           
-
-            
-        }
-        [HttpPost("api/validarDenunciante")]
-        public async Task<IActionResult> ValidarDenunciante([FromBody] RegistroModelo registroModelo)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            bool esCedula = Regex.IsMatch(registroModelo.Usuidentificacion, @"^\d{11}$");
-            if (!esCedula)
-            {
-                return BadRequest("La cedula solo debe contener 11 numeros.");
-            }
             var verificacionCedula = VerificarCedula(registroModelo.Usuidentificacion);
             if (!verificacionCedula)
             {
@@ -187,26 +117,80 @@ namespace SISDEN.Controllers
             {
                 return BadRequest("Datos invalidos");
             }
+            var passwordHasher = new PasswordHasher<Usuario>();
+            var random = new Random();
 
-            return Ok();
+            var verificationCode = random.Next(100000, 999999).ToString();
+
+            var usuario = new Usuario
+            {
+                Usunombre = registroModelo.Usunombre,
+                Usuapellido = registroModelo.Usuapellido,
+                Usuemail = registroModelo.Usuemail,
+                Usuidentificacion = registroModelo.Usuidentificacion,
+                Usuverificacion = verificationCode,
+                VerificationExpiry = DateTime.UtcNow.AddMinutes(15),
+                Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
+                Usurol = 1,
+                Usustatus = "No verificado",
+                Usutelefono = registroModelo.Usutelefono,
+                Usutelefono2 = registroModelo.Usutelefono2,
+            };
+
+
+            if (via == "whatsapp")
+            {
+                usuario.Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usuidentificacion);
+                usuario.Usustatus = "Verificado";
+
+                _context.Usuarios.Add(usuario);
+                await _context.SaveChangesAsync();
+            }
+
+            else
+            {
+                _context.Usuarios.Add(usuario);
+                await _context.SaveChangesAsync();
+
+
+                var subject = "Confirmación de registro";
+                var message = $"<h1>Bienvenido {usuario.Usunombre} {usuario.Usuapellido}, </h1><p>Gracias por registrarte en nuestra aplicación de registro y gestion de denucnas contra el maltrato animal.</p>" +
+                               $"<p>Por favor, verifica tu cuenta ingresando el siguiente código de verificación: </p>" +
+                               $"<p> <strong>{verificationCode}</strong></p>";
+
+                await _emailService.SendEmailAsync(usuario.Usuemail, subject, message);
+            }       
+                return Ok(new {  Data = registroModelo });
+
         }
+      
+       
 
         [HttpPost("api/registroEntidad")]
         public async Task<IActionResult> RegistroEntidad([FromBody] EntidadModel registroModelo)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
+
+            if (_context.Usuarios.Any(u => u.Usuentidad == registroModelo.Usuentidad))
+            {
+                return BadRequest("Datos inválidos");
+            }
+
             var passwordHasher = new PasswordHasher<Usuario>();
+            var random = new Random();
+            var verificationCode = random.Next(100000, 999999).ToString();
 
             var usuario = new Usuario
             {
-                Usuverificacion = Guid.NewGuid().ToString(),
+                Usuverificacion = verificationCode,
                 Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
                 Usurol = 2,
                 Usuentidad = registroModelo.Usuentidad,
-                Usustatus = registroModelo.Usustatus,
+                Usustatus = "No verificado",
+                VerificationExpiry = DateTime.UtcNow.AddMinutes(15),
                 Usutelefono = registroModelo.Usutelefono,
             };
 
@@ -216,20 +200,47 @@ namespace SISDEN.Controllers
 
              usuario.Usuemail = mail;
 
-
-            var verificationLink = Url.Action("VerifyEmail", "Usuarios", new { token = usuario.Usuverificacion }, Request.Scheme);
-
             var subject = "Confirmación de registro";
             var message = $"<h1>Bienvenido, </h1><p>Gracias por registrarte en nuestra aplicación de registro y gestion de denucnas contra el maltrato animal.</p>" +
-                          $"<p>Por favor, verifica tu cuenta como entidad haciendo clic en el siguiente enlace: <a href='{verificationLink}'>Verificar cuenta</a></p>";
+                  $"<p>Por favor, verifica tu cuenta como entidad ingresando el siguiente código de verificación: </p>" +
+                  $"<p> <strong>{verificationCode}</strong></p>";
 
             await _emailService.SendEmailAsync(mail, subject, message);
 
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Link = verificationLink, Usuemail = usuario.Usuemail });
+            return Ok(new { Usuemail = usuario.Usuemail });
 
+        }
+
+        [HttpPost("api/verifyEmail")]
+        public async Task<IActionResult> VerifyEmail([FromBody] VerificarEmail verificarEmail)
+        {
+            if (verificarEmail == null || string.IsNullOrEmpty(verificarEmail.Email) || string.IsNullOrEmpty(verificarEmail.Codigo))
+            {
+                return BadRequest("Datos inválidos.");
+            }
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == verificarEmail.Email);
+
+            if (usuario == null)
+            {
+                return BadRequest("Usuario no encontrado.");
+            }
+
+            if (usuario.Usuverificacion == verificarEmail.Codigo && usuario.VerificationExpiry > DateTime.UtcNow)
+            {
+                usuario.Usuverificacion = null; 
+                usuario.VerificationExpiry = null;
+                usuario.Usustatus = "Verificado"; 
+                _context.Usuarios.Update(usuario);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+
+            return BadRequest("Codigo invalido");
         }
 
         [HttpPut("api/EditarUsuario")]
@@ -292,20 +303,7 @@ namespace SISDEN.Controllers
             return NoContent();
 
         }
-        public async Task<IActionResult> VerifyEmail(string token)
-        {
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuverificacion == token);
-
-            if (usuario == null)
-            {
-                return BadRequest("El token es invalido");
-            }
-            usuario.Usustatus = "Activo";
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Cuenta verificada");
-        }
+       
 
         public bool VerificarCedula(string cedula)
         {
@@ -359,6 +357,7 @@ namespace SISDEN.Controllers
 
         }
         [HttpGet("api/ObtenerMensaje")]
+
         public async Task<IActionResult> MensajeFinal(string cedula)
         {
             string plataformaWeb = "";
@@ -438,7 +437,28 @@ namespace SISDEN.Controllers
             
         }
        
+        [HttpPost("api/contacto")]
+        public async Task <IActionResult> PostContacto([FromBody] ContactoDTO contactoDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
+            var subject = "¡Mensaje nuevo del centro de contacto!";
+
+           string message = $"<p>{contactoDTO.UsunombreCompleto} se ha puesto en contacto contigo y ha dejado el siguiente mensaje:</p>" +
+
+           $"<p>{contactoDTO.Mensaje}</p>" +
+
+           $"<p>Te puedes poner en contacto vía este correo electronico {contactoDTO.Usuemail} o a este número {contactoDTO.Usutelefono}</p>";
+
+            await _emailService.SendContactEmailAsync(contactoDTO.Usuemail, contactoDTO.UsunombreCompleto, subject, message);
+
+
+            return Ok("Mensaje eviado");
+
+        }
         private bool UsuarioExists(int id)
         {
             return _context.Usuarios.Any(u => u.Idusuario == id);

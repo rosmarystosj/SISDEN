@@ -418,7 +418,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.Idusuario).HasName("PK__USUARIO__98242AA9D3BA70C7");
+            entity.HasKey(e => e.Idusuario).HasName("PK__USUARIO__98242AA94AA6BF45");
 
             entity.ToTable("USUARIO");
 
@@ -459,6 +459,7 @@ public partial class SisdemContext : DbContext
             entity.Property(e => e.Usuverificacion)
                 .IsUnicode(false)
                 .HasColumnName("USUVERIFICACION");
+            entity.Property(e => e.VerificationExpiry).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<VistaArticulo>(entity =>

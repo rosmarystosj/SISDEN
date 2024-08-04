@@ -24,7 +24,6 @@ builder.Services.AddScoped<ISesion, ObtenerSesionIdService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddDbContext<SisdemContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SisdemContext"));

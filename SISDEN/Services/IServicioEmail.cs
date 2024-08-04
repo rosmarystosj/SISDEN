@@ -3,13 +3,12 @@ using Microsoft.Extensions.Configuration;
 using MimeKit;
 using System.Threading.Tasks;
 
-
 namespace SISDEN.Services
 {
     public interface IServicioEmail
     {
         Task SendEmailAsync(string toEmail, string subject, string message);
-
+        Task SendContactEmailAsync(string fromEmail, string fromName, string subject, string message);
     }
 
     public class EmailService : IServicioEmail
@@ -28,6 +27,25 @@ namespace SISDEN.Services
             emailMessage.To.Add(new MailboxAddress("", toEmail));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("html") { Text = message };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_configuration["Smtp:Host"], int.Parse(_configuration["Smtp:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_configuration["Smtp:Username"], _configuration["Smtp:Password"]);
+                await client.SendAsync(emailMessage);
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        public async Task SendContactEmailAsync(string fromEmail, string fromName, string subject, string message)
+        {
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress(fromName, fromEmail));
+            emailMessage.To.Add(new MailboxAddress("Sistema de Denuncias", _configuration["Smtp:Username"]));
+            emailMessage.Subject = subject;
+            emailMessage.Body = new TextPart("html") { Text = message };
+            emailMessage.ReplyTo.Add(new MailboxAddress(fromName, fromEmail)); 
+
 
             using (var client = new SmtpClient())
             {

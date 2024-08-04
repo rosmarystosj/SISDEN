@@ -27,54 +27,25 @@ namespace SISDENFRONT.Data
                 throw new ApplicationException(errorMessage);
             }
         }
-        public async Task<string> ValidarEntidad(EntidadModel entidadModelo)
-        {
-            var response = await _httpClient.PostAsJsonAsync("api/validarEntidad", entidadModelo);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-               
-                    var result = JsonSerializer.Deserialize<Dictionary<string, string>>(responseContent);
-                    if (result != null && result.ContainsKey("usuemail"))
-                    {
-                        return result["usuemail"];
-                    }
-                    else
-                    {
-                        throw new ApplicationException("Respuesta inesperada del servidor.");
-                    }
-            
-            }
-            else
-            {
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                throw new ApplicationException(errorMessage);
-            }
-        }
-        public async Task<bool> ValidarDenunciante(RegistroModelo registroModelo)
-        {
-            var response = await _httpClient.PostAsJsonAsync("api/validarDenunciante", registroModelo);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return true;
-            }
-            else
-            {
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                throw new ApplicationException(errorMessage);
-            }
-        }
-        public async Task<bool> RegistroEntidad(EntidadModel entidadModelo)
+     
+      
+        public async Task<string> RegistroEntidad(EntidadModel entidadModelo)
         {
             var response = await _httpClient.PostAsJsonAsync("api/registroEntidad", entidadModelo);
 
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadFromJsonAsync<dynamic>();
-                return true;
+
+                var responseContent = await response.Content.ReadFromJsonAsync<dynamic>();
+                var result = JsonSerializer.Deserialize<Dictionary<string, string>>(responseContent);
+                if (result != null && result.ContainsKey("usuemail"))
+                {
+                    return result["usuemail"];
+                }
+                else
+                {
+                    throw new ApplicationException("Respuesta inesperada del servidor.");
+                }
             }
             else
             {
@@ -99,6 +70,35 @@ namespace SISDENFRONT.Data
         public async Task<bool> LoginEntidad(LoginModel loginModel)
         {
             var response = await _httpClient.PostAsJsonAsync("api/loginEntidad", loginModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new ApplicationException(errorMessage);
+            }
+        }
+
+        public async Task<bool> VerificarEmail(VerificarEmail verificarEmail)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/verifyEmail", verificarEmail);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new ApplicationException(errorMessage);
+            }
+        }
+        public async Task<bool> Contacto(ContactoDTO contactoDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/contacto", contactoDTO);
 
             if (response.IsSuccessStatusCode)
             {

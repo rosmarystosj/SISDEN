@@ -3,27 +3,46 @@
 @inject RegistroDenuncianteService RegistroService
 @inject NavigationManager NavigationManager
 
-<h3>Registro</h3>
 
 <!DOCTYPE html>
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="floating-alert">
+        @errorMessage
+    </div>
+}
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Riho admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Riho admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="pixelstrap">
     <link rel="icon" href="../assets/images/favicon.png" type="image/x-icon">
     <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-icon">
+    <title>Riho - Premium Admin Template</title>
+    <!-- Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.css">
+    <!-- ico-font-->
     <link rel="stylesheet" type="text/css" href="../assets/css/vendors/icofont.css">
+    <!-- Themify icon-->
     <link rel="stylesheet" type="text/css" href="../assets/css/vendors/themify.css">
+    <!-- Flag icon-->
     <link rel="stylesheet" type="text/css" href="../assets/css/vendors/flag-icon.css">
+    <!-- Feather icon-->
     <link rel="stylesheet" type="text/css" href="../assets/css/vendors/feather-icon.css">
+    <!-- Plugins css start-->
+    <!-- Plugins css Ends-->
+    <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="../assets/css/vendors/bootstrap.css">
+    <!-- App css-->
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
     <link id="color" rel="stylesheet" href="../assets/css/color-1.css" media="screen">
+    <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="../assets/css/responsive.css">
 </head>
 <body>
@@ -41,7 +60,7 @@
                                 <h4>Crea tu cuenta</h4>
                                 <p>Ingresa tus datos personales para crear una cuenta</p>
                                 <div class="form-group">
-                                    <label class="col-form-label pt-0">Yo</label>
+                                    <label class="col-form-label pt-0">Tu Nombre</label>
                                     <div class="row g-2">
                                         <div class="col-6">
                                             <input class="form-control" type="text" required="" placeholder="Nombre" @bind="RegistroService.RegistroModelo.Usunombre" >
@@ -78,20 +97,22 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="col-form-label">Teléfono</label>
-                                    <input class="form-control" type="text" required="" placeholder="Ingrese su cédula sin guion aqui" @bind="RegistroService.RegistroModelo.Usutelefono">
+                                    <input class="form-control" type="text" required="" placeholder="000-000-0000" @bind="RegistroService.RegistroModelo.Usutelefono">
                                     <ValidationMessage For="@(() => RegistroService.RegistroModelo.Usutelefono)" class="validation-message" />
 
                                 </div>
-                                <div class="form-group mb-0">
-                                    <a @onclick="HandleRegister"><button class="btn btn-primary btn-block w-100" type="submit">Siguiente</button></a>
+                                <div class="button-group">
+                                    <div class="wizard-footer d-flex gap-2 justify-content-between">
+                                        <BotonAtras> </BotonAtras>
+                                        <button class="btn btn-primary btn-sm" id="nextbtn" @onclick="HandleRegister">Siguiente</button>
+                                    </div>
+                                </div>
+                               
+                              
+                                <p class="mt-4 mb-0">¿Ya tienes una cuenta?<a @onclick="IraLogin"class=" ms-2">Iniciar sesión</a></p>
 
-                                </div>
-                                <h6 class="text-muted mt-4 or">Or signup with</h6>
-                                <div class="social mt-4">
-                                    <div class="btn-showcase"><a class="btn btn-light" href="https://www.linkedin.com/login" target="_blank"><i class="txt-linkedin" data-feather="linkedin"></i> LinkedIn </a><a class="btn btn-light" href="https://twitter.com/login?lang=en" target="_blank"><i class="txt-twitter" data-feather="twitter"></i>twitter</a><a class="btn btn-light" href="https://www.facebook.com/" target="_blank"><i class="txt-fb" data-feather="facebook"></i>facebook</a></div>
-                                </div>
-                                <p class="mt-4 mb-0">¿Ya tienes una cuenta?<a class="ms-2" href="LoginDenun.razor">Iniciar sesión</a></p>
                             </EditForm>
+
                         </div>
                     </div>
                 </div>
@@ -101,25 +122,35 @@
         <script src="../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
         <script src="../assets/js/icons/feather-icon/feather.min.js"></script>
         <script src="../assets/js/icons/feather-icon/feather-icon.js"></script>
+    
         <script src="../assets/js/config.js"></script>
+    
         <script src="../assets/js/script.js"></script>
     </div>
 </body>
 </html>
+<style>
+    .button-group {
+        margin-top: 40px;
+</style>
 
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-danger">@errorMessage</div>
-}
 
 @code {
     private string errorMessage;
+ 
+
+    private async Task IraLogin()
+    {
+        NavigationManager.NavigateTo("/login-denunciante");
+    }
+    
+
     private async Task HandleRegister()
     {
         try
         {
             errorMessage = null;
-            var result = await AuthService.ValidarDenunciante(RegistroService.RegistroModelo);
+            var result = await AuthService.RegistroDenunciante(RegistroService.RegistroModelo, "web");
             NavigationManager.NavigateTo("/verificacion-denunciante");
         }
         catch (ApplicationException ex)

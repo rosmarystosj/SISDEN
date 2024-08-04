@@ -488,6 +488,7 @@ public partial class SisdemContext : DbContext
             entity.Property(e => e.Usuverificacion)
                 .IsUnicode(false)
                 .HasColumnName("USUVERIFICACION");
+            entity.Property(e => e.VerificationExpiry).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<VistaArticulo>(entity =>

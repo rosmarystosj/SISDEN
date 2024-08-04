@@ -1,0 +1,36 @@
+﻿@model SISDEN.Models.Evidencium
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Evidencium</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Evurl)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Evurl)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EvIdtipoevid)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EvIdtipoevid)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EvIddenuncia)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EvIddenuncia)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Idevidencia">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

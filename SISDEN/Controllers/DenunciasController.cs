@@ -23,11 +23,11 @@ namespace SISDEN.Controllers
         private readonly IServicioEmail _servicioEmail;
 
 
-        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia, NotificationService notificationService)
+        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia, NotificationService notificationService, IServicioEmail servicioEmail)
         {
             _context = context;
             _registrarDenuncia = registrarDenuncia;
-            _servicioEmail = emailService;
+            _servicioEmail = servicioEmail;
 
 
 

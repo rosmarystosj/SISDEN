@@ -9,10 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using SISDEN.Hubs;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddScoped<IServicioEmail, EmailService>();
@@ -63,7 +65,6 @@ builder.Services.AddAuthentication(options =>
 });
 // Configurar SignalR
 builder.Services.AddSignalR();
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -91,10 +92,10 @@ app.UseSession();
 app.MapControllers();
 
 // Configurar el endpoint del Hub
-app.UseEndpoints(endpoints =>
+/*app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
     endpoints.MapHub<NotificationHub>("/notificationHub");
-});
+});*/
 
 app.Run();

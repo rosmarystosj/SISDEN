@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿/*using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -53,4 +53,4 @@ public class NotificationService
             await _hubConnection.DisposeAsync();
         }
     }
-}
+}*/

@@ -19,11 +19,11 @@ namespace SISDEN.Controllers
     {
         private readonly SisdemContext _context;
         private readonly IRegistrarDenuncia _registrarDenuncia;
+        private readonly NotificationService _notificationService;
         private readonly IServicioEmail _servicioEmail;
 
 
-
-        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia, IServicioEmail emailService)
+        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia, NotificationService notificationService)
         {
             _context = context;
             _registrarDenuncia = registrarDenuncia;
@@ -131,6 +131,22 @@ namespace SISDEN.Controllers
                 _context.Denuncia.Add(denuncia);
                 await _context.SaveChangesAsync();
 
+                // Crear y enviar notificación
+                var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
+                var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
+
+                if (denuncia.DenIdusuario.HasValue && denuncia.DenIdestado.HasValue)
+                {
+                    await _notificationService.CreateNotificationAsync(denuncia.DenIdusuario.Value, denuncia.DenIdestado.Value, mensaje);
+                }
+                else
+                {
+                    // Manejar el caso en que los valores sean nulos
+                    // Podrías lanzar una excepción, registrar un error, etc.
+                    // Ejemplo:
+                    throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
+                }
+
                 return Ok(new { id = denuncia.Iddenuncia, denuncia });
             }
             catch (Exception ex)
@@ -195,6 +211,21 @@ namespace SISDEN.Controllers
 
                 denuncia.Dentitulo = GenerarTitulo(denunciaDTO);
                 await _context.SaveChangesAsync();
+
+                var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
+                var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
+
+                if (denuncia.DenIdusuario.HasValue && denuncia.DenIdestado.HasValue)
+                {
+                    await _notificationService.CreateNotificationAsync(denuncia.DenIdusuario.Value, denuncia.DenIdestado.Value, mensaje);
+                }
+                else
+                {
+                    // Manejar el caso en que los valores sean nulos
+                    // Podrías lanzar una excepción, registrar un error, etc.
+                    // Ejemplo:
+                    throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
+                }
 
                 return Ok( denuncia );
             }

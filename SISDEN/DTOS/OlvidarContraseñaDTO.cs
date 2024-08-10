@@ -2,7 +2,7 @@
 
 namespace SISDEN.DTOS
 {
-    public class OlvidarContraseña
+    public class OlvidarContraseñaDTO
     {
         [Required]
         [EmailAddress]

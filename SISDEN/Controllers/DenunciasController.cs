@@ -10,6 +10,7 @@ using SISDEN.DTOS;
 using System.Data.SqlClient;
 using SISDEN.Services;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 
 namespace SISDEN.Controllers
@@ -18,27 +19,40 @@ namespace SISDEN.Controllers
     {
         private readonly SisdemContext _context;
         private readonly IRegistrarDenuncia _registrarDenuncia;
+        private readonly IServicioEmail _servicioEmail;
 
 
-        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia)
+
+        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia, IServicioEmail emailService)
         {
             _context = context;
             _registrarDenuncia = registrarDenuncia;
+            _servicioEmail = emailService;
+
 
 
         }
-        [HttpGet("api/ObtenerIDDenuncia/{sesionid}")]
+        [HttpGet("api/ObtenerDenunciaSS/{sesionid}")]
         public async Task<IActionResult> GetIDDenuncias(string sesionid)
         {
             var denunciaid = await _registrarDenuncia.RegistrarDenunciaAsync(sesionid);
             return Ok(new { denunciaid });
         }
-
+        [HttpGet("api/Obtenerdetalle/{id}")]
+        public async Task<ActionResult<VistaDenuncia>> GetIDDenunciaid(int id)
+        {
+            var denuncias = await _context.VistaDenuncias.FirstOrDefaultAsync(d => d.Iddenuncia == id);
+            if (denuncias == null)
+            {
+                return BadRequest("Denuncia no encontrada");
+            }
+            return denuncias;
+        }
 
         [HttpGet("api/ObtenerDenuncias/entidad/{entidadid}")]
-        public async Task<IActionResult> GetIDDenunciasentidad(int entidadid)
+        public async Task<ActionResult<IEnumerable<VistaDenuncia>>> GetIDDenunciasentidad(int entidadid)
         {
-            if (entidadid == 13) {
+            if (entidadid == 14) {
                 var todasDenuncias = await _context.VistaDenuncias.ToListAsync();
                 return Ok(new { denuncias = todasDenuncias });
             }
@@ -49,32 +63,45 @@ namespace SISDEN.Controllers
                     .FromSqlRaw("EXEC GetDenunciasByEntidadId @EntidadId", entidadIdParameter)
                     .ToListAsync();
 
-                return Ok(new { denuncias });
+                 foreach (var denuncia in denuncias)
+    {
+        denuncia.Denentidadid = entidadid;
+    }
+
+    await _context.SaveChangesAsync();
+
+                return Ok(denuncias );
             }
         }
-        [HttpGet("api/ObtenerDenuncias")]
+
+      
+        [HttpGet("api/ObtenerAllDenuncias")]
         public async Task<ActionResult<IEnumerable<VistaDenuncia>>> GetDenuncias()
         {
 
              return await _context.VistaDenuncias.ToListAsync();
         }
 
-        [HttpGet("api/ObtenerDenuncia/{id}")]
-        public async Task<ActionResult<VistaDenuncia>> GetDenuncia(int id)
+       [HttpGet("api/ObtenerDenuncia/{cedula}")]
+        public async Task<ActionResult<IEnumerable<VistaDenuncia>>> GetDenunciasByCedula(string cedula)
         {
-            var denuncia = await _context.VistaDenuncias.FirstOrDefaultAsync(d => d.Iddenuncia == id);
-            if (denuncia == null)
+            var denuncia = await _context.VistaDenuncias.Where(d => d.CedulaUsuario == cedula).ToListAsync();
+            if (denuncia == null || denuncia.Count == 0)
             {
-                return NotFound();
+                return NotFound(new { message = "No se encontraron denuncias." });
 
             }
-            return denuncia;
+            return Ok(denuncia);
         }
+
+       
         [HttpPost("api/RegistarDenuncias")]
         public async Task<ActionResult> PostDenuncia([FromBody] DenunciasDTO denunciaDTO)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                return BadRequest();
+            }
 
             try
             {
@@ -146,10 +173,23 @@ namespace SISDEN.Controllers
                 denuncia.DenIdusuario = denunciaDTO.DenIdusuario;
                 denuncia.DenIdestado = denunciaDTO.DenIdestado;
                 denuncia.Dencategoria = denunciaDTO.DenCategoria;
-
-
+                denuncia.Denentidadid = denunciaDTO.DenEntidadid;
+                   
                 _context.Entry(denuncia).State = EntityState.Modified;
 
+                var ubicacionString = denunciaDTO.DenIdubicacion; 
+                var entidadIdParam = new SqlParameter("@EntidadId", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC AssignEntidadId @UbicacionString, @EntidadId OUTPUT",
+                    new SqlParameter("@UbicacionString", ubicacionString),
+                    entidadIdParam
+                );
+
+                denuncia.Denentidadid = (int)entidadIdParam.Value;
 
                 await _context.SaveChangesAsync();
 
@@ -198,10 +238,92 @@ namespace SISDEN.Controllers
 
         public string GenerarTitulo(DenunciasDTO denunciasDTO)
         {
-            var titulo = $" Denuncia sobre {denunciasDTO.DenCategoria} de {denunciasDTO.Denanimal} en {denunciasDTO.DenIdubicacion}";
+            var titulo = $" Denuncia sobre {denunciasDTO.DenCategoria} de {denunciasDTO.Denanimal} ";
 
 
              return titulo;
+        }
+
+        [HttpGet("api/ObtenerMensajeCorreoEntidad")]
+        public async Task<IActionResult> MensajeFinalCorreo(int denunciaid)
+        {
+            string plataformaWeb = "";
+            string enlaceChatBot = "";
+
+            var leyes = await _context.VistaViolaciones
+                .Where(lv => lv.Iddenuncia == denunciaid)
+                .Select(lv => new
+                {
+                    lv.Artnombre,
+                    lv.Artdescripcion,
+                    lv.Puntoartnumero,
+                    lv.Puntoartdescripcion
+                }).ToListAsync();
+
+
+            var listaArt = leyes.Select(lv =>
+            {
+                if (lv.Puntoartnumero != null && lv.Puntoartdescripcion != null)
+                {
+                    return $"- {lv.Artnombre}  Punto {lv.Puntoartnumero}: {lv.Puntoartdescripcion}";
+                }
+                else
+                {
+                    return $"- {lv.Artnombre} {lv.Artdescripcion} ";
+
+                }
+            });
+            string htmlContent = string.Join("", listaArt.Select(art => $"<p>{art}</p>"));
+
+
+            var entidad = await _context.Denuncia
+            .Where(lv => lv.Iddenuncia == denunciaid)
+            .Select(lv => new {
+                entidadid = lv.Denentidadid,
+                fecha = lv.Denfechacreacion,
+                descripcion = lv.Dendescripcion,
+                ubicacion = lv.Denubicacion,
+                titulo = lv.Dentitulo
+
+            }).FirstOrDefaultAsync();
+
+            var mail = await _context.Entidadautorizada
+                .Where(u => u.Identidadaut == entidad.entidadid)
+                 .Select(u => new
+                 {
+                     Correo = u.EntCorreo,
+                     Nombre = u.Entautorizadadescp
+                 })
+    .FirstOrDefaultAsync();
+
+
+
+                var subject = "Notificación de Nueva Denuncia Registrada";
+
+                string message = $"<h3>Estimado/a {mail.Nombre}</h3>" +
+
+                $"<p>Espero que este mensaje le encuentre bien.</p>" +
+
+                $"<p>{htmlContent}</p>" +
+
+                $"<p>Le informamos que se ha registrado una nueva denuncia en el sistema que está relacionada con su entidad. A continuación, encontrará los detalles relevantes de la denuncia:</p>" +
+
+                $"<p><strong>Titulo de la denuncia:</strong>{entidad.titulo}</p>" +
+                $"<p><strong>Fecha de registro:</strong> {entidad.fecha}</p>" +
+                $"<p><strong>Ubicacion:</strong> {entidad.ubicacion} </p>" +
+                $"<p><strong>Descripcion:</strong> {entidad.descripcion} </p>" +
+
+
+               $"<p><strong> Para más detalles, puede acceder y registrase al sistema a través del siguiente enlace: <strong> {plataformaWeb}</p>" +
+               $"<p>Le solicitamos que revise la denuncia y tome las acciones necesarias de acuerdo con los procedimientos establecidos. Si tiene alguna pregunta o necesita más información, no dude en contactarnos.</p>" +
+
+
+                $"<p>Atentamente,</p>" +
+                $"<p>El equipo de soporte de denuncias.</p>";
+
+                await _servicioEmail.SendEmailAsync(mail.Correo, subject, message);
+            return Ok("Mensaje eviado");
+
         }
         private bool DenunciaExists(int id)
         {

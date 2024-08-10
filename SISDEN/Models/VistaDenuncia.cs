@@ -39,13 +39,23 @@ public partial class VistaDenuncia
 
     public string? Densesion { get; set; }
 
+    public int? Idestado { get; set; }
+
     public string? Estado { get; set; }
 
     public string? MotivoCierre { get; set; }
+
+    public int? Idusuario { get; set; }
+
+    public int? Usurol { get; set; }
+
+    public int? Denentidadid { get; set; }
 
     public string? UsuarioNombreCompleto { get; set; }
 
     public string? UsuarioTelefono { get; set; }
 
     public string? UsuarioEmail { get; set; }
+
+    public string? CedulaUsuario { get; set; }
 }

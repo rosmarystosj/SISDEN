@@ -16,11 +16,11 @@
 
         public bool? Denevidenciaadjunta { get; set; }
 
-        public bool? Denservicio { get; set; }
+        public bool Denservicio { get; set; }
 
-        public bool? Densalarios { get; set; }
+        public bool Densalarios { get; set; }
 
-        public bool? Denprision { get; set; }
+        public bool Denprision { get; set; }
 
         public int? Dennumsalarios { get; set; }
 
@@ -32,14 +32,16 @@
 
         public int? DenIdmotivocierre { get; set; }
 
-        public string DenIdubicacion { get; set; }
+        public string? DenIdubicacion { get; set; }
 
-        public int? DenIdusuario { get; set; }
+        public int DenIdusuario { get; set; }
 
         public int? DenIdestado { get; set; }
-        public string Densesion { get; set; }
+        public string? Densesion { get; set; }
 
-        public string DenCategoria { get; set; }
+        public string? DenCategoria { get; set; }
+        public int DenEntidadid { get; set; }
+
 
     }
 }

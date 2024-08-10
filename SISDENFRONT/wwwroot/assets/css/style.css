@@ -1500,6 +1500,12 @@ svg.f-light {
   background-color: #E6E9EB;
 }
 
+
+.badge-green {
+    background-color: #316945;
+}
+
+
 .badge-dark {
   background-color: #2c323f;
 }
@@ -32462,26 +32468,38 @@ footer .license-list h6 {
 /**=====================
     3.29 Login CSS Start
 ==========================**/
+
+html {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .login-card {
-  min-height: 100vh;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  margin: 0 auto;
-  background: url("../images/login/login_bg.jpg");
-  background-position: center;
-  padding: 30px 12px;
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 0 auto;
+    background-image: url("../assets/images/login/istockphoto-1304878938-1090x930-transparent.png");
+    background-position: center;
+    padding: 30px 12px;
+}
+
+.denun-regi{
+    margin-top: 200px;
+
 }
 .login-card .logo {
-  display: block;
-  margin-bottom: 30px;
-  text-align: center;
+    display: block;
+    margin-bottom: 30px;
+    text-align: center;
 }
 .login-card .btn-showcase .btn {
   line-height: 1;
@@ -35884,13 +35902,25 @@ body.dark-only .accordion-button.accordion-light-dark:active, body.dark-only .ac
 body.dark-only .list-product-header .collapse .list-product-body {
   border: unset !important;
 }
+
+.header-izq {
+    position: relative;
+    left: -20px;
+   
+}
+
+.nav-izq {
+    position: relative;
+    left: -5px;
+  
+}
 body.dark-only .card {
-  --bs-card-title-color: var(--body-font-color);
-  --bs-card-subtitle-color: var(--body-font-color);
-  --bs-card-cap-color: var(--body-font-color);
-  --bs-card-color: var(--body-font-color);
-  --bs-body-color: var(--body-font-color);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    --bs-card-title-color: var(--body-font-color);
+    --bs-card-subtitle-color: var(--body-font-color);
+    --bs-card-cap-color: var(--body-font-color);
+    --bs-card-color: var(--body-font-color);
+    --bs-body-color: var(--body-font-color);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 body.dark-only .breadcrumb {
   --bs-breadcrumb-bg: transparent;
@@ -43724,7 +43754,7 @@ table.table-bordered thead tr th p {
   text-transform: capitalize;
 }
 .page-wrapper .sidebar-wrapper[data-layout=stroke-svg] .stroke-icon {
-  display: inline-block;
+    display: inline-block;
 }
 .page-wrapper .sidebar-wrapper[data-layout=stroke-svg] .fill-icon {
   display: none;
@@ -44184,7 +44214,7 @@ table.table-bordered thead tr th p {
   height: 100%;
   line-height: inherit;
   background: var(--theme-deafult);
-  width: 265px;
+  width: 290px;
   text-align: left;
   -webkit-transition: 0.3s;
   transition: 0.3s;
@@ -44721,7 +44751,7 @@ table.table-bordered thead tr th p {
 .page-wrapper.compact-wrapper .page-body-wrapper .page-body {
   min-height: calc(100vh - 80px);
   margin-top: 56px;
-  margin-left: 265px;
+  margin-left: 280px;
 }
 .page-wrapper.compact-wrapper.dark-sidebar .sidebar-main-title h6, .page-wrapper.compact-wrapper.color-sidebar .sidebar-main-title h6 {
   color: rgba(255, 255, 255, 0.6);
@@ -45084,7 +45114,7 @@ table.table-bordered thead tr th p {
   font-size: 14px;
   word-break: break-word;
 }
-.page-wrapper.compact-sidebar .page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-links .sidebar-list .sidebar-link .according-menu {
+.page-wrapper.compact-sidebar .page-body-wrapper div.sidebar-wrapper .sidebar-main . s .sidebar-list .sidebar-link .according-menu {
   display: none;
 }
 .page-wrapper.compact-sidebar .page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-links .mega-menu {

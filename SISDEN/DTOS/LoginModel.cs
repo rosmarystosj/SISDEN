@@ -12,7 +12,9 @@ namespace SISDEN.DTOS
         public string? Usucontraseña { get; set; }
 
         [Required(ErrorMessage = "Este campo es requerido.")]
-        public string? Usuemail { get; set; }   
+        public string? Usuemail { get; set; }
+        public int? UsuRol { get; set; }
+
 
     }
 }

@@ -13,7 +13,7 @@ namespace SISDEN.Controllers
             _context = context;
         }
 
-        [HttpGet("api/ObtenerOpcionesPreguntas{id}")]
+        [HttpGet("api/ObtenerOpcionesPreguntas/{id}")]
         public async Task<ActionResult<VistaOpcionesPregunta>> GetPregunta(int id)
         {
             var opcionespregunta = await _context.VistaOpcionesPreguntas.FirstOrDefaultAsync(op => op.Idopcionpreg == id);

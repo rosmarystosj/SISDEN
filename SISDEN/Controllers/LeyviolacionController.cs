@@ -33,7 +33,7 @@ namespace SISDEN.Controllers
                 }).ToListAsync();
         }
 
-        [HttpGet("api/Leyviolacion/id")]
+        [HttpGet("api/Leyviolacion/{id}")]
         public async Task<ActionResult<VistaViolacione>> GetLeyviolacion(int id)
         {
             var leyviolacion = await _context.VistaViolaciones
@@ -76,7 +76,6 @@ namespace SISDEN.Controllers
         {
             var leyviolacion = new Leyviolacion
             {
-                Idviolacion = leyviolacionDto.Idviolacion,
                 ViolIdpuntoart = leyviolacionDto.ViolIdpuntoart,
                 ViolIdarticulo = leyviolacionDto.ViolIdarticulo,
                 ViolIddenuncia = leyviolacionDto.ViolIddenuncia
@@ -90,7 +89,7 @@ namespace SISDEN.Controllers
             return CreatedAtAction(nameof(GetLeyviolacion), new { id = leyviolacion.Idviolacion }, leyviolacionDto);
         }
 
-        [HttpPut("api/Leyviolacion/id")]
+        [HttpPut("api/Leyviolacion/{id}")]
         public async Task<IActionResult> PutLeyviolacion([FromBody] int id, LeyviolacionDTO leyviolacionDto)
         {
             if (id != leyviolacionDto.Idviolacion)
@@ -130,7 +129,7 @@ namespace SISDEN.Controllers
             return NoContent();
         }
 
-        [HttpDelete("api/Leyviolacion/id")]
+        [HttpDelete("api/Leyviolacion/{id}")]
         public async Task<IActionResult> DeleteLeyviolacion(int id)
         {
             var leyviolacion = await _context.Leyviolacions.FindAsync(id);

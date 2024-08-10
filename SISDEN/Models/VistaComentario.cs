@@ -13,9 +13,13 @@ public partial class VistaComentario
 
     public string? UsuarioApellido { get; set; }
 
+    public DateTime? ComFecha { get; set; }
+
     public int? Iddenuncia { get; set; }
 
     public string? Rolnombre { get; set; }
+
+    public int? Idrol { get; set; }
 
     public string? DenunciaTitulo { get; set; }
 }

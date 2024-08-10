@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+@implements IDisposable
+@inject IJSRuntime JS
+
+<PageTitle>SISDENFRONT</PageTitle>
+<!DOCTYPE html>
+<html>
+<div>
+    <article class="content px-4">
+        <NavIndex> </NavIndex>
+
+        @Body
+    </article>
+</div>
+
+<ReferenciasJs></ReferenciasJs>
+</html>
+
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadScripts();
+        }
+    }
+
+    private async Task LoadScripts()
+    {
+        await JS.InvokeVoidAsync("eval", @"
+            var scriptBootstrap = document.createElement('script');
+            scriptBootstrap.src = 'https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js';
+            document.head.appendChild(scriptBootstrap);
+        ");
+    }
+
+    public void Dispose()
+    {
+    }
+}

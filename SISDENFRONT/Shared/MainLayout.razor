@@ -3,6 +3,9 @@
 @inject IJSRuntime JS
 
 <PageTitle>SISDENFRONT</PageTitle>
+<!DOCTYPE html>
+<html>
+
 
 <div>
     <article class="content px-4">
@@ -10,11 +13,11 @@
     </article>
 </div>
 
+<ReferenciasJs></ReferenciasJs>
+</html>
+
   
 @code{
-
-
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -34,8 +37,7 @@
 
     public void Dispose()
     {
-        // Si necesitas limpiar algo cuando se destruye el componente
-    }
+     }
 }
 
  

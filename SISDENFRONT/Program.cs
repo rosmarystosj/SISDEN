@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using SISDENFRONT.Data;
 using SISDENFRONT;
+using Blazored.LocalStorage;
 
 
 
@@ -15,6 +16,15 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddSingleton<RegistroEntidadService>();
 builder.Services.AddSingleton<RegistroDenuncianteService>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddSingleton<LoginModelService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<Comentarios>();
+builder.Services.AddScoped<DenunciasService>();
+builder.Services.AddScoped<ArticulosService>();
+
+builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<EntidadService>();
 builder.Services.AddScoped(sp =>
     new HttpClient
@@ -39,7 +49,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 

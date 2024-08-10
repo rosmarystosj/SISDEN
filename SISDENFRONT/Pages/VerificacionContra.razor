@@ -1,0 +1,82 @@
+﻿@page "/verificacion/contra"
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+@inject RegistroDenuncianteService RegistroService
+@layout MainLayout
+
+<body>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="floating-alert">
+            @errorMessage
+            <span class="floating-alert-close">&times;</span>
+        </div>
+    }
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="col-sm-12 col-md-10 col-lg-8">
+            <div class="card shadow-sm border rounded-3">
+                <div class="card-body email-verify p-4">
+                    <div class="row g-3">
+                        <div class="col-md-4 d-flex align-items-center justify-content-center">
+                            <img class="img-fluid" src="../assets/images/forms/email.png" alt="">
+                        </div>
+                        <div class="col-md-8">
+                            <div>
+                                <h3 class="mb-3">
+                                    Revisa tu bandeja de entrada en <h4> <strong>@RegistroService.RegistroModelo.Usuemail</strong></h4>
+                                </h3>
+                                <p class="mb-3">
+                                    Se ha enviado un código de verificación a su correo electrónico. Este código expira en 15 minutos. A veces el correo puede caer en filtros de spam. Puede que quieras añadir <strong>sistemasdedenucias@gmail.com</strong> a tu libreta de direcciones para que no te pierdas ninguna notificación importante.
+                                </p>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <input class="form-control" type="text" placeholder="Por favor ingresa tu codigo aqui." @bind="verificarEmail.Codigo" aria-label="basic-addon2" aria-describedby="basic-addon2">
+                            </div>
+                            <div class="wizard-footer d-flex gap-2 justify-content-between mt-3">
+                                <BotonAtras></BotonAtras>
+                                <button class="btn btn-primary" id="nextbtn" @onclick="VerifyCode">Siguiente</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<style>
+    .button-group {
+        margin-top: 40px;
+    }
+</style>
+
+@code {
+    private string errorMessage;
+    private VerificarEmail verificarEmail = new VerificarEmail();
+
+
+    private async Task VerifyCode()
+    {
+
+        try
+        {
+            errorMessage = null;
+            verificarEmail.Email = RegistroService.RegistroModelo.Usuemail;
+            var result = await AuthService.VerificarEmail(verificarEmail);
+
+            NavigationManager.NavigateTo("/confirmar");
+
+        }
+        catch (ApplicationException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ocurrio un error inesperado.";
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

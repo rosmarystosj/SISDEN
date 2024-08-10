@@ -1,15 +1,25 @@
-﻿using SISDEN.DTOS;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.JSInterop;
+using SISDEN.DTOS;
 using System.Text.Json;
+using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
 namespace SISDENFRONT.Data
 {
     public class AuthService
     {
         private readonly HttpClient _httpClient;
+        private readonly TokenProvider _tokenProvider;
+        private readonly NavigationManager _navigationManager;
+        private readonly IJSRuntime _jsRuntime;
 
-        public AuthService(HttpClient httpClient)
+        public AuthService(HttpClient httpClient, TokenProvider tokenProvider, NavigationManager navigationManager, IJSRuntime jsRuntime)
         {
             _httpClient = httpClient;
+            _tokenProvider = tokenProvider;
+            _navigationManager = navigationManager;
+            _jsRuntime = jsRuntime;
         }
 
         public async Task<bool> RegistroDenunciante(RegistroModelo registroModelo, string via)
@@ -59,20 +69,28 @@ namespace SISDENFRONT.Data
 
             if (response.IsSuccessStatusCode)
             {
+                 _navigationManager.NavigateTo("/index", forceLoad: true);
+
                 return true;
+                
             }
             else
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
                 throw new ApplicationException(errorMessage);
             }
+
         }
+
+       
         public async Task<bool> LoginEntidad(LoginModel loginModel)
         {
             var response = await _httpClient.PostAsJsonAsync("api/loginEntidad", loginModel);
 
             if (response.IsSuccessStatusCode)
             {
+                _navigationManager.NavigateTo("/index", forceLoad: true);
+
                 return true;
             }
             else

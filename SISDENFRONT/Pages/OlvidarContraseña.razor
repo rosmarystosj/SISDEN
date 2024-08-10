@@ -1,0 +1,85 @@
+﻿@page "/olvidarcontra"
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div class="container-fluid p-0">
+        <div class="row m-0">
+            <div class="col-12 p-0">
+                <div class="login-card login-dark">
+                    <div>
+                        <div><a class="logo"> <img class="img-fluid" src="../assets/images/landing/logo_transparent_background150.png" @onclick="IraHome" /></a></div>
+
+
+                        <div class="login-main">
+
+                            <EditForm class="theme-form" Model="olvidarContraseña">
+                                <DataAnnotationsValidator />
+                                <Validaciones TModel="OlvidarContraseñaDTO" />
+                                <h4>Reestablecer Contraseña</h4>
+                                <p>Ingresa tu correo electronico para validar tu cuenta.</p>
+
+                                <div class="form-group">
+                                    <label class="col-form-label" for="Usuidentificacion">Correo Electrónico</label>
+                                    <InputText id="Usuidentificacion" class="form-control" type="text" required="" placeholder="prueba@ejemplo.com" @bind-Value="olvidarContraseña.Email" />
+                                    <ValidationMessage For="@(() => olvidarContraseña.Email)" class="validation-message" />
+                                </div>
+                              
+                                <div class="form-group mb-0">
+
+                                    <div class="button-group">
+                                        <div class="wizard-footer d-flex gap-2 justify-content-between">
+                                            <BotonAtras> </BotonAtras>
+                                            <button class="btn btn-primary btn-sm" id="nextbtn" @onclick="Enviar">Enviar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+</body>
+<style>
+    .button-group {
+        margin-top: 40px;
+</style>
+
+</html>
+
+@code {
+    private string errorMessage;
+    private OlvidarContraseñaDTO olvidarContraseña = new OlvidarContraseñaDTO();
+    private async Task IraHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    private async Task Enviar()
+    {
+        try
+        {
+            errorMessage = null;
+        }
+        catch (ApplicationException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An unexpected error occurred.";
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+}

@@ -126,11 +126,14 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Comentario>(entity =>
         {
-            entity.HasKey(e => e.Idcomentario).HasName("PK__COMENTAR__B189A03BB4EBEF47");
+            entity.HasKey(e => e.Idcomentario).HasName("PK__COMENTAR__B189A03BD4404722");
 
             entity.ToTable("COMENTARIOS");
 
             entity.Property(e => e.Idcomentario).HasColumnName("IDCOMENTARIO");
+            entity.Property(e => e.ComFecha)
+                .HasColumnType("datetime")
+                .HasColumnName("COM_FECHA");
             entity.Property(e => e.ComIddenuncia).HasColumnName("COM_IDDENUNCIA");
             entity.Property(e => e.ComIdrol).HasColumnName("COM_IDROL");
             entity.Property(e => e.ComIdusuario).HasColumnName("COM_IDUSUARIO");
@@ -141,7 +144,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Denuncium>(entity =>
         {
-            entity.HasKey(e => e.Iddenuncia).HasName("PK__DENUNCIA__6560087946C99EB1");
+            entity.HasKey(e => e.Iddenuncia).HasName("PK__DENUNCIA__65600879303CC91A");
 
             entity.ToTable("DENUNCIA");
 
@@ -159,6 +162,7 @@ public partial class SisdemContext : DbContext
             entity.Property(e => e.Dendescripcion)
                 .IsUnicode(false)
                 .HasColumnName("DENDESCRIPCION");
+            entity.Property(e => e.Denentidadid).HasColumnName("DENENTIDADID");
             entity.Property(e => e.Denevidenciaadjunta).HasColumnName("DENEVIDENCIAADJUNTA");
             entity.Property(e => e.Denfechacierre)
                 .HasColumnType("datetime")
@@ -418,7 +422,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.Idusuario).HasName("PK__USUARIO__98242AA94AA6BF45");
+            entity.HasKey(e => e.Idusuario).HasName("PK__USUARIO__98242AA9075CFCEB");
 
             entity.ToTable("USUARIO");
 
@@ -499,6 +503,9 @@ public partial class SisdemContext : DbContext
                 .HasNoKey()
                 .ToView("VistaComentarios");
 
+            entity.Property(e => e.ComFecha)
+                .HasColumnType("datetime")
+                .HasColumnName("COM_FECHA");
             entity.Property(e => e.Comdescripcion)
                 .HasColumnType("text")
                 .HasColumnName("COMDESCRIPCION");
@@ -507,6 +514,7 @@ public partial class SisdemContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Idcomentario).HasColumnName("IDCOMENTARIO");
             entity.Property(e => e.Iddenuncia).HasColumnName("IDDENUNCIA");
+            entity.Property(e => e.Idrol).HasColumnName("IDROL");
             entity.Property(e => e.Rolnombre)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -525,6 +533,9 @@ public partial class SisdemContext : DbContext
                 .HasNoKey()
                 .ToView("VistaDenuncias");
 
+            entity.Property(e => e.CedulaUsuario)
+                .HasMaxLength(20)
+                .IsUnicode(false);
             entity.Property(e => e.Denanimal)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -535,6 +546,7 @@ public partial class SisdemContext : DbContext
             entity.Property(e => e.Dendescripcion)
                 .IsUnicode(false)
                 .HasColumnName("DENDESCRIPCION");
+            entity.Property(e => e.Denentidadid).HasColumnName("DENENTIDADID");
             entity.Property(e => e.Denevidenciaadjunta).HasColumnName("DENEVIDENCIAADJUNTA");
             entity.Property(e => e.Denfechacierre)
                 .HasColumnType("datetime")
@@ -565,6 +577,8 @@ public partial class SisdemContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Iddenuncia).HasColumnName("IDDENUNCIA");
+            entity.Property(e => e.Idestado).HasColumnName("IDESTADO");
+            entity.Property(e => e.Idusuario).HasColumnName("IDUSUARIO");
             entity.Property(e => e.MotivoCierre)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -572,11 +586,12 @@ public partial class SisdemContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.UsuarioNombreCompleto)
-                .HasMaxLength(100)
+                .HasMaxLength(101)
                 .IsUnicode(false);
             entity.Property(e => e.UsuarioTelefono)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+            entity.Property(e => e.Usurol).HasColumnName("USUROL");
         });
 
         modelBuilder.Entity<VistaEvidencia>(entity =>

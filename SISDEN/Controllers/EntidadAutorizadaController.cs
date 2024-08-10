@@ -35,7 +35,7 @@ namespace SISDEN.Controllers
         }
 
         
-        [HttpGet("api/EntidadAutorizada/id")]
+        [HttpGet("api/EntidadAutorizada/{id}")]
         public async Task<ActionResult<EntidadAutorizadaDTO>> GetEntidadAutorizada(int id)
         {
             var entidadAutorizada = await _context.Entidadautorizada

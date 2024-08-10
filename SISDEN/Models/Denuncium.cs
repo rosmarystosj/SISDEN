@@ -44,4 +44,6 @@ public partial class Denuncium
     public string? Densesion { get; set; }
 
     public string? Dencategoria { get; set; }
+
+    public int? Denentidadid { get; set; }
 }

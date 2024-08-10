@@ -33,7 +33,7 @@ namespace SISDEN.Controllers
         }
 
 
-        [HttpGet("api/Estado/id")]
+        [HttpGet("api/Estado/{id}")]
         public async Task<ActionResult<EstadoDTO>> GetEstadoid(int id)
         {
             var estado = await _context.Estados
@@ -70,7 +70,7 @@ namespace SISDEN.Controllers
         }
 
         
-        [HttpPut("api/Estado/id")]
+        [HttpPut("api/Estado/{id}")]
         public async Task<IActionResult> PutEstado(int id, EstadoDTO estadoDto)
         {
             if (id != estadoDto.Idestado)
@@ -108,7 +108,7 @@ namespace SISDEN.Controllers
             return NoContent();
         }
 
-        [HttpDelete("api/Estado/id")]
+        [HttpDelete("api/Estado/{id}")]
         public async Task<IActionResult> DeleteEstado(int id)
         {
             var estado = await _context.Estados.FindAsync(id);

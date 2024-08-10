@@ -1,0 +1,252 @@
+﻿@page "/denuncias"
+@layout NavLay
+@inject LoginModelService LoginModel
+@inject RegistroEntidadService RegistroServiceEntidad
+@inject RegistroDenuncianteService RegistroService
+@inject DenunciasService DenunciasService
+@inject EntidadService EntidadService
+@inject IJSRuntime JS
+
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/images/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-icon">
+    <!-- Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.css">
+    <!-- ico-font-->
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/icofont.css">
+    <!-- Themify icon-->
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/themify.css">
+    <!-- Flag icon-->
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/flag-icon.css">
+    <!-- Feather icon-->
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/feather-icon.css">
+    <!-- Plugins css start-->
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/scrollbar.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/animate.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/datatables.css">
+   
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+    <link id="color" rel="stylesheet" href="../assets/css/color-1.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../assets/css/responsive.css">
+  </head>
+    <div class="loader-wrapper">
+      <div class="loader"> 
+        <div class="loader4"></div>
+      </div>
+    </div>
+     <div class="tap-top"><i data-feather="chevrons-up"></i></div>
+    @if (denuncias == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        
+    <div class="page-wrapper compact-wrapper" id="pageWrapper">
+        <div class="page-body-wrapper">
+
+        <div class="page-body" >
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Denuncias</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="index.html">
+                                        <svg class="stroke-icon">
+                                            <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                        </svg>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">inicio</li>
+                                <li class="breadcrumb-item active">Ver Denuncias</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header pb-0 card-no-border">
+                        <h4 class="mb-3">Todas las denuncias</h4><span>A continuación una lista de denuncias recibidas a través de nuestro sistema. </span>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive custom-scrollbar">
+                   
+                      <table class="display" id="data-source-1" style="width:100%">
+                        <thead>
+                          <tr>
+                            <th>Título</th>
+                            <th>Fecha de Creación</th>
+                            <th>Ubicación</th>
+                            <th>Estado</th>
+                            <th>Denunciante</th>
+                            <th>Acción</th>  
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var denuncia in denuncias)
+                        {
+                            <tr>
+                                <td>@denuncia.Dentitulo</td>
+                                <td>@denuncia.Denfechacreacion?.ToString("yyyy-MM-dd")</td>
+                                <td>@denuncia.Denubicacion</td>
+                                @if (denuncia.Idestado == 1)
+                               {
+                                <td> <span class="badge rounded-pill badge-danger">Pendiente</span></td>
+                                }
+                                else if (denuncia.Idestado == 2)
+                                {
+                                  <td> <span class="badge rounded-pill badge-success">Resuelta</span></td>
+
+                                }
+                                else if (denuncia.Idestado == 3)
+                                {
+                                 <td> <span class="badge rounded-pill badge-info">En Revisión</span></td>
+
+                                }
+                                 else if (denuncia.Idestado == 4)
+                                {
+                                 <td> <span class="badge rounded-pill badge-warning">Detenida</span></td>
+
+                                }
+                                else if (denuncia.Idestado == 5)
+                                {
+                                 <td> <span class="badge rounded-pill badge-dark">Rechazada</span></td>
+
+                                }
+                                else if (denuncia.Idestado == 6)
+                                {
+                                 <td> <span class="badge rounded-pill badge-green">Cerrada</span></td>
+
+                                }
+                                else
+                                {
+                                 <td> @denuncia.Estado</td>
+
+                               }
+
+                                <td>@denuncia.UsuarioNombreCompleto</td>
+                                <td>
+                                    <ul class="action">
+                                       <li class="edit"> <a href="/denuncias/editardenuncias"><i class="icon-pencil-alt" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" data-bs-title="&lt;b&gt;Cerrar&lt;/b&gt; &lt;em&gt;denuncia&lt;/em&gt;"></i></a></li>
+                                       <li class="edit"> <a href="/detalle-denuncia/@denuncia.Iddenuncia"><i class="icon-eye" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" data-bs-title="&lt;b&gt;Ver&lt;/b&gt; &lt;em&gt;denuncia&lt;/em&gt;"></i></a></li>
+                                    </ul>
+                                </td>
+                                
+                            </tr>
+                        }
+                        </tbody>
+                        <tfoot>
+                         <tr>
+                        <th>Título</th>
+                        <th>Fecha de Creación</th>
+                        <th>Ubicación</th>
+                        <th>Estado</th>
+                        <th>Denunciante</th>
+                        <th>Acción</th>
+                         </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+       </div>
+      </div>
+    </div>
+
+        <footer class="footer">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12 footer-copyright text-center">
+                <p class="mb-0">Copyright 2024 © Riho theme by pixelstrap  </p>
+              </div>
+            </div>
+          </div>
+        </footer>
+    <script src="../assets/js/jquery.min.js"></script>
+    <script src="../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/icons/feather-icon/feather.min.js"></script>
+    <script src="../assets/js/icons/feather-icon/feather-icon.js"></script>
+    <script src="../assets/js/scrollbar/simplebar.js"></script>
+    <script src="../assets/js/scrollbar/custom.js"></script>
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/sidebar-menu.js"></script>
+    <script src="../assets/js/sidebar-pin.js"></script>
+    <script src="../assets/js/slick/slick.min.js"></script>
+    <script src="../assets/js/slick/slick.js"></script>
+    <script src="../assets/js/header-slick.js"></script>
+    <script src="../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+    <script src="../assets/js/datatable/datatables/datatable.custom.js"></script>
+   
+    <script src="../assets/js/script.js"></script>
+}
+@code {
+    private List<VistaDenuncia> denuncias;
+    private string errorMessage;
+
+    private async Task ShowMessage()
+    {
+        await JS.InvokeVoidAsync("alert", "¡Mensaje mostrado al pasar el cursor sobre el símbolo!");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            denuncias = new List<VistaDenuncia>(); 
+
+            if (LoginModel.LoginModel?.UsuRol == 1)
+            {
+                var cedula = LoginModel.LoginModel.Usuidentificacion;
+                denuncias = await DenunciasService.GetDenunciasByCedulaAsync(cedula);
+            }
+            else if (RegistroService.RegistroModelo?.Usurol == 1)
+            {
+                var cedula = RegistroService.RegistroModelo.Usuidentificacion;
+                denuncias = await DenunciasService.GetDenunciasByCedulaAsync(cedula);
+            }
+            else if (LoginModel.LoginModel?.UsuRol == 2)
+            {
+                var entidadid = await EntidadService.GetEntidadIdByEmailAsync(LoginModel.LoginModel.Usuemail);
+                denuncias = await DenunciasService.GetDenunciasByEntidadIdAsync(entidadid);
+            }
+            else if (RegistroServiceEntidad.EntidadModelo?.Usurol == 2)
+            {
+                var entidadid = await EntidadService.GetEntidadIdByEmailAsync(RegistroServiceEntidad.EntidadModelo.Usuemail);
+                denuncias = await DenunciasService.GetDenunciasByEntidadIdAsync(entidadid);
+            }
+        }
+        catch (HttpRequestException httpEx)
+        {
+            errorMessage = "Network error occurred: " + httpEx.Message;
+            Console.WriteLine(httpEx);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading entities: " + ex.Message;
+            Console.WriteLine(ex);
+        }
+    }
+
+}

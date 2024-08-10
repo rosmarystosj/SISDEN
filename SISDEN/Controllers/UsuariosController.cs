@@ -24,17 +24,21 @@ namespace SISDEN.Controllers
         private readonly SisdemContext _context;
         private readonly IServicioEmail _emailService;
         private readonly IRegistrarDenuncia _registrarDenuncia;
-        
-       
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public UsuariosController(SisdemContext context, IServicioEmail emailService, IRegistrarDenuncia registrarDenuncia)
- 
+
+        public UsuariosController(SisdemContext context, IServicioEmail emailService, IRegistrarDenuncia registrarDenuncia, UserManager<IdentityUser> userManager, IConfiguration configuration)
+
         {
             _context = context;
             _emailService = emailService;
             _registrarDenuncia = registrarDenuncia;
-          
+            _userManager = userManager;
+            _configuration = configuration;
+
         }
+  
 
         [HttpGet("api/ObtenerUsuarios")]
         public async Task<ActionResult<IEnumerable<VistaUsuario>>> GetUsuarios()
@@ -43,21 +47,21 @@ namespace SISDEN.Controllers
             return await _context.VistaUsuarios.ToListAsync();
         }
 
-        [HttpGet("api/ObtenerUsuario/{id}")]
-        public async Task<ActionResult<VistaUsuario>> GetUsuario(int id)
+        [HttpGet("api/ObtenerUsuario/{correo}")]
+        public async Task<ActionResult<Usuario>> GetUsuario(string correo)
         {
-            var usuario = await _context.VistaUsuarios.FirstOrDefaultAsync(u => u.Idusuario == id);
-            if (usuario == null) 
-            { 
-               return NotFound();
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == correo);
+            if (usuario == null)
+            {
+                return NotFound();
             }
-           return usuario;
+            return Ok(new { usuario.Usuentidad });
         }
+
+     
         [HttpPost("api/loginDenunciante")]
         public async Task<IActionResult> LoginDenunciante([FromBody] LoginModel loginModel)
-
         {
-           
             var usuarioLogin = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuidentificacion == loginModel.Usuidentificacion && u.Usustatus == "Verificado");
             if (usuarioLogin == null)
             {
@@ -131,7 +135,7 @@ namespace SISDEN.Controllers
                 Usuverificacion = verificationCode,
                 VerificationExpiry = DateTime.UtcNow.AddMinutes(15),
                 Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
-                Usurol = 1,
+                Usurol = registroModelo.Usurol,
                 Usustatus = "No verificado",
                 Usutelefono = registroModelo.Usutelefono,
                 Usutelefono2 = registroModelo.Usutelefono2,
@@ -156,7 +160,7 @@ namespace SISDEN.Controllers
                 var subject = "Confirmación de registro";
                 var message = $"<h1>Bienvenido {usuario.Usunombre} {usuario.Usuapellido}, </h1><p>Gracias por registrarte en nuestra aplicación de registro y gestion de denucnas contra el maltrato animal.</p>" +
                                $"<p>Por favor, verifica tu cuenta ingresando el siguiente código de verificación: </p>" +
-                               $"<p> <strong>{verificationCode}</strong></p>";
+                             $"<h2> <strong>{verificationCode}</strong></h2>";
 
                 await _emailService.SendEmailAsync(usuario.Usuemail, subject, message);
             }       
@@ -187,7 +191,7 @@ namespace SISDEN.Controllers
             {
                 Usuverificacion = verificationCode,
                 Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
-                Usurol = 2,
+                Usurol = registroModelo.Usurol,
                 Usuentidad = registroModelo.Usuentidad,
                 Usustatus = "No verificado",
                 VerificationExpiry = DateTime.UtcNow.AddMinutes(15),
@@ -201,9 +205,9 @@ namespace SISDEN.Controllers
              usuario.Usuemail = mail;
 
             var subject = "Confirmación de registro";
-            var message = $"<h1>Bienvenido, </h1><p>Gracias por registrarte en nuestra aplicación de registro y gestion de denucnas contra el maltrato animal.</p>" +
+            var message = $"<h1>Bienvenido, </h1><p>Gracias por registrarte en nuestra aplicación de registro y gestion de denuncias contra el maltrato animal.</p>" +
                   $"<p>Por favor, verifica tu cuenta como entidad ingresando el siguiente código de verificación: </p>" +
-                  $"<p> <strong>{verificationCode}</strong></p>";
+                  $"<h2> <strong>{verificationCode}</strong></h2>";
 
             await _emailService.SendEmailAsync(mail, subject, message);
 
@@ -458,6 +462,47 @@ namespace SISDEN.Controllers
 
             return Ok("Mensaje eviado");
 
+        }
+
+        [HttpPost("api/cambiarContra/{id}")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            if (request.NewPassword != request.ConfirmNewPassword)
+            {
+                return BadRequest("La nueva contraseña y la confirmación no coinciden.");
+            }
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Idusuario == request.UserId);
+            if (usuario == null)
+            {
+                return NotFound("Usuario no encontrado.");
+            }
+
+            var passwordHasher = new PasswordHasher<Usuario>();
+            var verificationResult = passwordHasher.VerifyHashedPassword(usuario, usuario.Usucontraseña, request.CurrentPassword);
+
+            if (verificationResult == PasswordVerificationResult.Failed)
+            {
+                return Unauthorized("La contraseña actual es incorrecta.");
+            }
+
+            usuario.Usucontraseña = passwordHasher.HashPassword(usuario, request.NewPassword);
+            _context.Usuarios.Update(usuario);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok("Contraseña cambiada exitosamente.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
         private bool UsuarioExists(int id)
         {

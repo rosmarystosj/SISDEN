@@ -35,7 +35,7 @@ namespace SISDEN.Services
             {
                 Densesion = sesionId,
                 Denfechacreacion = DateTime.Now,
-
+                DenIdestado = 1
             };
             _context.Denuncia.Add(denuncia);
             await _context.SaveChangesAsync();

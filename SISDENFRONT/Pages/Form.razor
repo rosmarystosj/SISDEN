@@ -1,0 +1,138 @@
+﻿
+<EditForm class="theme-form" Model="denunciaDTO">
+    <DataAnnotationsValidator />
+    <Validaciones TModel="DenunciasDTO" />
+    <div class="tab-content dark-field" id="vertical-wizard-tabContent">
+        <div class="tab-pane fade show active" id="wizard-v-info" role="tabpanel" aria-labelledby="wizard-v-info-tab">
+            <form class="row g-3 needs-validation" novalidate="">
+
+                <div class="col-xxl-12 col-md-12">
+                    <div class="card-wrapper border rounded-3 checkbox-checked " style="width: 100%;">
+                        <h6 class="sub-title">Acciones Legales</h6>
+
+                        <div class="form-check-size rtl-input">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input me-2" id="inlineCheckbox1" type="checkbox" @checked="denunciaDTO.Densalarios" />
+                                <label class="form-check-label" for="inlineCheckbox1">Multa</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input me-2" id="inlineCheckbox2" type="checkbox" @bind="denunciaDTO.Denservicio" />
+                                <label class="form-check-label" for="inlineCheckbox2">Servicios</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input me-2" id="inlineCheckbox3" type="checkbox" @checked="denunciaDTO.Denprision" @onClick="OnPrisionChanged" />
+                                <label class="form-check-label" for="inlineCheckbox3">Prision</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (denunciaDTO.Densalarios)
+                {
+                    <div class="col-xxl-4 col-sm-6">
+                        <label class="form-label" for="validation-firstname-wizard">Cantidad de salarios<span class="txt-danger">*</span></label>
+                        <input class="form-control" id="validation-firstname-wizard" type="text" placeholder="5" @bind="denunciaDTO.Dennumsalarios">
+                    </div>
+                }
+                @if (denunciaDTO.Denservicio)
+                {
+                    <div class="col-xxl-4 col-sm-6">
+                        <label class="form-label" for="validation-firstname-wizard">Cantidad Meses de Servicios<span class="txt-danger">*</span></label>
+                        <input class="form-control" id="validation-firstname-wizard" type="text" placeholder="5" @bind="denunciaDTO.Dennumserv">
+                    </div>
+                }
+                @if (denunciaDTO.Denprision)
+                {
+                    <div class="col-xxl-4 col-sm-6">
+                        <label class="form-label" for="validation-firstname-wizard">Cantidad de Meses de prisión<span class="txt-danger">*</span></label>
+                        <input class="form-control" id="validation-firstname-wizard" type="text" placeholder="5" @checked="denunciaDTO.Dennumprision">
+                    </div>
+                }
+
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" id="validation-check-wizard" type="checkbox" value="" @bind="denunciaDTO.Denevidenciaadjunta">
+                        <label class="form-check-label mb-0 d-block" for="validation-check-wizard">Se ha verificado el cumplimiento de las acciones legales</label>
+                    </div>
+                </div>
+                <div class="col-12 text-end">
+                    <button class="btn btn-primary">Continue</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="bank-v-wizard" role="tabpanel" aria-labelledby="inquiry-v-wizard-tab">
+            <form class="row g-3 needs-validation" novalidate="">
+                <div class="col-12 inquiries-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="f-w-500">Selecciona la acción de seguimiento requerida tras el cierre.</p>
+                            <div class="choose-option">
+                                <div class="form-check radio radio-primary">
+                                    <input class="form-check-input me-2" id="radioSelect1" type="radio" name="inlineRadioOptions" value="option1">
+                                    <label class="form-check-label" for="radioSelect1">Seguir con el denunciante</label>
+                                </div>
+                                <div class="form-check radio radio-primary">
+                                    <input class="form-check-input me-2" id="radioSelect2" type="radio" name="inlineRadioOptions" value="option2">
+                                    <label class="form-check-label" for="radioSelect2">No se requiere seguimiento</label>
+                                </div>
+                                <div class="form-check radio radio-primary">
+                                    <input class="form-check-input me-2" id="radioSelect3" type="radio" name="inlineRadioOptions" value="option3">
+                                    <label class="form-check-label" for="radioSelect3">Monitorear la situación</label>
+                                </div>
+                                <div class="form-check radio radio-primary">
+                                    <input class="form-check-input me-2" id="radioSelect4" type="radio" name="inlineRadioOptions" value="option3">
+                                    <label class="form-check-label" for="radioSelect4">Revisar en 3 meses</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-sm-6">
+                            <label class="form-label" for="validation-firstname-wizard">Fecha de Cierre<span class="txt-danger">*</span></label>
+                            <input class="form-control" id="validation-firstname-wizard" type="text" @bind="denunciaDTO.Denfechacierre">
+                        </div>
+                        <div class="col-xxl-5 col-md-6">
+                            <label class="form-label" for="validation-states">Motivo de Cierre</label>
+                            <InputSelect class="form-select form-select-sm" aria-label=".form-select-sm example" id="Usuentidad" type="text" @bind-Value="denunciaDTO.DenIdmotivocierre">
+                                <option value="">Selecciona tu entidad</option>
+                                @foreach (var motivo in motivosCierre)
+                                {
+                                    <option value="@motivo.Idmotivo">@motivo.Motivodescripcion</option>
+                                }
+                            </InputSelect>
+
+                        </div>
+                        <div class="col-xxl-5 col-md-6">
+                            <label class="form-label" for="validation-states">Estatus Final</label>
+                            <InputSelect class="form-select form-select-sm" aria-label=".form-select-sm example" id="Usuentidad" type="text" @bind-Value="denunciaDTO.DenIdestado">
+                                <option value="">Selecciona tu entidad</option>
+                                @foreach (var estados in estado)
+                                {
+                                    <option value="@estados.Idestado">@estados.Estdescripcion</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label f-w-500" for="formControlTextareaWizard">Observaciones Finales</label>
+                    <textarea class="form-control" id="formControlTextareaWizard" @bind="denunciaDTO.Denobservaciones" rows="3"></textarea>
+                </div>
+                <div class="col-12 text-end">
+                    <button class="btn btn-primary">Atras</button>
+                    <button class="btn btn-primary" @onClick="HandleValidSubmit">Continuar</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="successful-v-wizard" role="tabpanel" aria-labelledby="successful-v-wizard-tab">
+            <div class="form-completed">
+                <img src="../assets/images/gif/dashboard-8/successful.gif" alt="successful">
+                <h6>Completado satisfactoriamente </h6>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private DenunciasDTO denunciaDTO = new DenunciasDTO();
+    private List<Motivocierre> motivosCierre;
+    private List<Estado> estado;
+    private string errorMessage;
+}

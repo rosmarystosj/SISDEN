@@ -24,6 +24,11 @@ namespace SISDEN.Controllers
         [HttpPost("api/Comentario")]
         public async Task<ActionResult<ComentarioDTO>> PostComentario([FromBody] ComentarioDTO comentarioDto)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var comentario = new Comentario
             {
                 
@@ -31,16 +36,44 @@ namespace SISDEN.Controllers
                 ComIdusuario = comentarioDto.ComIdusuario,
                 ComIddenuncia = comentarioDto.ComIddenuncia,
                 ComIdrol = comentarioDto.ComIdrol,
+                ComFecha = comentarioDto.ComFecha,
             };
 
             _context.Comentarios.Add(comentario);
             await _context.SaveChangesAsync();
 
-            var Email = await _context.Usuarios.Where(u=> u.Idusuario== comentario.ComIdusuario).Select(u=> u.Usuemail).FirstOrDefaultAsync();
+            if (comentarioDto.ComIdrol == 2)
+            {
+                var usuario = await _context.Denuncia
+               .Where(d => d.Iddenuncia == comentarioDto.ComIddenuncia)
+               .Select(d => d.DenIdusuario).FirstOrDefaultAsync();
 
-            var mensaje = $"<p>Se ha creado un nuevo comentario.</p>" + $"<p>Contenido del comentario:</p>" + $"<p>'{comentario.Comdescripcion}'</p>";
+                var mail = await _context.Usuarios
+               .Where(u => u.Idusuario == usuario)
+               .Select(u => u.Usuemail).FirstOrDefaultAsync();
 
-            await _servicioEmail.SendEmailAsync(Email, "Nuevo comentario creado", mensaje);
+                var mensaje = $"<p>Se ha creado un nuevo comentario.</p>" +
+                          $"<p>Contenido del comentario:</p>" +
+                          $"<p>'{comentario.Comdescripcion}'</p>";
+
+                await _servicioEmail.SendEmailAsync(mail, "Nuevo comentario creado", mensaje);
+
+            }
+            else  {
+                var entidadid = await _context.Denuncia
+              .Where(d => d.Iddenuncia == comentarioDto.ComIddenuncia)
+              .Select(d => d.Denentidadid).FirstOrDefaultAsync();
+
+                var mail = await _context.Entidadautorizada
+               .Where(u => u.Identidadaut == entidadid)
+               .Select(u => u.EntCorreo).FirstOrDefaultAsync();
+
+                var mensaje = $"<p>Se ha creado un nuevo comentario.</p>" +
+                              $"<p>Contenido del comentario:</p>" +
+                              $"<p>'{comentario.Comdescripcion}'</p>";
+
+                await _servicioEmail.SendEmailAsync(mail, "Nuevo comentario creado", mensaje);
+            }
 
             comentarioDto.Idcomentario = comentario.Idcomentario;
 
@@ -48,7 +81,7 @@ namespace SISDEN.Controllers
         }
 
 
-        [HttpGet("api/Comentario/id")]
+        [HttpGet("api/Comentario/{id}")]
         public async Task<ActionResult<ComentarioDTO>> GetComentario(int id)
         {
             var comentario = await _context.Comentarios
@@ -69,7 +102,7 @@ namespace SISDEN.Controllers
             return comentario;
         }
 
-        [HttpGet("api/Comertariopordenuncia/Denunciaid")]
+        [HttpGet("api/Comertariopordenuncia/{Denunciaid}")]
         public async Task<ActionResult<IEnumerable<VistaComentario>>> GetComentarioPorDenuncia(int Denunciaid)
         {
             var comentarios = await _context.VistaComentarios
@@ -80,7 +113,8 @@ namespace SISDEN.Controllers
             UsuarioNombre = c.UsuarioNombre,
             Iddenuncia = c.Iddenuncia,
             Rolnombre = c.Rolnombre,
-            DenunciaTitulo = c.DenunciaTitulo
+            DenunciaTitulo = c.DenunciaTitulo,
+            ComFecha = c.ComFecha,
         }).ToListAsync();
 
             if (comentarios == null || comentarios.Count == 0)
@@ -91,7 +125,7 @@ namespace SISDEN.Controllers
             return comentarios;
         }
 
-        [HttpPut("api/Comentario/id")]
+        [HttpPut("api/Comentario/{id}")]
         public async Task<IActionResult> PutComentario([FromBody] int id, ComentarioDTO comentarioDto)
         {
             if (id != comentarioDto.Idcomentario)
@@ -110,6 +144,7 @@ namespace SISDEN.Controllers
             comentario.ComIdusuario = comentarioDto.ComIdusuario;
             comentario.ComIddenuncia = comentarioDto.ComIddenuncia;
             comentario.ComIdrol = comentarioDto.ComIdrol;
+            comentario.ComFecha = comentarioDto.ComFecha;   
 
             _context.Entry(comentario).State = EntityState.Modified;
 
@@ -133,7 +168,7 @@ namespace SISDEN.Controllers
         }
 
         
-        [HttpDelete("api/Comentario/id")]
+        [HttpDelete("api/Comentario/{id}")]
         public async Task<IActionResult> DeleteComentario(int id)
         {
             var comentario = await _context.Comentarios.FindAsync(id);

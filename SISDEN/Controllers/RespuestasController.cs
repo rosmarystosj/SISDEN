@@ -24,7 +24,7 @@ namespace SISDEN.Controllers
 
             return await _context.VistaRespuestas.ToListAsync();
         }
-        [HttpGet("api/ObtenerRespuestas{id}")]
+        [HttpGet("api/ObtenerRespuestas/{id}")]
         public async Task<ActionResult<VistaRespuesta>> GetRespuestas(int id)
         {
             var respuestas = await _context.VistaRespuestas.FirstOrDefaultAsync(r => r.Idrespuesta == id);

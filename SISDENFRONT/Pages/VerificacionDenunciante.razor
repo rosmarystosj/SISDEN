@@ -50,7 +50,6 @@
 <style>
     .button-group {
         margin-top: 40px;
-        e4erfn
 </style>
 @code {
 
@@ -67,7 +66,7 @@
             verificarEmail.Email = RegistroService.RegistroModelo.Usuemail;
             var result = await AuthService.VerificarEmail(verificarEmail);
 
-            NavigationManager.NavigateTo("/confirmar");
+            NavigationManager.NavigateTo("/confirmar", forceLoad: true);
 
         }
         catch (ApplicationException ex)

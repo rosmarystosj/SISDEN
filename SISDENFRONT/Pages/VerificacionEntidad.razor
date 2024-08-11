@@ -65,7 +65,7 @@
             verificarEmail.Email = RegistroService.EntidadModelo.Usuemail;
             var result = await AuthService.VerificarEmail(verificarEmail);
 
-            NavigationManager.NavigateTo("/confirmar");
+            NavigationManager.NavigateTo("/confirmar", forceLoad: true);
 
         }
         catch (ApplicationException ex)

@@ -20,7 +20,7 @@ namespace SISDEN.Controllers
             _emailService = emailService;
         }
 
-        [HttpGet]
+        [HttpGet("api/AllViolaciones")]
         public async Task<ActionResult<IEnumerable<LeyviolacionDTO>>> GetLeyviolaciones()
         {
             return await _context.Leyviolacions

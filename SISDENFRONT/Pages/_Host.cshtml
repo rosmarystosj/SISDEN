@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Components.Web
 @namespace SISDENFRONT.Pages
+@inject IHttpContextAccessor HttpContextAccessor
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
@@ -11,8 +12,13 @@
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
-    <link href="~/assets/css/vendors/landingp.css" rel="stylesheet" />
-    <link href="SISDENFRONT.styles.css" rel="stylesheet" />
+    @if (HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/"))
+    {
+        <link href="~/assets/css/vendors/landingp.css" rel="stylesheet" />
+        <link href="SISDENFRONT.styles.css" rel="stylesheet" />
+
+    }
+ 
     <link rel="icon" type="image/png" href="favicon.png"/>
 
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
@@ -33,5 +39,49 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+
+    
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/icons/feather-icon/feather.min.js"></script>
+<script src="../assets/js/icons/feather-icon/feather-icon.js"></script>
+<script src="../assets/js/scrollbar/simplebar.js"></script>
+<script src="../assets/js/scrollbar/custom.js"></script>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/sidebar-menu.js"></script>
+<script src="../assets/js/sidebar-pin.js"></script>
+<script src="../assets/js/slick/slick.min.js"></script>
+<script src="../assets/js/slick/slick.js"></script>
+<script src="../assets/js/header-slick.js"></script>
+<script src="../assets/js/chart/apex-chart/apex-chart.js"></script>
+<script src="../assets/js/chart/apex-chart/stock-prices.js"></script>
+<script src="../assets/js/chart/apex-chart/moment.min.js"></script>
+<script src="../assets/js/chart/echart/esl.js"></script>
+<script src="../assets/js/chart/echart/config.js"></script>
+<script src="../assets/js/chart/echart/pie-chart/facePrint.js"></script>
+<script src="../assets/js/chart/echart/pie-chart/testHelper.js"></script>
+<script src="../assets/js/chart/echart/pie-chart/custom-transition-texture.js"></script>
+<script src="../assets/js/chart/echart/data/symbols.js"></script>
+<script src="../assets/js/form-wizard/form-wizard.js"></script>
+<script src="../assets/js/form-wizard/image-upload.js"></script>
+<script src="../assets/js/height-equal.js"></script>
+<script src="../assets/js/owlcarousel/owl.carousel.js"></script>
+<script src="../assets/js/ecommerce.js"></script>
+<script src="../assets/js/rating/rating-script.js"></script>
+<script src="../assets/js/rating/jquery.barrating.js"></script>
+
+<script src="../assets/js/form-wizard/verification.js"></script>
+<script src="../assets/js/tooltip-init.js"></script>
+<script src="../assets/js/datepicker/date-picker/datepicker.js"></script>
+<script src="../assets/js/datepicker/date-picker/datepicker.en.js"></script>
+<script src="../assets/js/datepicker/date-picker/datepicker.custom.js"></script>
+<script src="../assets/js/dashboard/dashboard_3.js"></script>
+<script src="../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+<script src="../assets/js/datatable/datatables/datatable.custom.js"></script>
+<script src="../assets/js/script.js"></script>
+
+<script src="../assets/js/cleave/cleave.min.js"></script>
+<script src="../assets/js/cleave/custom-cleave.js"></script>
+<script src="../assets/js/height-equal.js"></script>
 </body>
 </html>

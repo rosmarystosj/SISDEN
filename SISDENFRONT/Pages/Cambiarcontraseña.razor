@@ -137,7 +137,7 @@
         changePasswordRequest.UserId = user;
         try
         {
-            var response = await Http.PostAsJsonAsync("/api/cambiarContra", changePasswordRequest);
+            var response = await Http.PostAsJsonAsync("api/cambiarContra", changePasswordRequest);
 
             if (response.IsSuccessStatusCode)
             {

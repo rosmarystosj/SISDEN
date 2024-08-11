@@ -29,7 +29,7 @@ builder.Services.AddScoped<EntidadService>();
 builder.Services.AddScoped(sp =>
     new HttpClient
     {
-        BaseAddress = new Uri("https://localhost:7212/")
+        BaseAddress = new Uri("https://sisdem-agf5defyachrh7g9.eastus-01.azurewebsites.net/")
     });
 
 

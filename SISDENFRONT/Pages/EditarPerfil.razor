@@ -174,13 +174,14 @@
 </body>
 </html>
 @code {
+    private RegistroModelo registromodelo = new RegistroModelo();
     private string errorMessage;
     private async Task HandleRegister()
     {
         try
         {
             errorMessage = null;
-            var resultado = await AuthService.EditarUsuario(registroModelo);
+            var resultado = await AuthService.EditarUsuario(registromodelo);
             NavigationManager.NavigateTo("/index");
         }
         catch (ApplicationException ex)

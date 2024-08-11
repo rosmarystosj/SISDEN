@@ -149,6 +149,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        evidencias = await Http.GetFromJsonAsync<List<VistaEvidencia>>($"/api/ObtenerEvidencias/{Id}");
+        evidencias = await Http.GetFromJsonAsync<List<VistaEvidencia>>($"api/ObtenerEvidencias/{Id}");
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.JSInterop;
 using SISDEN.DTOS;
+using SISDEN.Models;
 using System.Text.Json;
 using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
@@ -142,6 +143,15 @@ namespace SISDENFRONT.Data
                 throw new ApplicationException(errorMessage);
             }
         }
-
+        public async Task<VistaUsuario> ObtenerUsuarioAsync(string correo)
+        {
+            var response = await _httpClient.GetFromJsonAsync<VistaUsuario>($"api/ObtenerUsuarioAll/{correo}");
+            return response;
+        }
+        public async Task<int> ObtenerUsuarioIdAsync(string correo)
+        {
+            var usuario = await _httpClient.GetFromJsonAsync<VistaUsuario>($"api/ObtenerUsuarioall/{correo}");
+            return usuario.Idusuario;
+        }
     }
 }

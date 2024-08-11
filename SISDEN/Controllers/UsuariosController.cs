@@ -55,10 +55,20 @@ namespace SISDEN.Controllers
             {
                 return NotFound();
             }
-            return Ok(new { usuario.Usuentidad, usuario.Idusuario });
+            return Ok(new { usuario.Usuentidad});
         }
 
-
+        [HttpGet("api/ObtenerUsuarioAll/{correo}")]
+        public async Task<ActionResult<VistaUsuario>> GetUsuarioAll(string correo)
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == correo);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return Ok(usuario);
+        }
+    
         [HttpPost("api/loginDenunciante")]
         public async Task<IActionResult> LoginDenunciante([FromBody] LoginModel loginModel)
         {
@@ -94,7 +104,7 @@ namespace SISDEN.Controllers
             {
                 return Unauthorized("Datos invalidos.");
             }
-
+               
             return Ok("Login exitoso.");
 
         }
@@ -464,7 +474,7 @@ namespace SISDEN.Controllers
 
         }
 
-        [HttpPost("api/cambiarContra/{id}")]
+        [HttpPost("api/cambiarContra")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel request)
         {
             if (!ModelState.IsValid)

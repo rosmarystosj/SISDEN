@@ -2,6 +2,13 @@
 @layout NavLay
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
+@inject LoginModelService LoginModel
+@inject RegistroEntidadService RegistroServiceEntidad
+@inject RegistroDenuncianteService RegistroService
+@inject DenunciasService DenunciasService
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -96,6 +103,8 @@
 
 @code {
     private string errorMessage;
+    private string correo;
+    private int user;
 
     private ChangePasswordModel changePasswordRequest = new ChangePasswordModel();
 
@@ -108,7 +117,24 @@
             errorMessage = "La nueva contraseña y la confirmación no coinciden.";
             return;
         }
+        if (LoginModel.LoginModel?.UsuRol == 1 && LoginModel.LoginModel?.UsuRol == 2)
+        {
+            correo = LoginModel.LoginModel.Usuemail;
+            user = await AuthService.ObtenerUsuarioIdAsync(correo);
 
+        }
+        else if (RegistroService.RegistroModelo?.Usurol == 1)
+        {
+            correo = RegistroService.RegistroModelo.Usuidentificacion;
+            user = await AuthService.ObtenerUsuarioIdAsync(correo);
+        }
+
+        else if (RegistroServiceEntidad.EntidadModelo?.Usurol == 2)
+        {
+            correo = RegistroServiceEntidad.EntidadModelo.Usuemail;
+            user = await AuthService.ObtenerUsuarioIdAsync(correo);
+        }
+        changePasswordRequest.UserId = user;
         try
         {
             var response = await Http.PostAsJsonAsync("/api/cambiarContra", changePasswordRequest);

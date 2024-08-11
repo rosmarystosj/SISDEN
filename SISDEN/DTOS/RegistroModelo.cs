@@ -3,7 +3,8 @@
 namespace SISDEN.DTOS
 {
     public class RegistroModelo
-    {
+
+    {    
         [Required(ErrorMessage = "El nombre es requerido.")]
         public string? Usunombre { get; set; }
 

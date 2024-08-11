@@ -58,15 +58,15 @@
                                                     <div class="media">
                                                         <img class="img-70 rounded-circle" alt="" src="../assets/images/user/7.jpg">
                                                         <div class="media-body">
-                                                            @if (LoginModel.LoginModel?.UsuRol == 1 && RegistroService.RegistroModelo?.Usurol == 1)
+                                                            @if (user.Usurol == 1)
                                                             {
-                                                                <h5 class="mb-1">@LoginModel.LoginModel.Usuemail</h5>
+                                                                <h5 class="mb-1">@user.Usunombre @user.Usuapellido</h5>
                                                                 <p>Denunciante</p>
 
                                                             }
-                                                            else if (LoginModel.LoginModel?.UsuRol == 2 && RegistroServiceEntidad.EntidadModelo?.Usurol == 2)
+                                                            else if (user.Usurol == 2)
                                                             {
-                                                                <h5 class="mb-1">@LoginModel.LoginModel.Usuemail</h5>
+                                                                <h5 class="mb-1">@user.Entautorizadadescp</h5>
                                                                 <p>Entidad</p>
 
                                                             }
@@ -77,12 +77,12 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Correo Electrónico</label>
-                                                <Label class="form-control">@</label>
+                                                <Label class="form-control">@user.Usuemail</label>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label">Sitio Web</label>
-                                                <Label class="form-control"></label>
+                                                <label class="form-label">Teléfono</label>
+                                                <Label class="form-control">@user.Usutelefono</label>
                                             </div>
                                             
                                         </form>
@@ -100,31 +100,26 @@
                                             <div class="col-md-5">
                                                 <div class="mb-3">
                                                     <label class="form-label">Cédula</label>
-                                                    <input class="form-control" type="text" placeholder="Cedula">
+                                                    <input class="form-control" type="text" placeholder="Cedula" @bind="registromodelo.Usuidentificacion">
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-md-3">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Username</label>
-                                                    <input class="form-control" type="text" placeholder="Username">
-                                                </div>
-                                            </div>
+                                           
                                             <div class="col-sm-6 col-md-4">
                                                 <div class="mb-3">
                                                     <label class="form-label">Correo Electronico</label>
-                                                    <input class="form-control" type="email" placeholder="Email">
+                                                    <input class="form-control" type="email" placeholder="Email" @bind="registromodelo.Usuemail">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="mb-3">
                                                     <label class="form-label">Nombre</label>
-                                                    <input class="form-control" type="text" placeholder="Nombre">
+                                                    <input class="form-control" type="text" placeholder="Nombre" @bind="registromodelo.Usunombre">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="mb-3">
                                                     <label class="form-label">Apellidos</label>
-                                                    <input class="form-control" type="text" placeholder="Apellidos">
+                                                    <input class="form-control" type="text" placeholder="Apellidos" @bind="registromodelo.Usuapellido">
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -135,14 +130,14 @@
                                             </div>
                                             <div class="col-sm-6 col-md-4">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Segundo Teléfono</label>
-                                                    <input class="form-control" type="text" placeholder="Segundo Teléfono">
+                                                    <label class="form-label">Teléfono</label>
+                                                    <input class="form-control" type="text" placeholder="Segundo Teléfono" @bind="registromodelo.Usutelefono">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-3">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Telefono</label>
-                                                    <input class="form-control" type="number" placeholder="000-000-0000">
+                                                    <label class="form-label">Segundo Teléfono</label>
+                                                    <input class="form-control" type="number" placeholder="000-000-0000" @bind="registromodelo.Usutelefono2">
                                                 </div>
                                             </div>
 
@@ -150,7 +145,7 @@
                                         </div>
                                     </div>
                                     <div class="card-footer text-end">
-                                        <button class="btn btn-primary" type="submit">Actualizar Perfil</button>
+                                        <button class="btn btn-primary" @onClick="HandleRegister" type="submit">Actualizar Perfil</button>
                                     </div>
                                 </form>
                             </div>
@@ -176,6 +171,43 @@
 @code {
     private RegistroModelo registromodelo = new RegistroModelo();
     private string errorMessage;
+    private VistaUsuario user = new VistaUsuario();
+    private string correo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+
+            if (LoginModel.LoginModel?.UsuRol == 1 && LoginModel.LoginModel?.UsuRol == 2)
+            {
+                correo = LoginModel.LoginModel.Usuemail;
+                user = await AuthService.ObtenerUsuarioAsync(correo);
+
+            }
+            else if (RegistroService.RegistroModelo?.Usurol == 1)
+            {
+                correo = RegistroService.RegistroModelo.Usuidentificacion;
+                user = await AuthService.ObtenerUsuarioAsync(correo);
+            }
+          
+            else if (RegistroServiceEntidad.EntidadModelo?.Usurol == 2)
+            {
+                correo = RegistroServiceEntidad.EntidadModelo.Usuemail;
+                user = await AuthService.ObtenerUsuarioAsync(correo);
+            }
+        }
+        catch (HttpRequestException httpEx)
+        {
+            errorMessage = "Network error occurred: " + httpEx.Message;
+            Console.WriteLine(httpEx);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading entities: " + ex.Message;
+            Console.WriteLine(ex);
+        }
+    }
     private async Task HandleRegister()
     {
         try

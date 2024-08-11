@@ -128,5 +128,20 @@ namespace SISDENFRONT.Data
                 throw new ApplicationException(errorMessage);
             }
         }
+        public async Task<bool> EditarUsuario(RegistroModelo registroModelo)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/EditarUsuario", registroModelo);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new ApplicationException(errorMessage);
+            }
+        }
+
     }
 }

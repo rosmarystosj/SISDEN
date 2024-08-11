@@ -59,16 +59,10 @@ namespace SISDEN.Controllers
             else {
                 var entidadIdParameter = new SqlParameter("@EntidadId", entidadid);
 
-                var denuncias = await _context.VistaDenuncias
-                    .FromSqlRaw("EXEC GetDenunciasByEntidadId @EntidadId", entidadIdParameter)
+                var denuncias = await _context.VistaDenuncias.FromSqlRaw("EXEC GetDenunciasByEntidadId @EntidadId", entidadIdParameter)
                     .ToListAsync();
 
-                 foreach (var denuncia in denuncias)
-    {
-        denuncia.Denentidadid = entidadid;
-    }
-
-    await _context.SaveChangesAsync();
+                 await _context.SaveChangesAsync();
 
                 return Ok(denuncias );
             }

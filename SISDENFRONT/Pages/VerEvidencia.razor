@@ -5,6 +5,7 @@
 @inject RegistroDenuncianteService RegistroService
 @inject DenunciasService DenunciasService
 @inject EntidadService EntidadService
+@inject HttpClient Http
 
 
 <body>
@@ -50,30 +51,21 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                                        @if (evidencias.Any(e => e.TipoEvidencia == "Fotos"))
+                                       {
+                                        @foreach (var evidencia in evidencias)
+                                        {
                                         <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/08.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/08.jpg" itemprop="thumbnail" alt="Image description"></div>
+                                          <a href="../assets/images/big-lightgallry/08.jpg" src="@evidencia.Evurl" itemprop="contentUrl" data-size="1600x950">
+                                            <div><img src="@evidencia.Evurl" itemprop="thumbnail" alt="Image description"></div>
                                             </a>
                                             <figcaption itemprop="caption description">Image caption  1</figcaption>
                                         </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/09.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/09.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  2</figcaption>
-                                        </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/010.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/010.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  3</figcaption>
-                                        </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/011.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/011.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  4</figcaption>
-                                        </figure>
+                                                 
+                                          }
+                                        }
+                                           
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -87,35 +79,26 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/08.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/08.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  1</figcaption>
-                                        </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/09.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/09.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  2</figcaption>
-                                        </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/010.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/010.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  3</figcaption>
-                                        </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/011.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/011.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  4</figcaption>
-                                        </figure>
+                                    @if (evidencias.Any(e => e.TipoEvidencia == "Video"))
+                                    {
+                                        @foreach (var evidencia in evidencias)
+                                        {
+                                            <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
+                                                <a href="../assets/images/big-lightgallry/08.jpg" src="@evidencia.Evurl" itemprop="contentUrl" data-size="1600x950">
+                                                    <div><img src="@evidencia.Evurl" itemprop="thumbnail" alt="Image description"></div>
+                                                </a>
+                                                <figcaption itemprop="caption description">Image caption  1</figcaption>
+                                            </figure>
+
+                                        }
+                                    }
+             
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                  
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
@@ -124,30 +107,20 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/08.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/08.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  1</figcaption>
-                                        </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/09.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/09.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  2</figcaption>
-                                        </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/010.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/010.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  3</figcaption>
-                                        </figure>
-                                        <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
-                                            <a href="../assets/images/big-lightgallry/011.jpg" itemprop="contentUrl" data-size="1600x950">
-                                                <div><img src="../assets/images/lightgallry/011.jpg" itemprop="thumbnail" alt="Image description"></div>
-                                            </a>
-                                            <figcaption itemprop="caption description">Image caption  4</figcaption>
-                                        </figure>
+                                    @if (evidencias.Any(e => e.TipoEvidencia == "Documento"))
+                                    {
+                                        @foreach (var evidencia in evidencias)
+                                        {
+                                            <figure class="col-md-3 col-6 img-hover hover-1" itemprop="associatedMedia" itemscope="">
+                                                <a href="../assets/images/big-lightgallry/08.jpg" src="@evidencia.Evurl" itemprop="contentUrl" data-size="1600x950">
+                                                    <div><img src="@evidencia.Evurl" itemprop="thumbnail" alt="Image description"></div>
+                                                </a>
+                                                <figcaption itemprop="caption description">Image caption  1</figcaption>
+                                            </figure>
+
+                                        }
+                                    }
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -171,4 +144,11 @@
 @code {
     [Parameter]
     public int Id { get; set; }
+
+    private List<VistaEvidencia> evidencias;
+
+    protected override async Task OnInitializedAsync()
+    {
+        evidencias = await Http.GetFromJsonAsync<List<VistaEvidencia>>($"/api/ObtenerEvidencias/{Id}");
+    }
 }

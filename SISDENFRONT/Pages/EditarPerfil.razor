@@ -4,7 +4,8 @@
 @inject RegistroEntidadService RegistroServiceEntidad
 @inject RegistroDenuncianteService RegistroService
 @inject DenunciasService DenunciasService
-@inject EntidadService EntidadService
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,25 +58,33 @@
                                                     <div class="media">
                                                         <img class="img-70 rounded-circle" alt="" src="../assets/images/user/7.jpg">
                                                         <div class="media-body">
-                                                            <h5 class="mb-1">MARK JECNO</h5>
-                                                            <p>DESIGNER</p>
+                                                            @if (LoginModel.LoginModel?.UsuRol == 1 && RegistroService.RegistroModelo?.Usurol == 1)
+                                                            {
+                                                                <h5 class="mb-1">@LoginModel.LoginModel.Usuemail</h5>
+                                                                <p>Denunciante</p>
+
+                                                            }
+                                                            else if (LoginModel.LoginModel?.UsuRol == 2 && RegistroServiceEntidad.EntidadModelo?.Usurol == 2)
+                                                            {
+                                                                <h5 class="mb-1">@LoginModel.LoginModel.Usuemail</h5>
+                                                                <p>Entidad</p>
+
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label">Email-Address</label>
-                                                <input class="form-control" placeholder="your-email@domain.com">
+                                                <label class="form-label">Correo Electrónico</label>
+                                                <Label class="form-control">@</label>
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Sitio Web</label>
-                                                <input class="form-control" placeholder="http://Uplor .com">
+                                                <Label class="form-control"></label>
                                             </div>
-                                            <div class="form-footer">
-                                                <button class="btn btn-primary btn-block">Guardar</button>
-                                            </div>
+                                            
                                         </form>
                                     </div>
                                 </div>
@@ -165,5 +174,25 @@
 </body>
 </html>
 @code {
+    private string errorMessage;
+    private async Task HandleRegister()
+    {
+        try
+        {
+            errorMessage = null;
+            var resultado = await AuthService.EditarUsuario(registroModelo);
+            NavigationManager.NavigateTo("/index");
+        }
+        catch (ApplicationException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Ocurrio un error inesperado.";
+            Console.WriteLine(ex.Message);
+        }
+    }
+
 
 }

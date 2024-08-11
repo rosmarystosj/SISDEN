@@ -55,10 +55,10 @@ namespace SISDEN.Controllers
             {
                 return NotFound();
             }
-            return Ok(new { usuario.Usuentidad });
+            return Ok(new { usuario.Usuentidad, usuario.Idusuario });
         }
 
-     
+
         [HttpPost("api/loginDenunciante")]
         public async Task<IActionResult> LoginDenunciante([FromBody] LoginModel loginModel)
         {

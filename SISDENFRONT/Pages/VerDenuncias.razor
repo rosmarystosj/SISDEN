@@ -108,11 +108,11 @@
                                 <td>@denuncia.Dentitulo</td>
                                 <td>@denuncia.Denfechacreacion?.ToString("yyyy-MM-dd")</td>
                                 <td>@denuncia.Denubicacion</td>
-                                @if (denuncia.Idestado == 1)
+                                @if (denuncia.Idestado == 5)
                                {
                                 <td> <span class="badge rounded-pill badge-danger">Pendiente</span></td>
                                 }
-                                else if (denuncia.Idestado == 2)
+                                else if (denuncia.Idestado == 1)
                                 {
                                   <td> <span class="badge rounded-pill badge-success">Resuelta</span></td>
 
@@ -127,12 +127,12 @@
                                  <td> <span class="badge rounded-pill badge-warning">Detenida</span></td>
 
                                 }
-                                else if (denuncia.Idestado == 5)
+                                else if (denuncia.Idestado == 6)
                                 {
                                  <td> <span class="badge rounded-pill badge-dark">Rechazada</span></td>
 
                                 }
-                                else if (denuncia.Idestado == 6)
+                                else if (denuncia.Idestado == 2)
                                 {
                                  <td> <span class="badge rounded-pill badge-green">Cerrada</span></td>
 

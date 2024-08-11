@@ -41,6 +41,21 @@ namespace SISDEN.Controllers
             return denuncia;
         }
 
+        [HttpGet("api/ObtenerEvideniciaDenun/{denunciaid}")]
+        public async Task<ActionResult<VistaEvidencia>> GetEvidenciaPorDenuncia(int denunciaid)
+        {
+            var evidencias = await _context.VistaEvidencias
+               .Where(e => e.Iddenuncia == denunciaid)
+                 .ToListAsync();
+
+            if (evidencias == null || !evidencias.Any())
+            {
+                return NotFound("Evidencias no encontradas para esta denuncia.");
+            }
+
+            return Ok(evidencias);
+        }
+
         [HttpPost("api/GuardarArchivo")]
         public async Task<IActionResult> GuardarArchivos(IFormFile file, [FromHeader] string sesionId)
         {

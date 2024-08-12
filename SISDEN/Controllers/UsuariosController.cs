@@ -482,8 +482,8 @@ namespace SISDEN.Controllers
         [HttpGet("api/ObtenerMensajeCorreo")]
         public async Task<IActionResult> MensajeFinalCorreo(string cedula, int denunciaid, string email)
         {
-            string plataformaWeb = "";
-            string enlaceChatBot = "";
+            string plataformaWeb = "http://sisdemfe-dyebf9b7fwc6bygf.eastus-01.azurewebsites.net";
+            string enlaceChatBot = "https://wa.me/18296952218?text=Hola";
 
             var leyes = await _context.VistaViolaciones
                 .Where(lv => lv.Iddenuncia == denunciaid)
@@ -605,8 +605,8 @@ namespace SISDEN.Controllers
         [HttpGet("api/ObtenerMensajeCorreoEntidad")]
         public async Task<IActionResult> MensajeFinalCorreo(int denunciaid)
         {
-            string plataformaWeb = "";
-            string enlaceChatBot = "";
+            string plataformaWeb = "http://sisdemfe-dyebf9b7fwc6bygf.eastus-01.azurewebsites.net";
+            string enlaceChatBot = "https://wa.me/18296952218?text=Hola";
 
             var leyes = await _context.VistaViolaciones
                 .Where(lv => lv.Iddenuncia == denunciaid)

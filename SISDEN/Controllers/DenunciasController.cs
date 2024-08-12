@@ -47,6 +47,7 @@ namespace SISDEN.Controllers
             };
 
             return Ok(resultado);
+
         }
 
         [HttpGet("api/TotalDenunciasPorEstadoU")]
@@ -89,23 +90,22 @@ namespace SISDEN.Controllers
         [HttpGet("api/ObtenerDenuncias/entidad/{entidadid}")]
         public async Task<ActionResult<IEnumerable<VistaDenuncia>>> GetIDDenunciasentidad(int entidadid)
         {
-            if (entidadid == 14) {
-                var todasDenuncias = await _context.VistaDenuncias.ToListAsync();
-                return Ok(new { denuncias = todasDenuncias });
+            if (entidadid == 14)
+            {
+                var todasEntidades = await _context.Entidadautorizada.ToListAsync();
+                return Ok(new { entidades = todasEntidades });
             }
-            else {
-                var entidadIdParameter = new SqlParameter("@EntidadId", entidadid);
-
-                var denuncias = await _context.VistaDenuncias.FromSqlRaw("EXEC GetDenunciasByEntidadId @EntidadId", entidadIdParameter)
+            else
+            {
+                var denuncias = await _context.VistaDenuncias
+                    .Where(d => d.Iddenuncia == entidadid)
                     .ToListAsync();
 
-                 await _context.SaveChangesAsync();
-
-                return Ok(denuncias );
+                return Ok(new { denuncias = denuncias });
             }
         }
-
       
+
         [HttpGet("api/ObtenerAllDenuncias")]
         public async Task<ActionResult<IEnumerable<VistaDenuncia>>> GetDenuncias()
         {
@@ -162,17 +162,17 @@ namespace SISDEN.Controllers
                 _context.Denuncia.Add(denuncia);
                 await _context.SaveChangesAsync();
 
-               var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
-                var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
+               //var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
+               // var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
 
-                if (denuncia.DenIdusuario.HasValue && denuncia.DenIdestado.HasValue)
-                {
-                    await _notificationService.CreateNotificationAsync(denuncia.DenIdusuario.Value, denuncia.DenIdestado.Value, mensaje);
-                }
-                else
-                {
-                    throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
-                }
+               // if (denuncia.DenIdusuario.HasValue && denuncia.DenIdestado.HasValue)
+               // {
+               //     await _notificationService.CreateNotificationAsync(denuncia.DenIdusuario.Value, denuncia.DenIdestado.Value, mensaje);
+               // }
+               // else
+               // {
+               //     throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
+               // }
 
                 return Ok(new { id = denuncia.Iddenuncia, denuncia });
             }
@@ -239,17 +239,17 @@ namespace SISDEN.Controllers
                 denuncia.Dentitulo = GenerarTitulo(denunciaDTO);
                 await _context.SaveChangesAsync();
 
-                var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
-                var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
+                //var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
+                //var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
 
-                if (denuncia.DenIdusuario.HasValue && denuncia.DenIdestado.HasValue)
-                {
-                    await _notificationService.CreateNotificationAsync(denuncia.DenIdusuario.Value, denuncia.DenIdestado.Value, mensaje);
-                }
-                else
-                {
-                    throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
-                }
+                //if (denuncia.DenIdusuario.HasValue && denuncia.DenIdestado.HasValue)
+                //{
+                //    await _notificationService.CreateNotificationAsync(denuncia.DenIdusuario.Value, denuncia.DenIdestado.Value, mensaje);
+                //}
+                //else
+                //{
+                //    throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
+                //}
 
                 return Ok( denuncia );
             }

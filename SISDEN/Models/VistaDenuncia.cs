@@ -45,7 +45,7 @@ public partial class VistaDenuncia
 
     public string? MotivoCierre { get; set; }
 
-    public int Idusuario { get; set; }
+    public int? Idusuario { get; set; }
 
     public int? Usurol { get; set; }
 

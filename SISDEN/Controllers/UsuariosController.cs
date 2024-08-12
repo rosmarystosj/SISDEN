@@ -109,76 +109,104 @@ namespace SISDEN.Controllers
 
         }
 
+
         [HttpPost("api/registroDenunciante")]
         public async Task<IActionResult> RegistroDenunciante([FromBody] RegistroModelo registroModelo, string via)
         {
-            if (!ModelState.IsValid)
+            string errorMessage = null;
+
+            try
             {
-                return BadRequest();
+                if (!ModelState.IsValid)
+                {
+                    errorMessage = "Datos inválido.";
+                    return BadRequest(new { Error = errorMessage });
+                }
+
+                var email = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == registroModelo.Usuemail);
+                if (email != null)
+                {
+                    errorMessage = "Este correo electrónico ya está asociado a una cuenta.";
+                    return BadRequest(new { Error = errorMessage });
+                }
+
+                var verificacionCedula = VerificarCedula(registroModelo.Usuidentificacion);
+                if (!verificacionCedula)
+                {
+                    errorMessage = "Cédula no válida.";
+                    return BadRequest(new { Error = errorMessage });
+                }
+
+                if (_context.Usuarios.Any(u => u.Usuidentificacion == registroModelo.Usuidentificacion))
+                {
+                    errorMessage = "Esta cédula ya está registrada.";
+                    return BadRequest(new { Error = errorMessage });
+                }
+
+                var passwordHasher = new PasswordHasher<Usuario>();
+                var random = new Random();
+                var verificationCode = random.Next(100000, 999999).ToString();
+
+                var usuario = new Usuario
+                {
+                    Usunombre = registroModelo.Usunombre,
+                    Usuapellido = registroModelo.Usuapellido,
+                    Usuemail = registroModelo.Usuemail,
+                    Usuidentificacion = registroModelo.Usuidentificacion,
+                    Usuverificacion = verificationCode,
+                    VerificationExpiry = DateTime.UtcNow.AddMinutes(15),
+                    Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
+                    Usurol = registroModelo.Usurol,
+                    Usustatus = "No verificado",
+                    Usutelefono = registroModelo.Usutelefono,
+                    Usutelefono2 = registroModelo.Usutelefono2,
+                };
+
+                if (via == "whatsapp")
+                {
+                    usuario.Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usuidentificacion);
+                    usuario.Usustatus = "Verificado";
+
+                    _context.Usuarios.Add(usuario);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    _context.Usuarios.Add(usuario);
+                    await _context.SaveChangesAsync();
+
+                    var subject = "Confirmación de registro";
+                    var message = $"<h1>Bienvenido {usuario.Usunombre} {usuario.Usuapellido}, </h1>" +
+                                  $"<p>Gracias por registrarte en nuestra aplicación de registro y gestión de denuncias contra el maltrato animal.</p>" +
+                                  $"<p>Por favor, verifica tu cuenta ingresando el siguiente código de verificación:</p>" +
+                                  $"<h2><strong>{verificationCode}</strong></h2>";
+
+                    try
+                    {
+                        await _emailService.SendEmailAsync(usuario.Usuemail, subject, message);
+                    }
+                    catch (Exception ex)
+                    {
+                        errorMessage = "Error al enviar el correo electrónico de verificación.";
+                        return StatusCode(500, new { Error = errorMessage });
+                    }
+                }
+
+                return Ok(new { Data = registroModelo });
             }
-            var email = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == registroModelo.Usuemail);
-            if (email != null )
+            catch (ApplicationException ex)
             {
-                return BadRequest("Este correo electronico ya esta asociado a una cuenta");
+                errorMessage = ex.Message;
+                return StatusCode(500, new { Error = errorMessage });
             }
-
-            var verificacionCedula = VerificarCedula(registroModelo.Usuidentificacion);
-            if (!verificacionCedula)
+            catch (Exception ex)
             {
-                return BadRequest("Cédula no válida");
+                errorMessage = $"Ocurrió un error inesperado: {ex.Message}";
+                return StatusCode(500, new { Error = errorMessage });
             }
-            if (_context.Usuarios.Any(u => u.Usuidentificacion == registroModelo.Usuidentificacion))
-            {
-                return BadRequest("Datos invalidos");
-            }
-            var passwordHasher = new PasswordHasher<Usuario>();
-            var random = new Random();
-
-            var verificationCode = random.Next(100000, 999999).ToString();
-
-            var usuario = new Usuario
-            {
-                Usunombre = registroModelo.Usunombre,
-                Usuapellido = registroModelo.Usuapellido,
-                Usuemail = registroModelo.Usuemail,
-                Usuidentificacion = registroModelo.Usuidentificacion,
-                Usuverificacion = verificationCode,
-                VerificationExpiry = DateTime.UtcNow.AddMinutes(15),
-                Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usucontraseña),
-                Usurol = registroModelo.Usurol,
-                Usustatus = "No verificado",
-                Usutelefono = registroModelo.Usutelefono,
-                Usutelefono2 = registroModelo.Usutelefono2,
-            };
-
-
-            if (via == "whatsapp")
-            {
-                usuario.Usucontraseña = passwordHasher.HashPassword(null, registroModelo.Usuidentificacion);
-                usuario.Usustatus = "Verificado";
-
-                _context.Usuarios.Add(usuario);
-                await _context.SaveChangesAsync();
-            }
-
-            else
-            {
-                _context.Usuarios.Add(usuario);
-                await _context.SaveChangesAsync();
-
-
-                var subject = "Confirmación de registro";
-                var message = $"<h1>Bienvenido {usuario.Usunombre} {usuario.Usuapellido}, </h1><p>Gracias por registrarte en nuestra aplicación de registro y gestion de denucnas contra el maltrato animal.</p>" +
-                               $"<p>Por favor, verifica tu cuenta ingresando el siguiente código de verificación: </p>" +
-                             $"<h2> <strong>{verificationCode}</strong></h2>";
-
-                await _emailService.SendEmailAsync(usuario.Usuemail, subject, message);
-            }       
-                return Ok(new {  Data = registroModelo });
-
         }
-      
-       
+
+
 
         [HttpPost("api/registroEntidad")]
         public async Task<IActionResult> RegistroEntidad([FromBody] EntidadModel registroModelo)

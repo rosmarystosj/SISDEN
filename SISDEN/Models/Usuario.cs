@@ -23,7 +23,7 @@ public partial class Usuario
 
     public string? Usuemail { get; set; }
 
-    public int Usuentidad { get; set; }
+    public int? Usuentidad { get; set; }
 
     public string? Usustatus { get; set; }
 

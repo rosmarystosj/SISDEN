@@ -20,11 +20,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IServicioEmail, EmailService>();
 builder.Services.AddScoped<IRegistrarDenuncia, RegistroDenunciaService>();
 builder.Services.AddScoped<ISesion, ObtenerSesionIdService>();
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-//    .AddEntityFrameworkStores<SisdemContext>()
-//    .AddDefaultTokenProviders();
-
-
+builder.Services.AddScoped<IServicioEmail, EmailService>();
+builder.Services.AddScoped<INotificacionService, NotificacionService>();  
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SisdemContext>(options =>
@@ -91,7 +88,7 @@ app.UseAuthorization();
 app.UseSession();
 app.MapControllers();
 
-// Configurar el endpoint del Hub
+//Configurar el endpoint del Hub
 /*app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();

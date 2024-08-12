@@ -19,16 +19,14 @@ namespace SISDEN.Controllers
     {
         private readonly SisdemContext _context;
         private readonly IRegistrarDenuncia _registrarDenuncia;
-        private readonly NotificationService _notificationService;
-        private readonly IServicioEmail _servicioEmail;
+        private readonly INotificacionService _notificationService;
+    
 
-
-        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia, NotificationService notificationService, IServicioEmail servicioEmail)
+        public DenunciasController(SisdemContext context, IRegistrarDenuncia registrarDenuncia, INotificacionService notificationService)
         {
             _context = context;
             _registrarDenuncia = registrarDenuncia;
-            _servicioEmail = servicioEmail;
-
+            _notificationService = notificationService;
 
 
         }
@@ -164,8 +162,7 @@ namespace SISDEN.Controllers
                 _context.Denuncia.Add(denuncia);
                 await _context.SaveChangesAsync();
 
-                // Crear y enviar notificación
-                var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
+               var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
                 var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
 
                 if (denuncia.DenIdusuario.HasValue && denuncia.DenIdestado.HasValue)
@@ -174,9 +171,6 @@ namespace SISDEN.Controllers
                 }
                 else
                 {
-                    // Manejar el caso en que los valores sean nulos
-                    // Podrías lanzar una excepción, registrar un error, etc.
-                    // Ejemplo:
                     throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
                 }
 
@@ -254,9 +248,6 @@ namespace SISDEN.Controllers
                 }
                 else
                 {
-                    // Manejar el caso en que los valores sean nulos
-                    // Podrías lanzar una excepción, registrar un error, etc.
-                    // Ejemplo:
                     throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
                 }
 
@@ -308,87 +299,7 @@ namespace SISDEN.Controllers
              return titulo;
         }
 
-        [HttpGet("api/ObtenerMensajeCorreoEntidad")]
-        public async Task<IActionResult> MensajeFinalCorreo(int denunciaid)
-        {
-            string plataformaWeb = "";
-            string enlaceChatBot = "";
-
-            var leyes = await _context.VistaViolaciones
-                .Where(lv => lv.Iddenuncia == denunciaid)
-                .Select(lv => new
-                {
-                    lv.Artnombre,
-                    lv.Artdescripcion,
-                    lv.Puntoartnumero,
-                    lv.Puntoartdescripcion
-                }).ToListAsync();
-
-
-            var listaArt = leyes.Select(lv =>
-            {
-                if (lv.Puntoartnumero != null && lv.Puntoartdescripcion != null)
-                {
-                    return $"- {lv.Artnombre}  Punto {lv.Puntoartnumero}: {lv.Puntoartdescripcion}";
-                }
-                else
-                {
-                    return $"- {lv.Artnombre} {lv.Artdescripcion} ";
-
-                }
-            });
-            string htmlContent = string.Join("", listaArt.Select(art => $"<p>{art}</p>"));
-
-
-            var entidad = await _context.Denuncia
-            .Where(lv => lv.Iddenuncia == denunciaid)
-            .Select(lv => new {
-                entidadid = lv.Denentidadid,
-                fecha = lv.Denfechacreacion,
-                descripcion = lv.Dendescripcion,
-                ubicacion = lv.Denubicacion,
-                titulo = lv.Dentitulo
-
-            }).FirstOrDefaultAsync();
-
-            var mail = await _context.Entidadautorizada
-                .Where(u => u.Identidadaut == entidad.entidadid)
-                 .Select(u => new
-                 {
-                     Correo = u.EntCorreo,
-                     Nombre = u.Entautorizadadescp
-                 })
-    .FirstOrDefaultAsync();
-
-
-
-                var subject = "Notificación de Nueva Denuncia Registrada";
-
-                string message = $"<h3>Estimado/a {mail.Nombre}</h3>" +
-
-                $"<p>Espero que este mensaje le encuentre bien.</p>" +
-
-                $"<p>{htmlContent}</p>" +
-
-                $"<p>Le informamos que se ha registrado una nueva denuncia en el sistema que está relacionada con su entidad. A continuación, encontrará los detalles relevantes de la denuncia:</p>" +
-
-                $"<p><strong>Titulo de la denuncia:</strong>{entidad.titulo}</p>" +
-                $"<p><strong>Fecha de registro:</strong> {entidad.fecha}</p>" +
-                $"<p><strong>Ubicacion:</strong> {entidad.ubicacion} </p>" +
-                $"<p><strong>Descripcion:</strong> {entidad.descripcion} </p>" +
-
-
-               $"<p><strong> Para más detalles, puede acceder y registrase al sistema a través del siguiente enlace: <strong> {plataformaWeb}</p>" +
-               $"<p>Le solicitamos que revise la denuncia y tome las acciones necesarias de acuerdo con los procedimientos establecidos. Si tiene alguna pregunta o necesita más información, no dude en contactarnos.</p>" +
-
-
-                $"<p>Atentamente,</p>" +
-                $"<p>El equipo de soporte de denuncias.</p>";
-
-                await _servicioEmail.SendEmailAsync(mail.Correo, subject, message);
-            return Ok("Mensaje eviado");
-
-        }
+      
         private bool DenunciaExists(int id)
         {
             return _context.Denuncia.Any(e => e.Iddenuncia == id);

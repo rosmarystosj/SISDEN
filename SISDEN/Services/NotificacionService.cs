@@ -1,25 +1,29 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using SISDEN.Models;
-using Microsoft.EntityFrameworkCore;
 using SISDEN.Hubs;
-
+using SISDEN.Models;
 
 namespace SISDEN.Services
 {
-    public class NotificationService
+    public interface INotificacionService
     {
-        private readonly SisdemContext _context;
-        private readonly EmailService _emailService;
-        private readonly IHubContext<NotificationHub> _hubContext;
+        Task CreateNotificationAsync(int userId, int estadoId, string message);
+    }
 
-        public NotificationService(SisdemContext context, EmailService emailService, IHubContext<NotificationHub> hubContext)
+        public class NotificacionService : INotificacionService
         {
-            _context = context;
-            _emailService = emailService;
-            _hubContext = hubContext;
-        }
+            private readonly SisdemContext _context;
+            private readonly IServicioEmail _emailService;  
+            private readonly IHubContext<NotificationHub> _hubContext;
 
-        public async Task CreateNotificationAsync(int userId, int estadoId, string message)
+            public NotificacionService(SisdemContext context, IServicioEmail emailService, IHubContext<NotificationHub> hubContext)
+            {
+                _context = context;
+                _emailService = emailService;
+                _hubContext = hubContext;
+            }
+
+
+            public async Task CreateNotificationAsync(int userId, int estadoId, string message)
         {
             var notification = new Notificacion
             {
@@ -30,7 +34,7 @@ namespace SISDEN.Services
                 Leido = false
             };
 
-            //_context.Notificacions.Add(notification);
+           // _context.Noti.Add(notification);
             await _context.SaveChangesAsync();
 
             var user = await _context.Usuarios.FindAsync(userId);

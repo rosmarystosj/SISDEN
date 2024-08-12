@@ -24,18 +24,17 @@ namespace SISDEN.Controllers
         private readonly SisdemContext _context;
         private readonly IServicioEmail _emailService;
         private readonly IRegistrarDenuncia _registrarDenuncia;
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
 
 
-        public UsuariosController(SisdemContext context, IServicioEmail emailService, IRegistrarDenuncia registrarDenuncia, UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public UsuariosController(SisdemContext context, IRegistrarDenuncia registrarDenuncia,  IConfiguration configuration,  IServicioEmail servicioEmail)
 
         {
             _context = context;
-            _emailService = emailService;
             _registrarDenuncia = registrarDenuncia;
-            _userManager = userManager;
             _configuration = configuration;
+            _emailService = servicioEmail;
+
 
         }
   
@@ -192,7 +191,7 @@ namespace SISDEN.Controllers
                     }
                 }
 
-                return Ok(new { Data = registroModelo });
+                return Ok(new { Data = registroModelo});
             }
             catch (ApplicationException ex)
             {
@@ -601,6 +600,88 @@ namespace SISDEN.Controllers
             {
                 return StatusCode(500, $"Error interno del servidor: {ex.Message}");
             }
+        }
+
+        [HttpGet("api/ObtenerMensajeCorreoEntidad")]
+        public async Task<IActionResult> MensajeFinalCorreo(int denunciaid)
+        {
+            string plataformaWeb = "";
+            string enlaceChatBot = "";
+
+            var leyes = await _context.VistaViolaciones
+                .Where(lv => lv.Iddenuncia == denunciaid)
+                .Select(lv => new
+                {
+                    lv.Artnombre,
+                    lv.Artdescripcion,
+                    lv.Puntoartnumero,
+                    lv.Puntoartdescripcion
+                }).ToListAsync();
+
+
+            var listaArt = leyes.Select(lv =>
+            {
+                if (lv.Puntoartnumero != null && lv.Puntoartdescripcion != null)
+                {
+                    return $"- {lv.Artnombre}  Punto {lv.Puntoartnumero}: {lv.Puntoartdescripcion}";
+                }
+                else
+                {
+                    return $"- {lv.Artnombre} {lv.Artdescripcion} ";
+
+                }
+            });
+            string htmlContent = string.Join("", listaArt.Select(art => $"<p>{art}</p>"));
+
+
+            var entidad = await _context.Denuncia
+            .Where(lv => lv.Iddenuncia == denunciaid)
+            .Select(lv => new {
+                entidadid = lv.Denentidadid,
+                fecha = lv.Denfechacreacion,
+                descripcion = lv.Dendescripcion,
+                ubicacion = lv.Denubicacion,
+                titulo = lv.Dentitulo
+
+            }).FirstOrDefaultAsync();
+
+            var mail = await _context.Entidadautorizada
+                .Where(u => u.Identidadaut == entidad.entidadid)
+                 .Select(u => new
+                 {
+                     Correo = u.EntCorreo,
+                     Nombre = u.Entautorizadadescp
+                 })
+    .FirstOrDefaultAsync();
+
+
+
+            var subject = "Notificación de Nueva Denuncia Registrada";
+
+            string message = $"<h3>Estimado/a {mail.Nombre}</h3>" +
+
+            $"<p>Espero que este mensaje le encuentre bien.</p>" +
+
+            $"<p>{htmlContent}</p>" +
+
+            $"<p>Le informamos que se ha registrado una nueva denuncia en el sistema que está relacionada con su entidad. A continuación, encontrará los detalles relevantes de la denuncia:</p>" +
+
+            $"<p><strong>Titulo de la denuncia:</strong>{entidad.titulo}</p>" +
+            $"<p><strong>Fecha de registro:</strong> {entidad.fecha}</p>" +
+            $"<p><strong>Ubicacion:</strong> {entidad.ubicacion} </p>" +
+            $"<p><strong>Descripcion:</strong> {entidad.descripcion} </p>" +
+
+
+           $"<p><strong> Para más detalles, puede acceder y registrase al sistema a través del siguiente enlace: <strong> {plataformaWeb}</p>" +
+           $"<p>Le solicitamos que revise la denuncia y tome las acciones necesarias de acuerdo con los procedimientos establecidos. Si tiene alguna pregunta o necesita más información, no dude en contactarnos.</p>" +
+
+
+            $"<p>Atentamente,</p>" +
+            $"<p>El equipo de soporte de denuncias.</p>";
+
+            await _emailService.SendEmailAsync(mail.Correo, subject, message);
+            return Ok("Mensaje eviado");
+
         }
         private bool UsuarioExists(int id)
         {

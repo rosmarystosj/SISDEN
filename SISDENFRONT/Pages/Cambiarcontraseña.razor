@@ -117,7 +117,7 @@
             errorMessage = "La nueva contraseña y la confirmación no coinciden.";
             return;
         }
-        if (LoginModel.LoginModel?.UsuRol == 1 && LoginModel.LoginModel?.UsuRol == 2)
+        if (LoginModel.LoginModel?.UsuRol == 1 || LoginModel.LoginModel?.UsuRol == 2)
         {
             correo = LoginModel.LoginModel.Usuemail;
             user = await AuthService.ObtenerUsuarioIdAsync(correo);

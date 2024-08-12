@@ -31,16 +31,18 @@ namespace SISDEN.Services
             {
                 return denunciaExistente.Iddenuncia; 
             }
+            else {
             var denuncia = new Denuncium
             {
                 Densesion = sesionId,
                 Denfechacreacion = DateTime.Now,
-                DenIdestado = 1
+                DenIdestado = 5
             };
             _context.Denuncia.Add(denuncia);
             await _context.SaveChangesAsync();
 
             return denuncia.Iddenuncia;
+            }
         }
     }
 }

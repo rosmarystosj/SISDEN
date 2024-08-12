@@ -29,5 +29,22 @@ namespace SISDEN.Controllers
             }
             return articulo;
         }
+
+        [HttpGet("api/ArticulosMasViolados")]
+        public async Task<ActionResult<List<ArticuloVioladoDTO>>> GetArticulosMasViolados()
+        {
+            var articulosMasViolados = await _context.VistaViolaciones
+                .GroupBy(lv => new {lv.Artnombre })
+                .OrderByDescending(g => g.Count())
+                .Select(g => new ArticuloVioladoDTO
+                {
+                    Titulo = g.Key.Artnombre,
+                    CantidadDeViolaciones = g.Count()
+                })
+                .ToListAsync();
+
+            return Ok(articulosMasViolados);
+        }
+
     }
 }

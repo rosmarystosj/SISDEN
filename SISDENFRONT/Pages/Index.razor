@@ -44,10 +44,10 @@
                 <div class="row"> 
                   <div class="col-xl-3 col-sm-6">
                     <div class="card o-hidden small-widget">
-                      <div class="card-body total-project border-b-primary border-2"><span class="f-light f-w-500 f-14">Total Project</span>
+                      <div class="card-body total-project border-b-primary border-2"><span class="f-light f-w-500 f-14">Total de Denuncias</span>
                         <div class="project-details"> 
-                          <div class="project-counter"> 
-                            <h2 class="f-w-600">1,523</h2><span class="f-12 f-w-400">(This month)</span>
+                          <div class="project-counter">
+                            <h2 class="f-w-600">@denunciasPorEstado.Total</h2><span class="f-12 f-w-400"></span>
                           </div>
                           <div class="product-sub bg-primary-light">
                             <svg class="invoice-icon">
@@ -71,10 +71,10 @@
                   </div>
                   <div class="col-xl-3 col-sm-6">
                     <div class="card o-hidden small-widget">
-                      <div class="card-body total-Progress border-b-warning border-2"> <span class="f-light f-w-500 f-14">In Progress</span>
+                      <div class="card-body total-Progress border-b-warning border-2"> <span class="f-light f-w-500 f-14">En Revisión</span>
                         <div class="project-details">
                           <div class="project-counter">
-                            <h2 class="f-w-600">836</h2><span class="f-12 f-w-400">(This month) </span>
+                          <h2 class="f-w-600">@denunciasPorEstado.EnRevision</h2><span class="f-12 f-w-400"> </span>
                           </div>
                           <div class="product-sub bg-warning-light"> 
                             <svg class="invoice-icon">
@@ -98,10 +98,10 @@
                   </div>
                   <div class="col-xl-3 col-sm-6">
                     <div class="card o-hidden small-widget">
-                      <div class="card-body total-Complete border-b-secondary border-2"><span class="f-light f-w-500 f-14">Complete</span>
+                      <div class="card-body total-Complete border-b-secondary border-2"><span class="f-light f-w-500 f-14">Resuelta</span>
                         <div class="project-details">
                           <div class="project-counter">
-                            <h2 class="f-w-600">475</h2><span class="f-12 f-w-400">(This month) </span>
+                            <h2 class="f-w-600">@denunciasPorEstado.Realizadas</h2><span class="f-12 f-w-400"> </span>
                           </div>
                           <div class="product-sub bg-secondary-light"> 
                             <svg class="invoice-icon">
@@ -125,10 +125,10 @@
                   </div>
                   <div class="col-xl-3 col-sm-6">
                     <div class="card o-hidden small-widget">
-                      <div class="card-body total-upcoming"><span class="f-light f-w-500 f-14">Upcoming</span>
+                      <div class="card-body total-upcoming"><span class="f-light f-w-500 f-14">Pendiente</span>
                         <div class="project-details"> 
                           <div class="project-counter">
-                            <h2 class="f-w-600">189</h2><span class="f-12 f-w-400">(This month) </span>
+                           <h2 class="f-w-600">@denunciasPorEstado.Pendientes</h2><span class="f-12 f-w-400"></span>
                           </div>
                           <div class="product-sub bg-light-light"> 
                             <svg class="invoice-icon">
@@ -149,9 +149,9 @@
                         </ul>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-xl-5 box-col-6"> 
-                    <div class="card recent-order"> 
+                    </div>
+                        <div class="col-xl-12 col-md-6">
+                            <div class="card recent-order"> 
                       <div class="card-header card-no-border total-revenue">
                         <h4 class="m-0">Articulos Más Violados</h4>
                       </div>
@@ -159,21 +159,16 @@
                         <div class="client-list-table table-responsive custom-scrollbar">
                           <table class="order-table w-100">
                             <tbody>
+                            @foreach (var articulo in articulosMasViolados)
+                            {
                               <tr>
                                 <td class="client-list">
                                   <div class="user-id">
-                                    <div class="product-sub"><a class="f-14 f-w-500 " href="user-profile.pug">Jenny Bell</a><span class="d-block f-light f-w-500">India</span></div>
-                                  </div>
-                                  <div class="user-comment w-100">
-                                    <div class="product-sub"> <a class="f-14 f-w-500 " href="user-profile.pug">jennybell@gmail.com</a><span class="d-block f-light f-w-500">+84 342 556 555 </span></div>
-                                    <div class="product-sub">
-                                      <svg class="invoice-icon">
-                                        <use href="../assets/svg/icon-sprite.svg#messages-3"></use>
-                                      </svg>
-                                    </div>
+                                    <div class="product-sub"><a class="f-14 f-w-500 " href="user-profile.pug">@articulo.Titulo</a><span class="d-block f-light f-w-500">@articulo.CantidadDeViolaciones violaciones</span></div>
                                   </div>
                                 </td>
                               </tr>
+                             }
                             </tbody>
                           </table>
                         </div>
@@ -255,6 +250,7 @@
     private string correo;
     private int  entidadid;
     private DenunciasPorEstadoDTO denunciasPorEstado;
+    private List<ArticuloVioladoDTO> articulosMasViolados;
 
 
     protected override async Task OnInitializedAsync()
@@ -281,6 +277,7 @@
             correo = RegistroServiceEntidad.EntidadModelo.Usuemail;
             denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsync();
         }
-      
+        articulosMasViolados = await Http.GetFromJsonAsync<List<ArticuloVioladoDTO>>("api/ArticulosMasViolados");
+
     }
 }

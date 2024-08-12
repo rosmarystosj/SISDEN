@@ -3,6 +3,8 @@
 @inject AuthService AuthService
 @inject RegistroDenuncianteService RegistroService
 @layout MainLayout
+@inject LoginModelService LoginModel
+@inject OlvidarContraService olvidarService
 
 <body>
     @if (!string.IsNullOrEmpty(errorMessage))
@@ -22,11 +24,13 @@
                         </div>
                         <div class="col-md-8">
                             <div>
-                                <h3 class="mb-3">
-                                    Revisa tu bandeja de entrada en <h4> <strong>@RegistroService.RegistroModelo.Usuemail</strong></h4>
-                                </h3>
+                             
+                                    <h3 class="mb-3">
+                                        Revisa tu bandeja de entrada en <h4> <strong>@olvidarService.olvidarContra.Email</strong></h4>
+                                    </h3>
+                               
                                 <p class="mb-3">
-                                    Se ha enviado un código de verificación a su correo electrónico. Este código expira en 15 minutos. A veces el correo puede caer en filtros de spam. Puede que quieras añadir <strong>sistemasdedenucias@gmail.com</strong> a tu libreta de direcciones para que no te pierdas ninguna notificación importante.
+                                    Se ha enviado un código de verificación a su correo electrónico. Este código expira en 15 minutos. A veces el correo puede caer en filtros de spam. Puede que quieras añadir <strong>sistemasdedenuncias@gmail.com</strong> a tu libreta de direcciones para que no te pierdas ninguna notificación importante.
                                 </p>
                             </div>
 
@@ -66,7 +70,7 @@
             verificarEmail.Email = RegistroService.RegistroModelo.Usuemail;
             var result = await AuthService.VerificarEmail(verificarEmail);
 
-            NavigationManager.NavigateTo("/confirmar");
+            NavigationManager.NavigateTo("/restablecercontra");
 
         }
         catch (ApplicationException ex)

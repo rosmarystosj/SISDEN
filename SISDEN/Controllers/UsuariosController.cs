@@ -257,6 +257,66 @@ namespace SISDEN.Controllers
             return BadRequest("Codigo invalido");
         }
 
+        [HttpPost("api/olvidarContra")]
+        public async Task<IActionResult> OlvidarContra([FromBody] OlvidarContraseñaDTO olvidarContraseñaDTO)
+        {
+            if (olvidarContraseñaDTO == null || string.IsNullOrEmpty(olvidarContraseñaDTO.Email))
+            {
+                return BadRequest("Datos inválidos.");
+            }
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == olvidarContraseñaDTO.Email);
+
+            if (usuario == null)
+            {
+                return BadRequest("Usuario no encontrado.");
+            }
+
+            var random = new Random();
+            var verificationCode = random.Next(100000, 999999).ToString();
+
+            usuario.Usuverificacion = verificationCode;
+            usuario.VerificationExpiry = DateTime.UtcNow.AddMinutes(15);
+
+            return Ok(new {usuario });
+
+        }
+
+        [HttpPost("api/ResetearContra")]
+        public async Task<IActionResult> ChangePassword([FromBody] ResetearContraseña request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            if (request.Password!= request.ConfirmPassword)
+            {
+                return BadRequest("La nueva contraseña y la confirmación no coinciden.");
+            }
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuemail == request.correo);
+            if (usuario == null)
+            {
+                return NotFound("Usuario no encontrado.");
+            }
+
+            var passwordHasher = new PasswordHasher<Usuario>();
+
+            usuario.Usucontraseña = passwordHasher.HashPassword(usuario, request.correo);
+            _context.Usuarios.Update(usuario);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok("Contraseña cambiada exitosamente.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
         [HttpPut("api/EditarUsuario")]
         public async Task<IActionResult> PutUsuario([FromBody]  int id, RegistroModelo registroModelo)
         {

@@ -159,6 +159,38 @@ namespace SISDENFRONT.Data
             var usuario = await _httpClient.GetFromJsonAsync<Usuario>($"api/ObtenerUsuario/{correo}");
             return usuario.Usuentidad;
         }
-      
+
+        public async Task<bool> OlvidarContraseñaAsync(OlvidarContraseñaDTO olvidarContraseñaDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/olvidarContra", olvidarContraseñaDTO);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new ApplicationException(errorMessage);
+            }
+
+        }
+
+        public async Task<bool> ResetearContraseñaAsync(ResetearContraseña resetearContraseña)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/ResetearContra", resetearContraseña);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new ApplicationException(errorMessage);
+            }
+
+        }
+
     }
 }

@@ -30,7 +30,7 @@ namespace SISDEN.DTOS
         public string? Usuverificacion { get; set; }
 
         [Required(ErrorMessage = "El teléfono es requerido.")]
-        [RegularExpression(@"^\d+$", ErrorMessage = "El teléfono debe contener solo números.")]
+       // [RegularExpression(@"^\d+$", ErrorMessage = "El teléfono debe contener solo números.")]
 
         public string? Usutelefono { get; set; }
         public string? Usutelefono2 { get; set; }

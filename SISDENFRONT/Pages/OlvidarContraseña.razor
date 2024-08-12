@@ -2,6 +2,8 @@
 @inject AuthService AuthService
 @inject NavigationManager NavigationManager
 @using System.ComponentModel.DataAnnotations
+@inject LoginModelService LoginModel
+@inject OlvidarContraService olvidarContra
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,10 +16,9 @@
                     <div>
                         <div><a class="logo"> <img class="img-fluid" src="../assets/images/landing/logo_transparent_background150.png" @onclick="IraHome" /></a></div>
 
-
                         <div class="login-main">
 
-                            <EditForm class="theme-form" Model="olvidarContraseña">
+                            <EditForm class="theme-form" Model="olvidarContra.olvidarContra">
                                 <DataAnnotationsValidator />
                                 <Validaciones TModel="OlvidarContraseñaDTO" />
                                 <h4>Reestablecer Contraseña</h4>
@@ -25,8 +26,8 @@
 
                                 <div class="form-group">
                                     <label class="col-form-label" for="Usuidentificacion">Correo Electrónico</label>
-                                    <InputText id="Usuidentificacion" class="form-control" type="text" required="" placeholder="prueba@ejemplo.com" @bind-Value="olvidarContraseña.Email" />
-                                    <ValidationMessage For="@(() => olvidarContraseña.Email)" class="validation-message" />
+                                    <InputText id="Usuidentificacion" class="form-control" type="text" required="" placeholder="prueba@ejemplo.com" @bind-Value="olvidarContra.olvidarContra.Email" />
+                                    <ValidationMessage For="@(() => olvidarContra.olvidarContra.Email)" class="validation-message" />
                                 </div>
                               
                                 <div class="form-group mb-0">
@@ -60,7 +61,8 @@
 
 @code {
     private string errorMessage;
-    private OlvidarContraseñaDTO olvidarContraseña = new OlvidarContraseñaDTO();
+    private string correo;
+
     private async Task IraHome()
     {
         NavigationManager.NavigateTo("/");
@@ -69,6 +71,8 @@
     {
         try
         {
+           
+            var response = await AuthService.OlvidarContraseñaAsync(olvidarContra.olvidarContra);
             errorMessage = null;
         }
         catch (ApplicationException ex)

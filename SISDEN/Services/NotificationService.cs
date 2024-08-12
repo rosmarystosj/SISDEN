@@ -30,8 +30,8 @@ namespace SISDEN.Services
                 Leido = false
             };
 
-            _context.Notificacions.Add(notification);
-            await _context.SaveChangesAsync();
+           // _context.Notificacions.Add(notification);
+           // await _context.SaveChangesAsync();
 
             var user = await _context.Usuarios.FindAsync(userId);
             if (user != null)

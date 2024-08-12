@@ -1,5 +1,8 @@
 ﻿@page "/restablecercontra"
-
+@inject OlvidarContraService olvidarContra
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,29 +21,31 @@
                     <div class="login-card login-dark">
                         <div>
                             <div><a class="logo" href="/"> <img class="img-fluid" src="../assets/images/landing/logo_transparent_background150.png"  /></a></div>
-
+                             
                             <div class="login-main">
-                                <form class="theme-form">
-                                    <h4>Restablece tu contraseña</h4>
+                                <EditForm class="theme-form" Model="resetearContraseña">
+                                <DataAnnotationsValidator />
+                                <Validaciones TModel="ResetearContraseña" />                                   
+                                <h4>Restablece tu contraseña</h4>
                                     <div class="form-group">
                                         <label class="col-form-label">Nueva Contraseña</label>
                                         <div class="form-input position-relative">
-                                            <input class="form-control" type="password" name="login[password]" required="" placeholder="*********">
+                                            <input class="form-control" type="password" name="login[password]" required="" placeholder="*********" @bind="resetearContraseña.Password">
                                             <div class="show-hide"><span class="show"></span></div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-form-label">Confirmar Contraseña</label>
-                                        <input class="form-control" type="password" name="login[password]" required="" placeholder="*********">
+                                        <input class="form-control" type="password" name="login[password]" required="" placeholder="*********" @bind="resetearContraseña.ConfirmPassword">
                                     </div>
                                     <div class="form-group mb-0">
                                         <div class="checkbox p-0">
                                             <input id="checkbox1" type="checkbox">
                                             <label class="text-muted" for="checkbox1">Recodar contraseña</label>
                                         </div>
-                                        <button class="btn btn-primary btn-block w-100" type="submit">Finalizar</button>
+                                        <button class="btn btn-primary btn-block w-100" @onclick="Finalizar" type="submit">Finalizar</button>
                                     </div>
-                                </form>
+                                </EditForm>
                             </div>
                         </div>
                     </div>
@@ -48,11 +53,41 @@
             </div>
         </div>
     </div>
-  
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
 </body>
 </html>
 
 
 @code {
+    private string errorMessage;
 
+    private ResetearContraseña resetearContraseña = new ResetearContraseña();
+
+
+    private async Task Finalizar()
+    {
+
+        try
+        {
+            errorMessage = null;
+            resetearContraseña.correo = olvidarContra.olvidarContra.Email;
+            var result = await AuthService.ResetearContraseñaAsync(resetearContraseña);
+
+        NavigationManager.NavigateTo("/index");
+
+    }
+    catch (ApplicationException ex)
+    {
+        errorMessage = ex.Message;
+    }
+    catch (Exception ex)
+    {
+        errorMessage = "Ocurrio un error inesperado.";
+        Console.WriteLine(ex.Message);
+    }
+    }
 }

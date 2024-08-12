@@ -183,7 +183,7 @@ namespace SISDEN.Controllers
         }
         
         [HttpPut("api/EditarDenuncia/{id}")]
-        public async Task<IActionResult> PutDenuncia([FromBody] int id, DenunciasDTO denunciaDTO)
+        public async Task<IActionResult> PutDenuncia([FromBody] DenunciasDTO denunciaDTO, int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

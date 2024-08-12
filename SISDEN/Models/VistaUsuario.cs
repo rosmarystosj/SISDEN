@@ -26,4 +26,6 @@ public partial class VistaUsuario
     public int? Usurol { get; set; }
 
     public string? Entautorizadadescp { get; set; }
+
+    public string? EntCorreo { get; set; }
 }

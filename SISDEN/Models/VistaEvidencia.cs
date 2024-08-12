@@ -13,5 +13,7 @@ public partial class VistaEvidencia
 
     public int? Iddenuncia { get; set; }
 
+    public int? Idtipoevid { get; set; }
+
     public string? DenunciaTitulo { get; set; }
 }

@@ -13,5 +13,5 @@ public partial class Respuestum
 
     public int? RespIdopcion { get; set; }
 
-    public int RespIdusuario { get; set; }
+    public string RespIdusuario { get; set; } = null!;
 }

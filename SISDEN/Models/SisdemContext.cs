@@ -35,13 +35,13 @@ public partial class SisdemContext : DbContext
 
     public virtual DbSet<Motivocierre> Motivocierres { get; set; }
 
-    public virtual DbSet<Notificacion> Notificacions { get; set; }
-
     public virtual DbSet<Opcionpreguntum> Opcionpregunta { get; set; }
 
     public virtual DbSet<Preguntum> Pregunta { get; set; }
 
     public virtual DbSet<Puntosart> Puntosarts { get; set; }
+
+    public virtual DbSet<Pushsubscription> Pushsubscriptions { get; set; }
 
     public virtual DbSet<Respuestum> Respuesta { get; set; }
 
@@ -59,17 +59,15 @@ public partial class SisdemContext : DbContext
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
+    public virtual DbSet<ViewUserSubscription> ViewUserSubscriptions { get; set; }
+
     public virtual DbSet<VistaArticulo> VistaArticulos { get; set; }
 
     public virtual DbSet<VistaComentario> VistaComentarios { get; set; }
 
     public virtual DbSet<VistaDenuncia> VistaDenuncias { get; set; }
 
-    public virtual DbSet<VistaEntidadesAutorizada> VistaEntidadesAutorizadas { get; set; }
-
     public virtual DbSet<VistaEvidencia> VistaEvidencias { get; set; }
-
-    public virtual DbSet<VistaNotificacione> VistaNotificaciones { get; set; }
 
     public virtual DbSet<VistaOpcionesPregunta> VistaOpcionesPreguntas { get; set; }
 
@@ -77,21 +75,19 @@ public partial class SisdemContext : DbContext
 
     public virtual DbSet<VistaRespuesta> VistaRespuestas { get; set; }
 
-    public virtual DbSet<VistaUbicacione> VistaUbicaciones { get; set; }
-
     public virtual DbSet<VistaUsuario> VistaUsuarios { get; set; }
 
     public virtual DbSet<VistaViolacione> VistaViolaciones { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server = tcp:sisdem.database.windows.net, 1433; Initial Catalog = SISDEM; Persist Security Info=False;User ID = RosmaryStos; Password=Matematica12;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout = 30;");
+        => optionsBuilder.UseSqlServer("Server=tcp:sisdem.database.windows.net,1433;Initial Catalog=SISDEM;Persist Security Info=False;User ID=RosmaryStos;Password=Matematica12;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Articulo>(entity =>
         {
-            entity.HasKey(e => e.Idarticulo).HasName("PK__ARTICULO__51E79CEF9AF81259");
+            entity.HasKey(e => e.Idarticulo).HasName("PK__ARTICULO__51E79CEFB2915B9F");
 
             entity.ToTable("ARTICULO");
 
@@ -108,7 +104,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Capitulo>(entity =>
         {
-            entity.HasKey(e => e.Idcapitulo).HasName("PK__CAPITULO__E247373F6C014F8A");
+            entity.HasKey(e => e.Idcapitulo).HasName("PK__CAPITULO__E247373FBAAB5F95");
 
             entity.ToTable("CAPITULO");
 
@@ -121,7 +117,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Categorium>(entity =>
         {
-            entity.HasKey(e => e.Idcategoria).HasName("PK__CATEGORI__ADC0E7199E3D9B8D");
+            entity.HasKey(e => e.Idcategoria).HasName("PK__CATEGORI__ADC0E719919B4B53");
 
             entity.ToTable("CATEGORIA");
 
@@ -134,7 +130,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Comentario>(entity =>
         {
-            entity.HasKey(e => e.Idcomentario).HasName("PK__COMENTAR__B189A03BD4404722");
+            entity.HasKey(e => e.Idcomentario).HasName("PK__COMENTAR__B189A03B1AE33CAC");
 
             entity.ToTable("COMENTARIOS");
 
@@ -152,7 +148,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Denuncium>(entity =>
         {
-            entity.HasKey(e => e.Iddenuncia).HasName("PK__DENUNCIA__656008796FDE71F1");
+            entity.HasKey(e => e.Iddenuncia).HasName("PK__DENUNCIA__65600879341AFDA3");
 
             entity.ToTable("DENUNCIA");
 
@@ -201,7 +197,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Entidadautorizadum>(entity =>
         {
-            entity.HasKey(e => e.Identidadaut).HasName("PK__ENTIDADA__8DDD21D014D2C48A");
+            entity.HasKey(e => e.Identidadaut).HasName("PK__ENTIDADA__8DDD21D038066A4D");
 
             entity.ToTable("ENTIDADAUTORIZADA");
 
@@ -226,7 +222,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Estado>(entity =>
         {
-            entity.HasKey(e => e.Idestado).HasName("PK__ESTADO__A93E12E211606573");
+            entity.HasKey(e => e.Idestado).HasName("PK__ESTADO__A93E12E227F948CC");
 
             entity.ToTable("ESTADO");
 
@@ -239,7 +235,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Evidencium>(entity =>
         {
-            entity.HasKey(e => e.Idevidencia).HasName("PK__EVIDENCI__281166CE860D25CA");
+            entity.HasKey(e => e.Idevidencia).HasName("PK__EVIDENCI__281166CE3CBCDBAA");
 
             entity.ToTable("EVIDENCIA");
 
@@ -253,7 +249,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Leyviolacion>(entity =>
         {
-            entity.HasKey(e => e.Idviolacion).HasName("PK__LEYVIOLA__FF7F417A88E348E3");
+            entity.HasKey(e => e.Idviolacion).HasName("PK__LEYVIOLA__FF7F417A0A6701AD");
 
             entity.ToTable("LEYVIOLACION");
 
@@ -265,7 +261,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Motivocierre>(entity =>
         {
-            entity.HasKey(e => e.Idmotivo).HasName("PK__MOTIVOCI__BE3091F4E1D572EB");
+            entity.HasKey(e => e.Idmotivo).HasName("PK__MOTIVOCI__BE3091F4E445012D");
 
             entity.ToTable("MOTIVOCIERRE");
 
@@ -276,30 +272,9 @@ public partial class SisdemContext : DbContext
                 .HasColumnName("MOTIVODESCRIPCION");
         });
 
-        modelBuilder.Entity<Notificacion>(entity =>
-        {
-            entity.HasKey(e => e.Idnotificacion).HasName("PK__NOTIFICA__5A23FEB371A98753");
-
-            entity.ToTable("NOTIFICACION");
-
-            entity.Property(e => e.Idnotificacion).HasColumnName("IDNOTIFICACION");
-            entity.Property(e => e.Fechaenvio)
-                .HasColumnType("datetime")
-                .HasColumnName("FECHAENVIO");
-            entity.Property(e => e.Idestado).HasColumnName("IDESTADO");
-            entity.Property(e => e.Idusuario).HasColumnName("IDUSUARIO");
-            entity.Property(e => e.Leido)
-                .HasDefaultValueSql("((0))")
-                .HasColumnName("LEIDO");
-            entity.Property(e => e.Mensaje)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("MENSAJE");
-        });
-
         modelBuilder.Entity<Opcionpreguntum>(entity =>
         {
-            entity.HasKey(e => e.Idopcionpreg).HasName("PK__OPCIONPR__F9FF149B62D64D60");
+            entity.HasKey(e => e.Idopcionpreg).HasName("PK__OPCIONPR__F9FF149B314CA431");
 
             entity.ToTable("OPCIONPREGUNTA");
 
@@ -315,7 +290,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Preguntum>(entity =>
         {
-            entity.HasKey(e => e.Idpregunta).HasName("PK__PREGUNTA__177765F72A8788E3");
+            entity.HasKey(e => e.Idpregunta).HasName("PK__PREGUNTA__177765F7F28A35CB");
 
             entity.ToTable("PREGUNTA");
 
@@ -330,7 +305,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Puntosart>(entity =>
         {
-            entity.HasKey(e => e.Idpuntoart).HasName("PK__PUNTOSAR__412B9EA439440039");
+            entity.HasKey(e => e.Idpuntoart).HasName("PK__PUNTOSAR__412B9EA498D925DB");
 
             entity.ToTable("PUNTOSART");
 
@@ -345,16 +320,34 @@ public partial class SisdemContext : DbContext
                 .HasColumnName("PUNTOARTNUMERO");
         });
 
+        modelBuilder.Entity<Pushsubscription>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PushSubs__3214EC07970293C5");
+
+            entity.ToTable("PUSHSUBSCRIPTION");
+
+            entity.Property(e => e.Auth)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Endpoint).IsUnicode(false);
+            entity.Property(e => e.P256dh)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<Respuestum>(entity =>
         {
-            entity.HasKey(e => e.Idrespuesta).HasName("PK__RESPUEST__0B6869FD42F756D7");
+            entity.HasKey(e => e.Idrespuesta).HasName("PK__RESPUEST__0B6869FDBF9AF401");
 
             entity.ToTable("RESPUESTA");
 
             entity.Property(e => e.Idrespuesta).HasColumnName("IDRESPUESTA");
             entity.Property(e => e.RespIdopcion).HasColumnName("RESP_IDOPCION");
             entity.Property(e => e.RespIdpregunta).HasColumnName("RESP_IDPREGUNTA");
-            entity.Property(e => e.RespIdusuario).HasColumnName("RESP_IDUSUARIO");
+            entity.Property(e => e.RespIdusuario)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RESP_IDUSUARIO");
             entity.Property(e => e.Respdescripcion)
                 .HasColumnType("text")
                 .HasColumnName("RESPDESCRIPCION");
@@ -362,7 +355,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Idrol).HasName("PK__ROLES__A686519E29EAE46B");
+            entity.HasKey(e => e.Idrol).HasName("PK__ROLES__A686519E13F7DEF2");
 
             entity.ToTable("ROLES");
 
@@ -375,7 +368,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Seccion>(entity =>
         {
-            entity.HasKey(e => e.Idseccion).HasName("PK__SECCION__4956D423088DA49B");
+            entity.HasKey(e => e.Idseccion).HasName("PK__SECCION__4956D423CCD5CD5E");
 
             entity.ToTable("SECCION");
 
@@ -389,7 +382,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Sesion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SESION__3214EC27C1F5C329");
+            entity.HasKey(e => e.Id).HasName("PK__SESION__3214EC27BB192AD9");
 
             entity.ToTable("SESION");
 
@@ -411,7 +404,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Tipoevidencium>(entity =>
         {
-            entity.HasKey(e => e.Idtipoevid).HasName("PK__TIPOEVID__789FB5A1B359368F");
+            entity.HasKey(e => e.Idtipoevid).HasName("PK__TIPOEVID__789FB5A17D9D0220");
 
             entity.ToTable("TIPOEVIDENCIA");
 
@@ -424,7 +417,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Tipopreguntum>(entity =>
         {
-            entity.HasKey(e => e.Idtipo).HasName("PK__TIPOPREG__E57FEC10BF1EF8BE");
+            entity.HasKey(e => e.Idtipo).HasName("PK__TIPOPREG__E57FEC10A2E84033");
 
             entity.ToTable("TIPOPREGUNTA");
 
@@ -437,7 +430,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Ubicacion>(entity =>
         {
-            entity.HasKey(e => e.Idubicacion).HasName("PK__UBICACIO__781B28C929233A28");
+            entity.HasKey(e => e.Idubicacion).HasName("PK__UBICACIO__781B28C9427C7CC7");
 
             entity.ToTable("UBICACION");
 
@@ -451,7 +444,7 @@ public partial class SisdemContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.Idusuario).HasName("PK__USUARIO__98242AA971D46853");
+            entity.HasKey(e => e.Idusuario).HasName("PK__USUARIO__98242AA939F73B8F");
 
             entity.ToTable("USUARIO");
 
@@ -493,6 +486,24 @@ public partial class SisdemContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("USUVERIFICACION");
             entity.Property(e => e.VerificationExpiry).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<ViewUserSubscription>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("ViewUserSubscriptions");
+
+            entity.Property(e => e.Auth)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Endpoint).IsUnicode(false);
+            entity.Property(e => e.P256dh)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Username)
+                .HasMaxLength(101)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<VistaArticulo>(entity =>
@@ -623,29 +634,6 @@ public partial class SisdemContext : DbContext
             entity.Property(e => e.Usurol).HasColumnName("USUROL");
         });
 
-        modelBuilder.Entity<VistaEntidadesAutorizada>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("VistaEntidadesAutorizadas");
-
-            entity.Property(e => e.EntautorizadaEstatus)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("ENTAUTORIZADA_ESTATUS");
-            entity.Property(e => e.Entautorizadadescp)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("ENTAUTORIZADADESCP");
-            entity.Property(e => e.EntidadSector)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("ENTIDAD_SECTOR");
-            entity.Property(e => e.Identidadaut)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("IDENTIDADAUT");
-        });
-
         modelBuilder.Entity<VistaEvidencia>(entity =>
         {
             entity
@@ -660,38 +648,10 @@ public partial class SisdemContext : DbContext
                 .HasColumnName("EVURL");
             entity.Property(e => e.Iddenuncia).HasColumnName("IDDENUNCIA");
             entity.Property(e => e.Idevidencia).HasColumnName("IDEVIDENCIA");
+            entity.Property(e => e.Idtipoevid).HasColumnName("IDTIPOEVID");
             entity.Property(e => e.TipoEvidencia)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-        });
-
-        modelBuilder.Entity<VistaNotificacione>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("VistaNotificaciones");
-
-            entity.Property(e => e.EstadoDescripcion)
-                .HasMaxLength(20)
-                .IsUnicode(false);
-            entity.Property(e => e.Fechaenvio)
-                .HasColumnType("datetime")
-                .HasColumnName("FECHAENVIO");
-            entity.Property(e => e.Idestado).HasColumnName("IDESTADO");
-            entity.Property(e => e.Idnotificacion).HasColumnName("IDNOTIFICACION");
-            entity.Property(e => e.Idusuario).HasColumnName("IDUSUARIO");
-            entity.Property(e => e.Leido).HasColumnName("LEIDO");
-            entity.Property(e => e.Mensaje)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("MENSAJE");
-            entity.Property(e => e.UsuarioNombreCompleto)
-                .HasMaxLength(101)
-                .IsUnicode(false);
-            entity.Property(e => e.Usuemail)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("USUEMAIL");
         });
 
         modelBuilder.Entity<VistaOpcionesPregunta>(entity =>
@@ -764,29 +724,16 @@ public partial class SisdemContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<VistaUbicacione>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("VistaUbicaciones");
-
-            entity.Property(e => e.EntidadSector)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("ENTIDAD_SECTOR");
-            entity.Property(e => e.Idubicacion).HasColumnName("IDUBICACION");
-            entity.Property(e => e.Ubdescripcion)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("UBDESCRIPCION");
-        });
-
         modelBuilder.Entity<VistaUsuario>(entity =>
         {
             entity
                 .HasNoKey()
                 .ToView("VistaUsuarios");
 
+            entity.Property(e => e.EntCorreo)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("ENT_CORREO");
             entity.Property(e => e.Entautorizadadescp)
                 .HasMaxLength(255)
                 .IsUnicode(false)

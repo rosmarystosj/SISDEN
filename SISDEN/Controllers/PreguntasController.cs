@@ -23,5 +23,11 @@ namespace SISDEN.Controllers
             }
             return pregunta;
         }
+        [HttpGet("api/ObtenerPreguntas")]
+        public async Task<ActionResult<IEnumerable<VistaPregunta>>> GetOpciones()
+        {
+
+            return await _context.VistaPreguntas.ToListAsync();
+        }
     }
 }

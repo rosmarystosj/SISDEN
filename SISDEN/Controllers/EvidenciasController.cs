@@ -2,11 +2,13 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using NuGet.Versioning;
+using SISDEN.DTOS;
 using SISDEN.Models;
 using SISDEN.Services;
 
@@ -30,7 +32,7 @@ namespace SISDEN.Controllers
             return await _context.VistaEvidencias.ToListAsync();
         }
 
-        [HttpGet("api/ObtenerEvidenicia/{id}")]
+        [HttpGet("api/ObtenerEvidencia/{id}")]
         public async Task<ActionResult<VistaEvidencia>> GetEvidencia(int id)
         {
             var denuncia = await _context.VistaEvidencias.FirstOrDefaultAsync(e => e.Idevidencia == id);
@@ -41,7 +43,7 @@ namespace SISDEN.Controllers
             return denuncia;
         }
 
-        [HttpGet("api/ObtenerEvideniciaDenun/{denunciaid}")]
+        [HttpGet("api/ObtenerEvidenciaDenun/{denunciaid}")]
         public async Task<ActionResult<VistaEvidencia>> GetEvidenciaPorDenuncia(int denunciaid)
         {
             var evidencias = await _context.VistaEvidencias
@@ -134,6 +136,32 @@ namespace SISDEN.Controllers
     
         }
 
+    
+    [HttpPost("api/GuardarURL")]
+    public async Task<IActionResult> GuardarURL([FromBody] EvidenciaDTO evidenciaDTO, string sesionId)
+    {
+        var userid = await _sesion.ObtenerUserIdAsync(sesionId);
+        if (userid == null)
+        {
+            return Unauthorized("Sesion expirada o invalida");
+        }
+
+            int denunciaId = await _registrarDenuncia.RegistrarDenunciaAsync(sesionId);
+            var evidencia = new Evidencium()
+            {
+                EvIddenuncia = denunciaId,
+                Evurl = evidenciaDTO.Evurl,
+                EvIdtipoevid = evidenciaDTO.EvIdtipoevid,
+            };
+            _context.Evidencia.Add(evidencia);
+            await _context.SaveChangesAsync();
+
+
+            return Ok(new { evidencia });
+
+
+        }
+
     }
+
 }
- 

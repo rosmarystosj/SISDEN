@@ -148,6 +148,7 @@ namespace SISDEN.Controllers
                     Densalarios = denunciaDTO.Densalarios,
                     Denprision = denunciaDTO.Denprision,
                     Dennumsalarios = denunciaDTO.Dennumsalarios,
+                    Denentidadid = denunciaDTO.DenEntidadid,
                     Dennumprision = denunciaDTO.Dennumprision,
                     Dennumserv = denunciaDTO.Dennumserv,
                     Denobservaciones = denunciaDTO.Denobservaciones,
@@ -158,9 +159,23 @@ namespace SISDEN.Controllers
                     Dencategoria =denunciaDTO.DenCategoria,
                 };
 
-                
+                var notification = new NotificationDto
+                {
+                    Idusuario = 0,
+                    EntidadId = denunciaDTO.DenEntidadid,
+                    Idestado = denunciaDTO.DenIdestado ?? 0,
+                    Mensaje = "Notificacion nueva",
+                    Fechaenvio = DateTime.Now,
+                    Leido = 0
+                };
+
+
                 _context.Denuncia.Add(denuncia);
                 await _context.SaveChangesAsync();
+
+                await _notificationService.CreateNotificationAsync(notification);
+
+
 
                //var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
                // var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
@@ -182,7 +197,7 @@ namespace SISDEN.Controllers
             }
         }
         
-        [HttpPut("api/EditarDenuncia/{id}")]
+        [HttpPut("api/EditarDenunciate/{id}")]
         public async Task<IActionResult> PutDenuncia([FromBody] DenunciasDTO denunciaDTO, int id)
         {
             if (!ModelState.IsValid)
@@ -219,8 +234,9 @@ namespace SISDEN.Controllers
                 denuncia.Denentidadid = denunciaDTO.DenEntidadid;
                    
                 _context.Entry(denuncia).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
 
-                var ubicacionString = denunciaDTO.DenIdubicacion; 
+                var ubicacionString = denunciaDTO.DenIdubicacion;
                 var entidadIdParam = new SqlParameter("@EntidadId", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.Output
@@ -238,6 +254,21 @@ namespace SISDEN.Controllers
 
                 denuncia.Dentitulo = GenerarTitulo(denunciaDTO);
                 await _context.SaveChangesAsync();
+
+                // Creación de NotificationDto y envío de notificación
+                var notification = new NotificationDto
+                {
+                    Idusuario = 1,
+                    EntidadId = 0,
+                    Idestado = denuncia.DenIdestado ??0,
+                    Mensaje = "Su denuncia ha sido actualizada.",
+                    Fechaenvio = DateTime.Now,
+                    Leido = 0  // Asumiendo que 'Leido' es un int. Si es boolean, debería ser 'false'
+                };
+
+                await _notificationService.CreateNotificationAsync(notification);
+
+              
 
                 //var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
                 //var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
@@ -270,9 +301,116 @@ namespace SISDEN.Controllers
             {
                 return StatusCode(500, $"Error interno del servidor: {ex.Message}");
             }
+
         }
 
-        [HttpDelete("api/EliminarDenuncia/{id}")]
+        [HttpPut("api/Editarentidad/{id}")]
+        public async Task<IActionResult> PutDenunciaen([FromBody] DenunciasDTO denunciaDTO, int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            try
+            {
+                var denuncia = await _context.Denuncia.FirstOrDefaultAsync(d => d.Iddenuncia == id);
+
+                if (denuncia == null)
+                {
+                    return NotFound("Denuncia no encontrada");
+
+                }
+                if (denunciaDTO.Denanimal == "Ambos")
+                {
+                    denunciaDTO.Denanimal = "Perros y gatos";
+                }
+                denuncia.Dendescripcion = denunciaDTO.Dendescripcion;
+                denuncia.Denanimal = denunciaDTO.Denanimal;
+                denuncia.Denfechacierre = denunciaDTO.Denfechacierre;
+                denuncia.Denevidenciaadjunta = denunciaDTO.Denevidenciaadjunta;
+                denuncia.Denservicio = denunciaDTO.Denservicio;
+                denuncia.Densalarios = denunciaDTO.Densalarios;
+                denuncia.Denprision = denunciaDTO.Denprision;
+                denuncia.Dennumsalarios = denunciaDTO.Dennumsalarios;
+                denuncia.Dennumprision = denunciaDTO.Dennumprision;
+                denuncia.Dennumserv = denunciaDTO.Dennumserv;
+                denuncia.Denobservaciones = denunciaDTO.Denobservaciones;
+                denuncia.DenIdmotivocierre = denunciaDTO.DenIdmotivocierre;
+                denuncia.Denubicacion = denunciaDTO.DenIdubicacion;
+                denuncia.DenIdusuario = denunciaDTO.DenIdusuario;
+                denuncia.DenIdestado = denunciaDTO.DenIdestado;
+                denuncia.Dencategoria = denunciaDTO.DenCategoria;
+                denuncia.Denentidadid = denunciaDTO.DenEntidadid;
+
+                _context.Entry(denuncia).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                var ubicacionString = denunciaDTO.DenIdubicacion;
+                var entidadIdParam = new SqlParameter("@EntidadId", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC AssignEntidadId @UbicacionString, @EntidadId OUTPUT",
+                    new SqlParameter("@UbicacionString", ubicacionString),
+                    entidadIdParam
+                );
+
+                denuncia.Denentidadid = (int)entidadIdParam.Value;
+
+                await _context.SaveChangesAsync();
+
+     
+
+                // Creación de NotificationDto y envío de notificación
+                var notification = new NotificationDto
+                {
+                    Idusuario = 0,
+                    EntidadId = denunciaDTO.DenEntidadid,
+                    Idestado = denuncia.Denentidadid ?? 0,
+                    Mensaje = "Su denuncia ha sido actualizada.",
+                    Fechaenvio = DateTime.Now,
+                    Leido = 0  // Asumiendo que 'Leido' es un int. Si es boolean, debería ser 'false'
+                };
+
+                await _notificationService.CreateNotificationAsync(notification);
+
+              
+
+                //var estado = await _context.Estados.FindAsync(denuncia.DenIdestado);
+                //var mensaje = $"Se ha registrado una nueva denuncia con el estado: {estado.Estdescripcion}";
+
+                //if (denuncia.DenIdusuario.HasValue && denuncia.DenIdestado.HasValue)
+                //{
+                //    await _notificationService.CreateNotificationAsync(denuncia.DenIdusuario.Value, denuncia.DenIdestado.Value, mensaje);
+                //}
+                //else
+                //{
+                //    throw new InvalidOperationException("DenIdusuario o DenIdestado son nulos.");
+                //}
+
+                return Ok(denuncia);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+
+                if (DenunciaExists(id))
+                {
+                    return NotFound("Denuncia no encontrada");
+                }
+                else
+                {
+                    throw;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+
+        }
+
+            [HttpDelete("api/EliminarDenuncia/{id}")]
          public async Task<IActionResult> DeleteDenuncia(int id)
         {
             var denuncia = await _context.Denuncia.FirstOrDefaultAsync(d => d.Iddenuncia == id);   

@@ -153,6 +153,11 @@ namespace SISDENFRONT.Data
             var usuario = await _httpClient.GetFromJsonAsync<VistaUsuario>($"api/ObtenerUsuarioall/{correo}");
             return usuario.Idusuario;
         }
+        public async Task<int> ObtenerUsuarioIDCEdula(string cedula)
+        {
+            var usuario = await _httpClient.GetFromJsonAsync<VistaUsuario>($"api/ObtenerUsuarioID/{cedula}");
+            return usuario.Idusuario;
+        }
 
         public async Task<int?> ObtenerUsuarioIdentidad(string correo)
         {

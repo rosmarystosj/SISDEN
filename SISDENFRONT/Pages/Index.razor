@@ -9,202 +9,206 @@
 @inject HttpClient Http
 @inject AuthService AuthService
 
-  <body>  
+<body>
     <div class="loader-wrapper">
-      <div class="loader"> 
-        <div class="loader4"></div>
-      </div>
+        <div class="loader">
+            <div class="loader4"></div>
+        </div>
     </div>
     <div class="tap-top"><i data-feather="chevrons-up"></i></div>
     <div class="page-wrapper compact-wrapper" id="pageWrapper">
-      <div class="page-body-wrapper">
-        <div class="page-body">
-          <div class="container-fluid">
-            <div class="page-title">
-              <div class="row">
-                <div class="col-6">
-                  <h4>
-                     Project Management </h4>
+        <div class="page-body-wrapper">
+            <div class="page-body">
+                <div class="container-fluid">
+                    <div class="page-title">
+                        <div class="row">
+                            <div class="col-6">
+                                <h4>
+                                    Resumén
+                                </h4>
+                            </div>
+                            <div class="col-6">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="/index">
+                                            <svg class="stroke-icon">
+                                                <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumb-item">Home</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-6">
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/index"> 
-                        <svg class="stroke-icon">
-                          <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
-                        </svg></a></li>
-                    <li class="breadcrumb-item">Home</li>
-                  </ol>
+                <div class="container-fluid">
+                    <div class="row size-column">
+                        <div class="col-xxl-9 box-col-12">
+                            <div class="row">
+                                <div class="col-xl-3 col-sm-6">
+                                    <div class="card o-hidden small-widget">
+                                        <div class="card-body total-project border-b-primary border-2">
+                                            <span class="f-light f-w-500 f-14">Total de Denuncias</span>
+                                            <div class="project-details">
+                                                <div class="project-counter">
+                                                    <h2 class="f-w-600">@denunciasPorEstado.Total</h2><span class="f-12 f-w-400"></span>
+                                                </div>
+                                                <div class="product-sub bg-primary-light">
+                                                    <svg class="invoice-icon">
+                                                        <use href="../assets/svg/icon-sprite.svg#color-swatch"></use>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <ul class="bubbles">
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6">
+                                    <div class="card o-hidden small-widget">
+                                        <div class="card-body total-Progress border-b-warning border-2">
+                                            <span class="f-light f-w-500 f-14">En Revisión</span>
+                                            <div class="project-details">
+                                                <div class="project-counter">
+                                                    <h2 class="f-w-600">@denunciasPorEstado.EnRevision</h2><span class="f-12 f-w-400"> </span>
+                                                </div>
+                                                <div class="product-sub bg-warning-light">
+                                                    <svg class="invoice-icon">
+                                                        <use href="../assets/svg/icon-sprite.svg#tick-circle"></use>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <ul class="bubbles">
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6">
+                                    <div class="card o-hidden small-widget">
+                                        <div class="card-body total-Complete border-b-secondary border-2">
+                                            <span class="f-light f-w-500 f-14">Resuelta</span>
+                                            <div class="project-details">
+                                                <div class="project-counter">
+                                                    <h2 class="f-w-600">@denunciasPorEstado.Realizadas</h2><span class="f-12 f-w-400"> </span>
+                                                </div>
+                                                <div class="product-sub bg-secondary-light">
+                                                    <svg class="invoice-icon">
+                                                        <use href="../assets/svg/icon-sprite.svg#add-square"></use>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <ul class="bubbles">
+                                                <li class="bubble"> </li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"> </li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"> </li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"> </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6">
+                                    <div class="card o-hidden small-widget">
+                                        <div class="card-body total-upcoming">
+                                            <span class="f-light f-w-500 f-14">Pendiente</span>
+                                            <div class="project-details">
+                                                <div class="project-counter">
+                                                    <h2 class="f-w-600">@denunciasPorEstado.Pendientes</h2><span class="f-12 f-w-400"></span>
+                                                </div>
+                                                <div class="product-sub bg-light-light">
+                                                    <svg class="invoice-icon">
+                                                        <use href="../assets/svg/icon-sprite.svg#edit-2"></use>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <ul class="bubbles">
+                                                <li class="bubble"> </li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                                <li class="bubble"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 ">
+                                    <div class="card recent-order">
+                                        <div class="card-header card-no-border total-revenue">
+                                            <h4 class="m-0">Articulos Más Violados</h4>
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <div class="client-list-table table-responsive custom-scrollbar">
+                                                @if (articulosMasViolados != null && articulosMasViolados.Any())
+                                                {
+                                                    <table class="order-table w-100">
+                                                        <tbody>
+                                                            @foreach (var articulo in articulosMasViolados)
+                                                            {
+                                                                <tr>
+                                                                    <td class="client-list">
+                                                                        <div class="user-id">
+                                                                            <div class="product-sub">
+                                                                                <a class="f-14 f-w-500" href="user-profile.pug">@articulo.Titulo</a>
+                                                                                <span class="d-block f-light f-w-500">@articulo.CantidadDeViolaciones violaciones</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                }
+                                                else
+                                                {
+                                                    <p>No se encontraron artículos violados.</p>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-          <div class="container-fluid">
-            <div class="row size-column"> 
-              <div class="col-xxl-9 box-col-12">
-                <div class="row"> 
-                  <div class="col-xl-3 col-sm-6">
-                    <div class="card o-hidden small-widget">
-                      <div class="card-body total-project border-b-primary border-2"><span class="f-light f-w-500 f-14">Total de Denuncias</span>
-                        <div class="project-details"> 
-                          <div class="project-counter">
-                            <h2 class="f-w-600">@denunciasPorEstado.Total</h2><span class="f-12 f-w-400"></span>
-                          </div>
-                          <div class="product-sub bg-primary-light">
-                            <svg class="invoice-icon">
-                              <use href="../assets/svg/icon-sprite.svg#color-swatch"></use>
-                            </svg>
-                          </div>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 footer-copyright text-center">
+                            <p class="mb-0">Copyright 2024 © Riho theme by pixelstrap  </p>
                         </div>
-                        <ul class="bubbles">
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                        </ul>
-                      </div>
                     </div>
-                  </div>
-                  <div class="col-xl-3 col-sm-6">
-                    <div class="card o-hidden small-widget">
-                      <div class="card-body total-Progress border-b-warning border-2"> <span class="f-light f-w-500 f-14">En Revisión</span>
-                        <div class="project-details">
-                          <div class="project-counter">
-                          <h2 class="f-w-600">@denunciasPorEstado.EnRevision</h2><span class="f-12 f-w-400"> </span>
-                          </div>
-                          <div class="product-sub bg-warning-light"> 
-                            <svg class="invoice-icon">
-                              <use href="../assets/svg/icon-sprite.svg#tick-circle"></use>
-                            </svg>
-                          </div>
-                        </div>
-                        <ul class="bubbles">
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-3 col-sm-6">
-                    <div class="card o-hidden small-widget">
-                      <div class="card-body total-Complete border-b-secondary border-2"><span class="f-light f-w-500 f-14">Resuelta</span>
-                        <div class="project-details">
-                          <div class="project-counter">
-                            <h2 class="f-w-600">@denunciasPorEstado.Realizadas</h2><span class="f-12 f-w-400"> </span>
-                          </div>
-                          <div class="product-sub bg-secondary-light"> 
-                            <svg class="invoice-icon">
-                              <use href="../assets/svg/icon-sprite.svg#add-square"></use>
-                            </svg>
-                          </div>
-                        </div>
-                        <ul class="bubbles"> 
-                          <li class="bubble"> </li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"> </li>
-                          <li class="bubble"></li>
-                          <li class="bubble"> </li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"> </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-3 col-sm-6">
-                    <div class="card o-hidden small-widget">
-                      <div class="card-body total-upcoming"><span class="f-light f-w-500 f-14">Pendiente</span>
-                        <div class="project-details"> 
-                          <div class="project-counter">
-                           <h2 class="f-w-600">@denunciasPorEstado.Pendientes</h2><span class="f-12 f-w-400"></span>
-                          </div>
-                          <div class="product-sub bg-light-light"> 
-                            <svg class="invoice-icon">
-                              <use href="../assets/svg/icon-sprite.svg#edit-2"></use>
-                            </svg>
-                          </div>
-                        </div>
-                        <ul class="bubbles"> 
-                          <li class="bubble"> </li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                          <li class="bubble"></li>
-                        </ul>
-                      </div>
-                    </div>
-                    </div>
-                        <div class="col-xl-12 col-md-6">
-                            <div class="card recent-order"> 
-                      <div class="card-header card-no-border total-revenue">
-                        <h4 class="m-0">Articulos Más Violados</h4>
-                      </div>
-                      <div class="card-body pt-0"> 
-                        <div class="client-list-table table-responsive custom-scrollbar">
-                          <table class="order-table w-100">
-                            <tbody>
-                            @foreach (var articulo in articulosMasViolados)
-                            {
-                              <tr>
-                                <td class="client-list">
-                                  <div class="user-id">
-                                    <div class="product-sub"><a class="f-14 f-w-500 " href="user-profile.pug">@articulo.Titulo</a><span class="d-block f-light f-w-500">@articulo.CantidadDeViolaciones violaciones</span></div>
-                                  </div>
-                                </td>
-                              </tr>
-                             }
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
-              <div class="col-xxl-3 d-xxl-block d-none activity-group box-col-none">
-                <div class="row">
-                  <div class="col-xl-12 col-md-6">
-                    <div class="card overflow-hidden"> 
-                      <div class="card-body pt-0 project-ideas-card">
-                        <div class="project-card">
-\                          <div><span class="f-22 f-w-500 text-center">Escanea el Codigo para hacer una denuncia o haz click aqui.</span>
-                            <div class="btn-showcase text-center"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            </footer>
         </div>
-        <footer class="footer">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-md-12 footer-copyright text-center">
-                <p class="mb-0">Copyright 2024 © Riho theme by pixelstrap  </p>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
     </div>
     <!-- latest jquery-->
     <script src="../assets/js/jquery.min.js"></script>
@@ -244,40 +248,51 @@
     <!-- Theme js-->
     <script src="../assets/js/script.js"></script>
     <script>new WOW().init();</script>
-  </body>
+</body>
 
 @code {
+    private string cedula;
     private string correo;
-    private int  entidadid;
+    private int userId;
+
+    private int?  entidadid;
     private DenunciasPorEstadoDTO denunciasPorEstado;
     private List<ArticuloVioladoDTO> articulosMasViolados;
 
 
     protected override async Task OnInitializedAsync()
     {
+        denunciasPorEstado = new DenunciasPorEstadoDTO();
+        articulosMasViolados = new List<ArticuloVioladoDTO>();
+        articulosMasViolados = await Http.GetFromJsonAsync<List<ArticuloVioladoDTO>>("api/ArticulosMasViolados");
 
-        if (LoginModel.LoginModel?.UsuRol == 1 && LoginModel.LoginModel?.UsuRol == 2)
+        if (LoginModel.LoginModel?.UsuRol == 1 )
         {
-            correo = LoginModel.LoginModel.Usuemail;
-            denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsyncU();
+            cedula = LoginModel.LoginModel.Usuidentificacion;
+             userId = await AuthService.ObtenerUsuarioIDCEdula(cedula);
+            denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsyncU(userId);
 
         }
         else if (RegistroService.RegistroModelo?.Usurol == 1)
         {
-            correo = RegistroService.RegistroModelo.Usuidentificacion;
-            denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsyncU();
+            cedula = RegistroService.RegistroModelo.Usuidentificacion;
+            userId = await AuthService.ObtenerUsuarioIDCEdula(cedula);
+            denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsyncU(userId);
+
         }
-        else if (RegistroService.RegistroModelo?.Usurol == 1)
-        {
-            correo = RegistroService.RegistroModelo.Usuidentificacion;
-            denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsync();
-        }
+       
         else if (RegistroServiceEntidad.EntidadModelo?.Usurol == 2)
         {
             correo = RegistroServiceEntidad.EntidadModelo.Usuemail;
-            denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsync();
+            entidadid = await AuthService.ObtenerUsuarioIdentidad(correo);
+            denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsync(entidadid);
         }
-        articulosMasViolados = await Http.GetFromJsonAsync<List<ArticuloVioladoDTO>>("api/ArticulosMasViolados");
+        else if (LoginModel.LoginModel?.UsuRol == 2)
+        {
+            correo = LoginModel.LoginModel.Usuemail;
+           entidadid = await AuthService.ObtenerUsuarioIdentidad(correo);
+            denunciasPorEstado = await DenunciasService.GetTotalDenunciasPorEstadoAsync(entidadid);
+        }
 
     }
 }

@@ -146,7 +146,11 @@
                                 <td>@denuncia.UsuarioNombreCompleto</td>
                                 <td>
                                     <ul class="action">
-                                       <li class="edit"> <a href="/denuncias/editardenuncias"><i class="icon-pencil-alt" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" data-bs-title="&lt;b&gt;Cerrar&lt;/b&gt; &lt;em&gt;denuncia&lt;/em&gt;"></i></a></li>
+                               @if (LoginModel.LoginModel?.UsuRol == 2 || RegistroServiceEntidad.EntidadModelo?.Usurol == 2)
+                                {
+                                    <li class="edit"> <a href="/denuncias/editardenuncias/@denuncia.Iddenuncia"><i class="icon-pencil-alt" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" data-bs-title="&lt;b&gt;Cerrar&lt;/b&gt; &lt;em&gt;denuncia&lt;/em&gt;"></i></a></li>
+
+                                }
                                        <li class="edit"> <a href="/detalle-denuncia/@denuncia.Iddenuncia"><i class="icon-eye" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" data-bs-title="&lt;b&gt;Ver&lt;/b&gt; &lt;em&gt;denuncia&lt;/em&gt;"></i></a></li>
                                     </ul>
                                 </td>
@@ -180,7 +184,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12 footer-copyright text-center">
-                <p class="mb-0">Copyright 2024 © Riho theme by pixelstrap  </p>
+                <p class="mb-0">Copyright 2024 © SIDEN  </p>
               </div>
             </div>
           </div>
@@ -201,6 +205,12 @@
     <script src="../assets/js/datatable/datatables/datatable.custom.js"></script>
    
     <script src="../assets/js/script.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
 }
 @code {
     private List<VistaDenuncia> denuncias;

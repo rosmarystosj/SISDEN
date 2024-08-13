@@ -56,6 +56,16 @@ namespace SISDEN.Controllers
             }
             return Ok(new { usuario.Usuentidad});
         }
+        [HttpGet("api/ObtenerUsuarioID/{cedula}")]
+        public async Task<ActionResult<Usuario>> GetUsuarioDen(string cedula)
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Usuidentificacion == cedula);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return Ok(new { usuario.Idusuario });
+        }
 
         [HttpGet("api/ObtenerUsuarioAll/{correo}")]
         public async Task<ActionResult<VistaUsuario>> GetUsuarioAll(string correo)

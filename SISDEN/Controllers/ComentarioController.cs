@@ -117,11 +117,6 @@ namespace SISDEN.Controllers
             ComFecha = c.ComFecha,
         }).ToListAsync();
 
-            if (comentarios == null || comentarios.Count == 0)
-            {
-                return NotFound();
-            }
-
             return comentarios;
         }
 

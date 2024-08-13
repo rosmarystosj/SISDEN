@@ -29,17 +29,32 @@ namespace SISDENFRONT.Data
 
         public async Task<VistaDenuncia> GetDenunciaById(int id)
         {
-            return await _httpClient.GetFromJsonAsync<VistaDenuncia>($"api/Obtenerdetalle/{id}");
+            try
+            {
+                var response = await _httpClient.GetAsync($"api/Obtenerdetalle/{id}");
+                response.EnsureSuccessStatusCode(); // Throws an exception if the HTTP response status is an error code.
+                return await response.Content.ReadFromJsonAsync<VistaDenuncia>();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"HTTP error while fetching denuncia by id: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"General error while fetching denuncia by id: {ex.Message}");
+                return null;
+            }
         }
-        public async Task<DenunciasPorEstadoDTO> GetTotalDenunciasPorEstadoAsync()
+        public async Task<DenunciasPorEstadoDTO> GetTotalDenunciasPorEstadoAsync(int? entidadid)
         {
-            var response = await _httpClient.GetFromJsonAsync<DenunciasPorEstadoDTO>("api/TotalDenunciasPorEstado");
+            var response = await _httpClient.GetFromJsonAsync<DenunciasPorEstadoDTO>($"api/TotalDenunciasPorEstado{entidadid}");
             return response;
         }
 
-        public async Task<DenunciasPorEstadoDTO> GetTotalDenunciasPorEstadoAsyncU()
+        public async Task<DenunciasPorEstadoDTO> GetTotalDenunciasPorEstadoAsyncU(int userid)
         {
-            var response = await _httpClient.GetFromJsonAsync<DenunciasPorEstadoDTO>("api/TotalDenunciasPorEstadoU");
+            var response = await _httpClient.GetFromJsonAsync<DenunciasPorEstadoDTO>($"api/TotalDenunciasPorEstadoU/{userid}");
             return response;
         }
     }

@@ -120,7 +120,7 @@
               <li class="profile-nav onhover-dropdown"> 
                 <div class="media profile-media"><img class="b-r-10" src="../assets/images/dashboard/profile.png" alt="">
                   <div class="media-body d-xxl-block d-none box-col-none">
-                    <div class="d-flex align-items-center gap-2"> <span>Alex Mora </span><i class="middle fa fa-angle-down"> </i></div>
+                    <div class="d-flex align-items-center gap-2"> <span> </span><i class="middle fa fa-angle-down"> </i></div>
                     <p class="mb-0 font-roboto">Admin</p>
                   </div>
                 </div>
@@ -175,19 +175,9 @@
                      </a>
                      <ul class="sidebar-submenu">
                        <li><a href="/denuncias">Ver Denuncias</a></li>
-                       <li><a href="/denuncias-finalizadas">Denuncias Finalizadas</a></li>
                   </ul>
                 </li>
-                <li class="sidebar-list"> 
-                      <i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title link-nav" @onclick="IraDenunciasFina">
-                        <svg class="stroke-icon">
-                       <use href="../assets/svg/icon-sprite.svg#fill-widget"></use>
-                                        </svg>
-                        <svg class="fill-icon">
-                           <use href="../assets/svg/icon-sprite.svg#fill-widget"></use>
-                            </svg><span style="font-size: 16px;">Estadisticas</span>
-                        </a>
-                </li>
+               
                 <li class="sidebar-list"> <i class="fa fa-thumb-tack"> </i><a class="sidebar-link sidebar-title">
                     <svg class="stroke-icon"> 
                       <use href="../assets/svg/icon-sprite.svg#stroke-user"></use>
@@ -197,7 +187,6 @@
                     </svg><span style="font-size: 16px;">Tu Cuenta</span>
                 </a>
                   <ul class="sidebar-submenu">
-                    <li><a href="/verperfil">Ver Perfil</a></li>
                     <li><a href="/editarperfil">Editar Perfil</a></li>
                     <li><a href="/cambiarcontra">Cambiar Contraseña</a></li>
                   </ul>
@@ -223,16 +212,6 @@
                     </a>
                  </li>
 
-                     <li class="sidebar-list">
-                      <i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title link-nav" href="/fqa">
-                    <svg class="stroke-icon">
-                      <use href="../assets/svg/icon-sprite.svg#stroke-faq"></use>
-                    </svg>
-                    <svg class="fill-icon">
-                      <use href="../assets/svg/icon-sprite.svg#fill-faq"></use>
-                    </svg><span style="font-size: 16px;">FAQ</span>
-                </a>
-            </li>
               </ul>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
             </div>
@@ -244,53 +223,24 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12 footer-copyright text-center">
-                <p class="mb-0">Copyright 2024 © Riho theme by pixelstrap  </p>
+                <p class="mb-0">Copyright 2024 © SISDEN  </p>
               </div>
             </div>
           </div>
         </footer>
       </div>
 </body>
+<script>
 
+    document.addEventListener('DOMContentLoaded', function () {
+        var element = document.getElementById('yourElementId');
+        if (element) {
+            // Tu código que usa el elemento aquí
+        }
+    });
+</script>
 
 @code {
-    private async Task IraHome()
-    {
-        NavigationManager.NavigateTo("/index");
-    }
-    private async Task IraDenuncias()
-    {
-        NavigationManager.NavigateTo("/denuncias");
-    }
-    private async Task IraDenunciasFina()
-    {
-        NavigationManager.NavigateTo("/denuncias-finalizadas");
-    }
-    private async Task IraPerfil()
-    {
-        NavigationManager.NavigateTo("/verperfil");
-    }
-    private async Task IraEditarPerfil()
-    {
-        NavigationManager.NavigateTo("/editarperfil");
-    }
-    private async Task IraContra()
-    {
-        NavigationManager.NavigateTo("/cambiarcontra");
-    }
-    private async Task IraContacto()
-    {
-        Console.WriteLine("Contacto clicked!");
-
-        NavigationManager.NavigateTo("/contacto-index");
-    }
-    private async Task IraFQA()
-    {
-        NavigationManager.NavigateTo("/fqa");
-    }
-    private async Task IraPaginap ()
-    {
-        NavigationManager.NavigateTo("/");
-    }
+   
 
 }

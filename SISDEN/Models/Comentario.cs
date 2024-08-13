@@ -9,7 +9,7 @@ public partial class Comentario
 
     public string Comdescripcion { get; set; } = null!;
 
-    public int ComIdusuario { get; set; }
+    public int? ComIdusuario { get; set; }
 
     public int ComIddenuncia { get; set; }
 

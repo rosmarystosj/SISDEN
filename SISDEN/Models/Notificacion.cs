@@ -5,9 +5,11 @@ namespace SISDEN.Models;
 
 public partial class Notificacion
 {
-    public int Idnotificacion { get; set; }
+    public int Id { get; set; }
 
-    public int Idusuario { get; set; }
+    public int? Idusuario { get; set; }
+
+    public int? EntidadId { get; set; }
 
     public int Idestado { get; set; }
 
@@ -15,5 +17,5 @@ public partial class Notificacion
 
     public DateTime Fechaenvio { get; set; }
 
-    public bool? Leido { get; set; }
+    public int Leido { get; set; }
 }

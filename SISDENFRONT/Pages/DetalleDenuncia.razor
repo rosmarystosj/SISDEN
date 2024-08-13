@@ -298,7 +298,7 @@
     private async Task AgregarComentario()
     {
         newComentario.ComIddenuncia = Id;
-        newComentario.ComIdusuario = denuncias.Idusuario;
+        newComentario.ComIdusuario = denuncias.Idusuario ?? 0;
         newComentario.ComIdrol = denuncias.Usurol;
 
         await ComentarioService.AddComment(newComentario);

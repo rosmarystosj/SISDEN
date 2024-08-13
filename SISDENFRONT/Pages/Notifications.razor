@@ -1,0 +1,31 @@
+﻿@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+
+@code {
+    private bool _isInitialized;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Llama a la función de JavaScript para registrar el Service Worker
+            await JSRuntime.InvokeVoidAsync("registerServiceWorker");
+
+            // Llama a la función de JavaScript pasando los parámetros para el título y el mensaje de la notificación
+            string title = "Notificación Personalizada";
+            string message = "Este es un mensaje personalizado.";
+            await JSRuntime.InvokeVoidAsync("requestNotificationPermission", title, message);
+
+            _isInitialized = true;
+        }
+    }
+
+    public async Task NotificameDeUnaEntidad()
+    {
+        // Llama a la función de JavaScript pasando los parámetros para el título y el mensaje de la notificación
+        string title = "Otra Notificacion";
+        string message = "Otro Mensaje";
+        await JSRuntime.InvokeVoidAsync("requestNotificationPermission", "Este es otro mensaje", "HOLA");
+    }
+}

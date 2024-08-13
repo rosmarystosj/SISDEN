@@ -4,11 +4,10 @@
 @using System.ComponentModel.DataAnnotations
 @inject LoginModelService LoginModel
 @inject IJSRuntime JSRuntime
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <head>
-   
-
-
+  
 </head>
 <body>
     <div class="container-fluid p-0">
@@ -45,7 +44,7 @@
                                         <a class="link" href="/olvidarcontra">¿Olvidaste tu contraseña?</a>
 
                                     </div>
-                                    <button class="btn btn-primary btn-block w-100" @onclick="HandleLogin" type="submit">Iniciar sesión</button>
+                                    <a class="btn btn-primary btn-block w-100" @onclick="HandleLogin">Iniciar sesión</a>
                                 </div>
                             </EditForm>
                             <p class="mt-4 mb-0 text-center">¿No tienes una cuenta?<a class="ms-2" href="sign-up.html">Crear cuenta</a></p>
@@ -67,7 +66,15 @@
 
 @code {
 
+    private string cedula;
+    private string correo;
+    private int userId;
 
+
+
+    private int? entidadid;
+    private DenunciasPorEstadoDTO denunciasPorEstado;
+    private List<ArticuloVioladoDTO> articulosMasViolados;
 
     private string errorMessage; 
     
@@ -83,6 +90,14 @@
             errorMessage = null;   
             var result = await AuthService.LoginDenunciante(LoginModel.LoginModel);
             LoginModel.LoginModel.UsuRol = 1;
+
+            if (LoginModel.LoginModel?.UsuRol == 1)
+            {
+                cedula = LoginModel.LoginModel.Usuidentificacion;
+
+            }
+            
+
         }
     catch (ApplicationException ex)
     {

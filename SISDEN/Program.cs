@@ -12,9 +12,10 @@ using SISDEN.Hubs;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.SignalR;
+
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddScoped<IServicioEmail, EmailService>();
@@ -88,11 +89,12 @@ app.UseAuthorization();
 app.UseSession();
 app.MapControllers();
 
-//Configurar el endpoint del Hub
-/*app.UseEndpoints(endpoints =>
+/// Configurar el pipeline de solicitudes HTTP.
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers();
     endpoints.MapHub<NotificationHub>("/notificationHub");
-});*/
+});
 
 app.Run();

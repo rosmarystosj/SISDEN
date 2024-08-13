@@ -35,6 +35,8 @@ public partial class SisdemContext : DbContext
 
     public virtual DbSet<Motivocierre> Motivocierres { get; set; }
 
+    public virtual DbSet<Notificacion> Notificacions { get; set; }
+
     public virtual DbSet<Opcionpreguntum> Opcionpregunta { get; set; }
 
     public virtual DbSet<Preguntum> Pregunta { get; set; }
@@ -270,6 +272,16 @@ public partial class SisdemContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("MOTIVODESCRIPCION");
+        });
+
+        modelBuilder.Entity<Notificacion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07BAEC7FA4");
+
+            entity.ToTable("Notificacion");
+
+            entity.Property(e => e.Fechaenvio).HasColumnType("datetime");
+            entity.Property(e => e.Mensaje).IsUnicode(false);
         });
 
         modelBuilder.Entity<Opcionpreguntum>(entity =>

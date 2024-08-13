@@ -13443,26 +13443,45 @@ html {
     width: 3rem;
     font-size: 1.5rem;
 }
+.qr-title {
+    color: white; /* Texto en blanco */
+    margin-top: 20px; /* Espacio arriba del título */
+    margin-bottom: 20px; /* Espacio abajo del título */
+    font-size: 20px; /* Ajusta al tamaño deseado */
+    text-align: center; /* Centra el texto */
+    width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+}
+
+.qr-code-container {
+    display: flex; /* Utiliza flexbox */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    padding: 20px; /* Espacio alrededor del código QR */
+    width: 100%; /* Asegura que el contenedor del QR ocupe todo el ancho del bloque */
+}
 
 .profile {
     position: relative;
-    height: 75vw;
-    width: 75vw;
-
-    border-radius: 5vw;
-    margin-top: 5vw;
-    max-height: 40rem;
-    max-width: 40rem;
+    background-color: #034; /* Ajusta al color deseado para el bloque principal */
+    display: flex;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center; /* Centrado vertical */
+    border-radius: 8px; /* Bordes redondeados para el bloque */
+    overflow: hidden; /* Oculta cualquier contenido que se desborde del área del contenedor */
+    flex-direction: column;
 }
 
-    .profile .profile-img {
-        height: 60vw;
-        max-height: 22rem;
-        position: absolute;
-        bottom: 0;
-        left: 45%;
-        transform: translateX(-50%);
-    }
+.dots-1 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* Aquí puedes agregar tus estilos para los puntos */
+}
+
+.profile .profile-img {
+    max-width: 80%; /* Asegura que la imagen no sobrepase el ancho del contenedor */
+    height: 80%;
+}
 
     .profile .dots-1 {
         position: absolute;
@@ -13515,7 +13534,8 @@ html {
     }
 
         .profile .profile-img {
-            height: 60vw;
+            max-width: 80%; /* Asegura que la imagen no sobrepase el ancho del contenedor */
+            height: 80%;
         }
 
         .profile .dots-1 {
@@ -13546,7 +13566,8 @@ html {
     }
 
         .profile .profile-img {
-            height: 55vw;
+            max-width: 80%; /* Asegura que la imagen no sobrepase el ancho del contenedor */
+            height: 80%;
         }
 
         .profile .dots-1 {
@@ -13577,7 +13598,8 @@ html {
     }
 
         .profile .profile-img {
-            height: 45vw;
+            max-width: 80%; /* Asegura que la imagen no sobrepase el ancho del contenedor */
+            height: 80%;
         }
 
         .profile .dots-1 {
@@ -13608,8 +13630,8 @@ html {
     }
 
         .profile .profile-img {
-            height: 60vw;
-            max-height: 20rem;
+            max-width: 80%; /* Asegura que la imagen no sobrepase el ancho del contenedor */
+            height: 80%;
         }
 
         .profile .dots-1 {

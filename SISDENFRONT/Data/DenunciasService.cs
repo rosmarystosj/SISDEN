@@ -48,7 +48,7 @@ namespace SISDENFRONT.Data
         }
         public async Task<DenunciasPorEstadoDTO> GetTotalDenunciasPorEstadoAsync(int? entidadid)
         {
-            var response = await _httpClient.GetFromJsonAsync<DenunciasPorEstadoDTO>($"api/TotalDenunciasPorEstado{entidadid}");
+            var response = await _httpClient.GetFromJsonAsync<DenunciasPorEstadoDTO>($"api/TotalDenunciasPorEstado/{entidadid}");
             return response;
         }
 

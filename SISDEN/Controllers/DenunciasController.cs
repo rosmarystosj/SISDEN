@@ -30,13 +30,13 @@ namespace SISDEN.Controllers
 
 
         }
-        [HttpGet("api/TotalDenunciasPorEstado")]
-        public async Task<ActionResult<DenunciasPorEstadoDTO>> GetDenunciasPorEstadoYEntidad(int entidadId)
+        [HttpGet("api/TotalDenunciasPorEstado/{entidadid}")]
+        public async Task<ActionResult<DenunciasPorEstadoDTO>> GetDenunciasPorEstadoYEntidad(int entidadid)
         {
-            var pendientes = await _context.VistaDenuncias.CountAsync(d => d.Estado == "Pendiente" && d.Denentidadid == entidadId);
-            var realizadas = await _context.VistaDenuncias.CountAsync(d => d.Estado == "Realizada" && d.Denentidadid == entidadId);
-            var enRevision = await _context.VistaDenuncias.CountAsync(d => d.Estado == "Revisión" && d.Denentidadid == entidadId);
-            var total = await _context.VistaDenuncias.CountAsync(d => d.Denentidadid == entidadId);
+            var pendientes = await _context.VistaDenuncias.CountAsync(d => d.Estado == "Pendiente" && d.Denentidadid == entidadid);
+            var realizadas = await _context.VistaDenuncias.CountAsync(d => d.Estado == "Realizada" && d.Denentidadid == entidadid);
+            var enRevision = await _context.VistaDenuncias.CountAsync(d => d.Estado == "Revisión" && d.Denentidadid == entidadid);
+            var total = await _context.VistaDenuncias.CountAsync(d => d.Denentidadid == entidadid);
 
             var resultado = new DenunciasPorEstadoDTO
             {

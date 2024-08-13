@@ -342,12 +342,7 @@
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
-    private async Task AgregarComentario()
-    {
-        newComentario.ComIddenuncia = Id;
-        newComentario.ComIdusuario = denuncias.Idusuario ?? 0;
-        newComentario.ComIdrol = denuncias.Usurol;
-
+   
     public async Task AgregarComentario()
     {
         if (denuncias != null)
@@ -366,4 +361,5 @@
             StateHasChanged();
         }
     }
+}
 }
